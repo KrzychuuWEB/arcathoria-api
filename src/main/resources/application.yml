@@ -3,7 +3,7 @@ spring:
     name: api
   liquibase:
     change-log: classpath:db/changelog-master.xml
-    enabled: false
+    enabled: true
   jpa:
     hibernate:
       ddl-auto: validate
