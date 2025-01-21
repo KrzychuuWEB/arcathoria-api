@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "players")
-class Player {
+public class Player {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,6 +30,9 @@ class Player {
 
     @Column
     private LocalDateTime deletedAt;
+
+    Player() {
+    }
 
     public Long getId() {
         return id;
@@ -63,16 +66,8 @@ class Player {
         return createdAt;
     }
 
-    public void setCreatedAt(final LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
-    }
-
-    public void setUpdatedAt(final LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
     }
 
     public LocalDateTime getDeletedAt() {
@@ -81,5 +76,56 @@ class Player {
 
     public void setDeletedAt(final LocalDateTime deletedAt) {
         this.deletedAt = deletedAt;
+    }
+
+
+    public static final class PlayerBuilder {
+        private Long id;
+        private String username;
+        private String email;
+        private String password;
+        private LocalDateTime deletedAt;
+
+        private PlayerBuilder() {
+        }
+
+        public static PlayerBuilder aPlayer() {
+            return new PlayerBuilder();
+        }
+
+        public PlayerBuilder withId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public PlayerBuilder withUsername(String username) {
+            this.username = username;
+            return this;
+        }
+
+        public PlayerBuilder withEmail(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public PlayerBuilder withPassword(String password) {
+            this.password = password;
+            return this;
+        }
+
+        public PlayerBuilder withDeletedAt(LocalDateTime deletedAt) {
+            this.deletedAt = deletedAt;
+            return this;
+        }
+
+        public Player build() {
+            Player player = new Player();
+            player.setUsername(username);
+            player.setEmail(email);
+            player.setPassword(password);
+            player.setDeletedAt(deletedAt);
+            player.id = this.id;
+            return player;
+        }
     }
 }

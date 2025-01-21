@@ -1,4 +1,12 @@
 package com.arcathoria.api.player.dto;
 
-public record PlayerDTO() {
+import java.time.LocalDateTime;
+
+public record PlayerDTO(
+        String username,
+        String email,
+        LocalDateTime createdAt,
+        LocalDateTime updateAt
+) {
+    
 }
