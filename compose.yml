@@ -6,8 +6,8 @@ services:
     volumes:
       - local_pgdata:/var/lib/postgresql/data
     environment:
-      - POSTGRES_PASSWORD=dev
       - POSTGRES_USER=dev_user
+      - POSTGRES_PASSWORD=dev
       - POSTGRES_DB=arcathoria
 
   pgadmin:

@@ -1,0 +1,8 @@
+plugins {
+    id 'java'
+}
+
+dependencies {
+    implementation project(':domain')
+    implementation 'org.springframework:spring-context:6.2.2'
+}

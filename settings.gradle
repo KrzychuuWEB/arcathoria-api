@@ -1,1 +1,6 @@
-rootProject.name = 'api'
+rootProject.name = 'arcathoria-game'
+include 'infrastructure'
+include 'domain'
+include 'app'
+include 'bootstrap'
+
