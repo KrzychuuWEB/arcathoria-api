@@ -1,4 +1,4 @@
-package com.arcathoria.api.player.dto;
+package com.arcathoria.player.dto;
 
 import java.time.LocalDateTime;
 
@@ -8,5 +8,5 @@ public record PlayerDTO(
         LocalDateTime createdAt,
         LocalDateTime updateAt
 ) {
-    
+
 }

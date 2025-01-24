@@ -1,4 +1,4 @@
-package com.arcathoria.api.player.dto;
+package com.arcathoria.player.dto;
 
 
 import jakarta.validation.constraints.Email;
