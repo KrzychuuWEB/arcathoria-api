@@ -21,6 +21,7 @@ subprojects {
 
 	dependencies {
 		testImplementation 'org.junit.jupiter:junit-jupiter'
+		testImplementation 'org.assertj:assertj-core:3.27.3'
 	}
 
 	tasks.withType(Test).configureEach {
