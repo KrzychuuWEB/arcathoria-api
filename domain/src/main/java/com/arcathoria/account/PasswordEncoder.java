@@ -1,10 +1,8 @@
 package com.arcathoria.account;
 
-import com.arcathoria.account.vo.HashedPassword;
+public interface PasswordEncoder {
 
-interface PasswordEncoder {
+    String encode(String password);
 
-    HashedPassword encode(String password);
-
-    boolean matches(String password, HashedPassword hashedPassword);
+    boolean matches(String password, String hashedPassword);
 }

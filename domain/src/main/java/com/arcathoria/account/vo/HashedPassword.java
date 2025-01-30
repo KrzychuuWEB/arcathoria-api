@@ -1,18 +1,20 @@
 package com.arcathoria.account.vo;
 
-public class HashedPassword {
+import com.arcathoria.account.PasswordEncoder;
 
-    private final String password;
+public record HashedPassword(String password) {
 
-    public HashedPassword(final String password) {
+    public HashedPassword {
         if (password == null || password.isBlank()) {
             throw new IllegalArgumentException("Password cannot be null or blank.");
         }
-
-        this.password = password;
     }
 
-    public String getPassword() {
-        return password;
+    HashedPassword fromRawPassword(String rawPassword, PasswordEncoder encoder) {
+        return new HashedPassword(encoder.encode(rawPassword));
+    }
+
+    boolean matches(String rawPassword, PasswordEncoder encoder) {
+        return encoder.matches(rawPassword, password);
     }
 }
