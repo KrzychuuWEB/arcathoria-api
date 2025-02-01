@@ -23,36 +23,36 @@ class EmailTest {
 
     @Test
     void should_throw_exception_when_email_is_null() {
-        assertThatThrownBy(() -> {
-            new Email(null);
-        }).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() ->
+                new Email(null)
+        ).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void should_throw_exception_when_email_is_blank() {
-        assertThatThrownBy(() -> {
-            new Email("");
-        }).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() ->
+                new Email("")
+        ).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void should_throw_exception_when_email_is_invalid_without_at_sign() {
-        assertThatThrownBy(() -> {
-            new Email("testemail.com");
-        }).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() ->
+                new Email("testemail.com")
+        ).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void should_throw_exception_when_email_is_invalid_without_domain() {
-        assertThatThrownBy(() -> {
-            new Email("test@");
-        }).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() ->
+                new Email("test@")
+        ).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void should_throw_exception_when_email_is_invalid_without_domain_extension() {
-        assertThatThrownBy(() -> {
-            new Email("test@email");
-        }).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() ->
+                new Email("test@email")
+        ).isInstanceOf(IllegalArgumentException.class);
     }
 }

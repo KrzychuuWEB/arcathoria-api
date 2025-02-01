@@ -23,16 +23,16 @@ class HashedPasswordTest {
 
     @Test
     void should_throw_exception_when_password_is_null() {
-        assertThatThrownBy(() -> {
-            HashedPassword.fromRawPassword(null, passwordEncoder);
-        }).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() ->
+                HashedPassword.fromRawPassword(null, passwordEncoder)
+        ).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void should_throw_exception_when_password_is_blank() {
-        assertThatThrownBy(() -> {
-            HashedPassword.fromRawPassword("", passwordEncoder);
-        }).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() ->
+                HashedPassword.fromRawPassword("", passwordEncoder)
+        ).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
