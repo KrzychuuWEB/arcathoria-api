@@ -6,7 +6,7 @@ public class HashedPassword {
 
     private final String password;
 
-    private HashedPassword(final String password) {
+    public HashedPassword(final String password) {
         if (password == null || password.isBlank()) {
             throw new IllegalArgumentException("Password cannot be null or blank.");
         }

@@ -22,6 +22,15 @@ class HashedPasswordTest {
     }
 
     @Test
+    void should_create_new_hashed_password_from_constructor() {
+        String rawPassword = "password";
+
+        HashedPassword hashedPassword = new HashedPassword(rawPassword);
+
+        assertThat(hashedPassword.getPassword()).isEqualTo(rawPassword);
+    }
+
+    @Test
     void should_throw_exception_when_password_is_null() {
         assertThatThrownBy(() ->
                 HashedPassword.fromRawPassword(null, passwordEncoder)
