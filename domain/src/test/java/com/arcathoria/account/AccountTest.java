@@ -24,8 +24,8 @@ class AccountTest {
 
         assertThat(account).isNotNull();
         assertThat(account.getSnapshot().getAccountId()).isEqualTo(accountId);
-        assertThat(account.getSnapshot().getEmail().getEmail()).isEqualTo("test@email.com");
-        assertThat(account.getSnapshot().getPassword().getPassword()).isEqualTo("secret");
+        assertThat(account.getSnapshot().getEmail().getValue()).isEqualTo("test@email.com");
+        assertThat(account.getSnapshot().getPassword().getValue()).isEqualTo("secret");
     }
 
     @Test
@@ -42,7 +42,7 @@ class AccountTest {
 
         assertThat(account).isNotNull();
         assertThat(result.getAccountId()).isEqualTo(accountId);
-        assertThat(result.getEmail().getEmail()).isEqualTo("test@email.com");
-        assertThat(result.getPassword().getPassword()).isEqualTo("secret");
+        assertThat(result.getEmail().getValue()).isEqualTo("test@email.com");
+        assertThat(result.getPassword().getValue()).isEqualTo("secret");
     }
 }

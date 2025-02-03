@@ -4,17 +4,17 @@ import java.util.UUID;
 
 public class AccountId {
 
-    private final UUID id;
+    private final UUID value;
 
     public AccountId(UUID uuid) {
         if (uuid == null) {
             throw new IllegalArgumentException("Account ID cannot be null.");
         }
 
-        this.id = uuid;
+        this.value = uuid;
     }
 
-    public UUID getId() {
-        return id;
+    public UUID getValue() {
+        return value;
     }
 }

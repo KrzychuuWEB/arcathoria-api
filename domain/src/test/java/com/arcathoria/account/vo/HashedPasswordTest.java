@@ -18,7 +18,7 @@ class HashedPasswordTest {
 
         assertThat(hashedPassword).isNotNull();
         assertThat(hashedPassword.matches(rawPassword, passwordEncoder)).isTrue();
-        assertThat(hashedPassword.getPassword()).isNotEqualTo(rawPassword);
+        assertThat(hashedPassword.getValue()).isNotEqualTo(rawPassword);
     }
 
     @Test
@@ -27,7 +27,7 @@ class HashedPasswordTest {
 
         HashedPassword hashedPassword = new HashedPassword(rawPassword);
 
-        assertThat(hashedPassword.getPassword()).isEqualTo(rawPassword);
+        assertThat(hashedPassword.getValue()).isEqualTo(rawPassword);
     }
 
     @Test
@@ -62,6 +62,6 @@ class HashedPasswordTest {
     void should_return_hashed_password() {
         HashedPassword hashedPassword = HashedPassword.fromRawPassword("secret", passwordEncoder);
 
-        assertThat(hashedPassword.getPassword()).isEqualTo("hashed-secret");
+        assertThat(hashedPassword.getValue()).isEqualTo("hashed-secret");
     }
 }

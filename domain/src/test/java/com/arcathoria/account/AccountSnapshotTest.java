@@ -22,7 +22,7 @@ class AccountSnapshotTest {
         );
 
         assertThat(snapshot.getAccountId()).isEqualTo(uuid);
-        assertThat(snapshot.getEmail().getEmail()).isEqualTo("test@email.com");
-        assertThat(snapshot.getPassword().getPassword()).isEqualTo("secret");
+        assertThat(snapshot.getEmail().getValue()).isEqualTo("test@email.com");
+        assertThat(snapshot.getPassword().getValue()).isEqualTo("secret");
     }
 }

@@ -4,14 +4,14 @@ import com.arcathoria.account.PasswordEncoder;
 
 public class HashedPassword {
 
-    private final String password;
+    private final String value;
 
     public HashedPassword(final String password) {
         if (password == null || password.isBlank()) {
             throw new IllegalArgumentException("Password cannot be null or blank.");
         }
 
-        this.password = password;
+        this.value = password;
     }
 
     public static HashedPassword fromRawPassword(String rawPassword, PasswordEncoder encoder) {
@@ -22,10 +22,10 @@ public class HashedPassword {
     }
 
     public boolean matches(String rawPassword, PasswordEncoder encoder) {
-        return encoder.matches(rawPassword, password);
+        return encoder.matches(rawPassword, value);
     }
 
-    public String getPassword() {
-        return password;
+    public String getValue() {
+        return value;
     }
 }
