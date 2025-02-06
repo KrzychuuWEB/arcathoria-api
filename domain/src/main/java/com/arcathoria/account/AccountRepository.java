@@ -9,5 +9,5 @@ interface AccountRepository {
 
     Optional<Account> findByEmail(Email email);
 
-    void save(Account account);
+    Account save(Account account);
 }

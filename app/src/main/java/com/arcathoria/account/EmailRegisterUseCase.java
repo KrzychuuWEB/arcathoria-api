@@ -1,7 +1,9 @@
 package com.arcathoria.account;
 
 import com.arcathoria.account.dto.RegisterDTO;
+import com.arcathoria.account.exception.EmailExistsException;
 import com.arcathoria.account.vo.Email;
+import com.arcathoria.account.vo.HashedPassword;
 
 class EmailRegisterUseCase implements RegisterUseCase {
 
@@ -15,10 +17,17 @@ class EmailRegisterUseCase implements RegisterUseCase {
 
     @Override
     public Account register(RegisterDTO registerDTO) {
-        if (accountRepository.existsByEmail(new Email(registerDTO.email()))) {
-            return null;
+        Email email = new Email(registerDTO.email());
+        if (accountRepository.existsByEmail(email)) {
+            throw new EmailExistsException("This email is already used");
         }
 
-        return null;
+        HashedPassword hashedPassword = HashedPassword.fromRawPassword(registerDTO.password(), passwordEncoder);
+
+        return accountRepository.save(Account.restore(new AccountSnapshot(
+                null,
+                email,
+                hashedPassword
+        )));
     }
 }
