@@ -9,25 +9,28 @@ class EmailRegisterUseCase implements RegisterUseCase {
 
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AccountFactory accountFactory;
 
-    EmailRegisterUseCase(final AccountRepository accountRepository, final PasswordEncoder passwordEncoder) {
+    EmailRegisterUseCase(final AccountRepository accountRepository, final PasswordEncoder passwordEncoder, final AccountFactory accountFactory) {
         this.accountRepository = accountRepository;
         this.passwordEncoder = passwordEncoder;
+        this.accountFactory = accountFactory;
     }
 
     @Override
     public Account register(RegisterDTO registerDTO) {
         Email email = new Email(registerDTO.email());
+
         if (accountRepository.existsByEmail(email)) {
-            throw new EmailExistsException("This email is already used");
+            throw new EmailExistsException("Email " + email + " is already used");
         }
 
-        HashedPassword hashedPassword = HashedPassword.fromRawPassword(registerDTO.password(), passwordEncoder);
+        return accountRepository.save(
+                accountFactory.from(email, encodePassword(registerDTO.password()))
+        );
+    }
 
-        return accountRepository.save(Account.restore(new AccountSnapshot(
-                null,
-                email,
-                hashedPassword
-        )));
+    private HashedPassword encodePassword(String rawPassword) {
+        return HashedPassword.fromRawPassword(rawPassword, passwordEncoder);
     }
 }
