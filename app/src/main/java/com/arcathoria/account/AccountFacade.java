@@ -5,11 +5,11 @@ import com.arcathoria.account.dto.RegisterDTO;
 
 public class AccountFacade {
 
+    private final RegisterUseCase registerUseCase;
+
     AccountFacade(final RegisterUseCase registerUseCase) {
         this.registerUseCase = registerUseCase;
     }
-
-    private final RegisterUseCase registerUseCase;
 
     public AccountDTO createNewAccount(RegisterDTO registerDTO) {
         return toDto(registerUseCase.register(registerDTO));
