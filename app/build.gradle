@@ -4,6 +4,7 @@ plugins {
 
 dependencies {
     implementation project(':domain')
+    implementation 'javax.validation:validation-api:2.0.1.Final'
     testImplementation 'org.mockito:mockito-core:5.15.2'
     testImplementation 'org.mockito:mockito-junit-jupiter:5.15.2'
 }
