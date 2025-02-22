@@ -7,10 +7,6 @@ public class AccountId {
     private final UUID value;
 
     public AccountId(UUID uuid) {
-        if (uuid == null) {
-            throw new IllegalArgumentException("Account ID cannot be null.");
-        }
-
         this.value = uuid;
     }
 
