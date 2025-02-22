@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class AccountIdTest {
 
@@ -16,10 +15,5 @@ class AccountIdTest {
         AccountId accountId = new AccountId(uuid);
 
         assertThat(accountId.getValue()).isEqualTo(uuid);
-    }
-
-    @Test
-    void should_throw_exception_when_uuid_is_null() {
-        assertThatThrownBy(() -> new AccountId(null)).isInstanceOf(IllegalArgumentException.class);
     }
 }

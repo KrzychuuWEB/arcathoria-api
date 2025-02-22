@@ -3,4 +3,5 @@ include 'infrastructure'
 include 'domain'
 include 'app'
 include 'bootstrap'
+include 'shared-test-helpers'
 
