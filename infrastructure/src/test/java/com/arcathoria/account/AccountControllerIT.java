@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class AccountControllerIT extends PostgreSQLTestContainerConfig {
 
     @Autowired
-    private AccountRepositoryAdapter repositoryAdapter;
+    private AccountFacade accountFacade;
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -33,7 +33,7 @@ class AccountControllerIT extends PostgreSQLTestContainerConfig {
     void should_register_account_and_return_201_status() {
         RegisterDTO registerDTO = new RegisterDTO("account@email.com", "secret_password");
 
-        ResponseEntity<AccountDTO> response = restTemplate.postForEntity(BASE_URL, new HttpEntity<>(registerDTO), AccountDTO.class);
+        ResponseEntity<AccountDTO> response = restTemplate.postForEntity(BASE_URL + "/register", new HttpEntity<>(registerDTO), AccountDTO.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(response.getBody()).isNotNull();
@@ -46,9 +46,9 @@ class AccountControllerIT extends PostgreSQLTestContainerConfig {
         Email email = new Email("account@email.com");
         RegisterDTO registerDTO = new RegisterDTO(email.getValue(), "secret_password");
 
-        repositoryAdapter.save(Account.restore(AccountSnapshotMother.create().withEmail(email.getValue()).build()));
+        accountFacade.createNewAccount(registerDTO);
 
-        ResponseEntity<ErrorResponse> result = restTemplate.postForEntity(BASE_URL, new HttpEntity<>(registerDTO), ErrorResponse.class);
+        ResponseEntity<ErrorResponse> result = restTemplate.postForEntity(BASE_URL + "/register", new HttpEntity<>(registerDTO), ErrorResponse.class);
 
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
     }

@@ -16,7 +16,7 @@ class AccountController {
         this.accountFacade = accountFacade;
     }
 
-    @PostMapping
+    @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     AccountDTO registerRequest(@Valid @RequestBody RegisterDTO registerDTO) {
         return accountFacade.createNewAccount(registerDTO);

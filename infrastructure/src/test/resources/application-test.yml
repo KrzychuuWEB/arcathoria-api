@@ -21,3 +21,8 @@ logging:
           descriptor:
             sql:
               BasicBinder: TRACE
+
+jwt:
+  secret: "I3poS1pVcm0xTmU0QTUqRG5HSDcwdk1UJjlCWlU3NWU="
+  validity: 3600
+
