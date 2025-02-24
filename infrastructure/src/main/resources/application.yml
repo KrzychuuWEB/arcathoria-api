@@ -7,3 +7,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+
+jwt:
+  secret: "Z2VrSHNAbEYmJkEqekVuTSo3SHB1NCVqUlZLME9BeU0="
+  validity: 3600
