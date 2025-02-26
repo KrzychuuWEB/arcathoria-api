@@ -44,11 +44,11 @@ class AuthControllerIT extends PostgreSQLTestContainerConfig {
     }
 
     @Test
-    void should_invalid_credentials_return_unauthorized() {
+    void should_invalid_credentials_return_bad_request() {
         AuthRequestDTO authRequestDTO = new AuthRequestDTO("invalid@email.com", "secret_invalid_password123");
 
         ResponseEntity<TokenResponseDTO> response = restTemplate.postForEntity("/authenticate", new HttpEntity<>(authRequestDTO), TokenResponseDTO.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 }
