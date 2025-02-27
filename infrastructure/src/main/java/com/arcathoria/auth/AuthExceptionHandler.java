@@ -1,6 +1,7 @@
 package com.arcathoria.auth;
 
 import com.arcathoria.ApiErrorResponse;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -38,6 +39,20 @@ class AuthExceptionHandler {
                 HttpStatus.FORBIDDEN.getReasonPhrase(),
                 "Lack of access to resources",
                 "ERR-AUTH-FORBIDDEN-403",
+                request.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    ApiErrorResponse handleExpiredJwtException(
+            ExpiredJwtException ex, HttpServletRequest request) {
+
+        return new ApiErrorResponse(
+                HttpStatus.UNAUTHORIZED.value(),
+                HttpStatus.UNAUTHORIZED.getReasonPhrase(),
+                "Jwt token has been expired!",
+                "ERR-AUTH-EXPIRED_TOKEN-401",
                 request.getRequestURI()
         );
     }
