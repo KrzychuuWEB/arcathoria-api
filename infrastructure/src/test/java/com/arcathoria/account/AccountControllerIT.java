@@ -1,6 +1,6 @@
 package com.arcathoria.account;
 
-import com.arcathoria.ErrorResponse;
+import com.arcathoria.ApiErrorResponse;
 import com.arcathoria.PostgreSQLTestContainerConfig;
 import com.arcathoria.account.dto.AccountDTO;
 import com.arcathoria.account.dto.RegisterDTO;
@@ -48,7 +48,7 @@ class AccountControllerIT extends PostgreSQLTestContainerConfig {
 
         accountFacade.createNewAccount(registerDTO);
 
-        ResponseEntity<ErrorResponse> result = restTemplate.postForEntity(BASE_URL + "/register", new HttpEntity<>(registerDTO), ErrorResponse.class);
+        ResponseEntity<ApiErrorResponse> result = restTemplate.postForEntity(BASE_URL + "/register", new HttpEntity<>(registerDTO), ApiErrorResponse.class);
 
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
     }

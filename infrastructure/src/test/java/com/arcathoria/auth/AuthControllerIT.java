@@ -1,5 +1,6 @@
 package com.arcathoria.auth;
 
+import com.arcathoria.ApiErrorResponse;
 import com.arcathoria.PostgreSQLTestContainerConfig;
 import com.arcathoria.account.AccountFacade;
 import com.arcathoria.account.dto.RegisterDTO;
@@ -47,7 +48,7 @@ class AuthControllerIT extends PostgreSQLTestContainerConfig {
     void should_invalid_credentials_return_bad_request() {
         AuthRequestDTO authRequestDTO = new AuthRequestDTO("invalid@email.com", "secret_invalid_password123");
 
-        ResponseEntity<TokenResponseDTO> response = restTemplate.postForEntity("/authenticate", new HttpEntity<>(authRequestDTO), TokenResponseDTO.class);
+        ResponseEntity<ApiErrorResponse> response = restTemplate.postForEntity("/authenticate", new HttpEntity<>(authRequestDTO), ApiErrorResponse.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }

@@ -1,35 +1,60 @@
 package com.arcathoria;
 
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.List;
-import java.util.Map;
-
 @RestControllerAdvice
+@Order(9999)
 class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Map<String, Object>> handleValidationException(MethodArgumentNotValidException ex) {
-        List<Map<String, String>> errors = ex.getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .map(error -> Map.of(
-                        "field", error.getField(),
-                        "message", error.getDefaultMessage()
-                ))
-                .toList();
-
-        Map<String, Object> body = Map.of(
-                "status", HttpStatus.BAD_REQUEST.value(),
-                "errors", errors
+    ApiErrorResponse handleValidationException(MethodArgumentNotValidException ex, HttpServletRequest request) {
+        ApiErrorResponse response = new ApiErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                "Invalid input data",
+                "ERR-DATA-VALIDATION-400",
+                request.getRequestURI()
         );
 
-        return ResponseEntity.badRequest().body(body);
+        ex.getBindingResult().getFieldErrors().forEach(error ->
+                response.addDetail(error.getField(), error.getDefaultMessage())
+        );
+
+        return response;
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    ApiErrorResponse handleIllegalArgumentException(
+            IllegalArgumentException ex, HttpServletRequest request) {
+
+        return new ApiErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                ex.getMessage(),
+                "ERR-JAVA-ILLEGAL_ARGUMENT-400",
+                request.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    ApiErrorResponse handleAllExceptions(
+            Exception ex, HttpServletRequest request) {
+
+        return new ApiErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
+                "An unexpected error occurred",
+                "ERR-SERVER-500",
+                request.getRequestURI()
+        );
     }
 }
