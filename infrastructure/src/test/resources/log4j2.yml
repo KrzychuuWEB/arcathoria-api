@@ -1,0 +1,12 @@
+Configuration:
+  status: warn
+
+  Appenders:
+    Null:
+      name: NullAppender
+
+  Loggers:
+    Root:
+      level: off
+      AppenderRef:
+        - ref: NullAppender

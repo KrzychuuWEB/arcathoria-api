@@ -4,14 +4,21 @@ import com.arcathoria.account.dto.RegisterDTO;
 import com.arcathoria.account.exception.EmailExistsException;
 import com.arcathoria.account.vo.Email;
 import com.arcathoria.account.vo.HashedPassword;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 class EmailRegisterUseCase implements RegisterUseCase {
 
+    private static final Logger logger = LogManager.getLogger(EmailRegisterUseCase.class);
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
     private final AccountFactory accountFactory;
 
-    EmailRegisterUseCase(final AccountRepository accountRepository, final PasswordEncoder passwordEncoder, final AccountFactory accountFactory) {
+    EmailRegisterUseCase(
+            final AccountRepository accountRepository,
+            final PasswordEncoder passwordEncoder,
+            final AccountFactory accountFactory
+    ) {
         this.accountRepository = accountRepository;
         this.passwordEncoder = passwordEncoder;
         this.accountFactory = accountFactory;
@@ -25,9 +32,13 @@ class EmailRegisterUseCase implements RegisterUseCase {
             throw new EmailExistsException(email.getValue());
         }
 
-        return accountRepository.save(
+        Account account = accountRepository.save(
                 accountFactory.from(email, encodePassword(registerDTO.password()))
         );
+
+        logger.info("Account with email {} has been registered!", email.getValue());
+
+        return account;
     }
 
     private HashedPassword encodePassword(String rawPassword) {

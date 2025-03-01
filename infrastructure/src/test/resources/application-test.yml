@@ -14,13 +14,10 @@ spring:
 
 logging:
   level:
-    org:
-      hibernate:
-        SQL: DEBUG
-        type:
-          descriptor:
-            sql:
-              BasicBinder: TRACE
+    root: OFF
+    com.arcathoria: OFF
+    org.springframework: OFF
+
 
 jwt:
   secret: "I3poS1pVcm0xTmU0QTUqRG5HSDcwdk1UJjlCWlU3NWU="
