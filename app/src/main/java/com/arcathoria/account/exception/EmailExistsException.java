@@ -4,7 +4,14 @@ import com.arcathoria.ApiException;
 
 public class EmailExistsException extends ApiException {
 
-    public EmailExistsException(final String message) {
-        super(message, "ERR_ACCOUNT_EMAIL_EXISTS-409");
+    private final String email;
+
+    public EmailExistsException(final String email) {
+        super("account.registration.email.exists", "ERR_ACCOUNT_EMAIL_EXISTS-409");
+        this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
     }
 }

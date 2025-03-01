@@ -16,15 +16,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 class AuthExceptionHandler {
 
     @ExceptionHandler(BadCredentialsException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     ApiErrorResponse handleBadCredentialsException(
             BadCredentialsException ex, HttpServletRequest request) {
 
         return new ApiErrorResponse(
-                HttpStatus.UNAUTHORIZED.value(),
-                HttpStatus.UNAUTHORIZED.getReasonPhrase(),
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
                 "Bad credentials",
-                "ERR-AUTH-UNAUTHORIZED-401",
+                "ERR-AUTH-BAD_CREDENTIALS-400",
                 request.getRequestURI()
         );
     }

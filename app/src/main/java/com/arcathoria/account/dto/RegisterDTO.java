@@ -5,12 +5,12 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public record RegisterDTO(
-        @NotBlank
-        @Email
+        @NotBlank(message = "validation.constraints.NotBlank")
+        @Email(message = "validation.constraints.Email")
         String email,
 
-        @NotBlank
-        @Size(min = 8)
+        @NotBlank(message = "validation.constraints.NotBlank")
+        @Size(min = 8, max = 32, message = "validation.constraints.Size")
         String password
 ) {
 }
