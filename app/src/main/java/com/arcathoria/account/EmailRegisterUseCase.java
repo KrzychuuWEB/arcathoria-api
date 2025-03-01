@@ -22,7 +22,7 @@ class EmailRegisterUseCase implements RegisterUseCase {
         Email email = new Email(registerDTO.email());
 
         if (accountRepository.existsByEmail(email)) {
-            throw new EmailExistsException("Email " + email.getValue() + " is already used");
+            throw new EmailExistsException(email.getValue());
         }
 
         return accountRepository.save(
