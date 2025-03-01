@@ -3,6 +3,8 @@ package com.arcathoria.account;
 import com.arcathoria.ApiErrorResponse;
 import com.arcathoria.account.exception.EmailExistsException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.MessageSource;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import java.util.Locale;
 @Order(1)
 class AccountExceptionHandler {
 
+    private static final Logger logger = LogManager.getLogger(AccountExceptionHandler.class);
     private final MessageSource messageSource;
 
     AccountExceptionHandler(final MessageSource messageSource) {
@@ -25,6 +28,8 @@ class AccountExceptionHandler {
     @ExceptionHandler(EmailExistsException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     ApiErrorResponse handleEmailExistsException(EmailExistsException ex, HttpServletRequest request, Locale locale) {
+        logger.warn("Email {} has been exists", ex.getEmail());
+
         return new ApiErrorResponse(
                 HttpStatus.CONFLICT.value(),
                 HttpStatus.CONFLICT.getReasonPhrase(),

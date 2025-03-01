@@ -11,3 +11,6 @@ spring:
 jwt:
   secret: "Z2VrSHNAbEYmJkEqekVuTSo3SHB1NCVqUlZLME9BeU0="
   validity: 3600
+
+logging:
+  config: classpath:log4j2.yml

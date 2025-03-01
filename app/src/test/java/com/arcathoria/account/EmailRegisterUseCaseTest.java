@@ -4,9 +4,9 @@ import com.arcathoria.account.dto.RegisterDTO;
 import com.arcathoria.account.exception.EmailExistsException;
 import com.arcathoria.account.vo.Email;
 import com.arcathoria.account.vo.HashedPassword;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -27,12 +27,8 @@ class EmailRegisterUseCaseTest {
     @Mock
     private AccountFactory accountFactory;
 
-    private RegisterUseCase registerUseCase;
-
-    @BeforeEach
-    void setUp() {
-        registerUseCase = new EmailRegisterUseCase(accountRepository, passwordEncoder, accountFactory);
-    }
+    @InjectMocks
+    private EmailRegisterUseCase registerUseCase;
 
     @Test
     void should_register_account_when_email_is_not_taken() {
