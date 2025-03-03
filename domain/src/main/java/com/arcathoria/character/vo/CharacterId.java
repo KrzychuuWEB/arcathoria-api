@@ -1,14 +1,14 @@
-package com.arcathoria.account.vo;
+package com.arcathoria.character.vo;
 
 import java.util.Objects;
 import java.util.UUID;
 
-public class AccountId {
+public class CharacterId {
 
     private final UUID value;
 
-    public AccountId(UUID uuid) {
-        this.value = uuid;
+    public CharacterId(final UUID value) {
+        this.value = value;
     }
 
     public UUID getValue() {
@@ -18,8 +18,8 @@ public class AccountId {
     @Override
     public boolean equals(final Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        final AccountId accountId = (AccountId) o;
-        return Objects.equals(value, accountId.value);
+        final CharacterId that = (CharacterId) o;
+        return Objects.equals(value, that.value);
     }
 
     @Override
