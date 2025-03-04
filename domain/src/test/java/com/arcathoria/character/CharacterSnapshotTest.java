@@ -16,13 +16,13 @@ class CharacterSnapshotTest {
         AccountId accountId = new AccountId(UUID.randomUUID());
 
         CharacterSnapshot snapshot = CharacterSnapshotMother.create()
-                .withCharacterId(characterId.getValue())
-                .withAccountId(accountId.getValue())
+                .withCharacterId(characterId.value())
+                .withAccountId(accountId.value())
                 .build();
 
         assertThat(snapshot).isNotNull();
         assertThat(snapshot.getCharacterId()).isEqualTo(characterId);
-        assertThat(snapshot.getName().getValue()).isEqualTo(CharacterSnapshotMother.DEFAULT_CHARACTER_NAME);
+        assertThat(snapshot.getName().value()).isEqualTo(CharacterSnapshotMother.DEFAULT_CHARACTER_NAME);
         assertThat(snapshot.getAccountId()).isEqualTo(accountId);
     }
 }

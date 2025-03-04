@@ -14,6 +14,6 @@ class AccountIdTest {
 
         AccountId accountId = new AccountId(uuid);
 
-        assertThat(accountId.getValue()).isEqualTo(uuid);
+        assertThat(accountId.value()).isEqualTo(uuid);
     }
 }

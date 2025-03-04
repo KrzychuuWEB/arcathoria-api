@@ -1,29 +1,6 @@
 package com.arcathoria.account.vo;
 
-import java.util.Objects;
 import java.util.UUID;
 
-public class AccountId {
-
-    private final UUID value;
-
-    public AccountId(UUID uuid) {
-        this.value = uuid;
-    }
-
-    public UUID getValue() {
-        return value;
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        final AccountId accountId = (AccountId) o;
-        return Objects.equals(value, accountId.value);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(value);
-    }
+public record AccountId(UUID value) {
 }

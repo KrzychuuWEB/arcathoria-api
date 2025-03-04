@@ -14,6 +14,6 @@ class CharacterIdTest {
 
         CharacterId id = new CharacterId(uuid);
 
-        assertThat(id.getValue()).isEqualTo(uuid);
+        assertThat(id.value()).isEqualTo(uuid);
     }
 }

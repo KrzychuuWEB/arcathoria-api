@@ -11,14 +11,14 @@ class EmailTest {
     void should_create_email_when_valid_input() {
         Email email = new Email("test@email.com");
 
-        assertThat(email.getValue()).isEqualTo("test@email.com");
+        assertThat(email.value()).isEqualTo("test@email.com");
     }
 
     @Test
     void should_get_correct_email_with_two_domain_extension() {
         Email email = new Email("test@email.com.pl");
 
-        assertThat(email.getValue()).isEqualTo("test@email.com.pl");
+        assertThat(email.value()).isEqualTo("test@email.com.pl");
     }
 
     @Test

@@ -13,7 +13,7 @@ class CharacterNameTest {
         CharacterName result = new CharacterName(name);
 
         assertThat(result).isNotNull();
-        assertThat(result.getValue()).isEqualTo(name);
+        assertThat(result.value()).isEqualTo(name);
     }
 
     @Test
@@ -46,6 +46,6 @@ class CharacterNameTest {
         CharacterName result = new CharacterName("    Example    ");
 
         assertThat(result).isNotNull();
-        assertThat(result.getValue()).isEqualTo("Example");
+        assertThat(result.value()).isEqualTo("Example");
     }
 }
