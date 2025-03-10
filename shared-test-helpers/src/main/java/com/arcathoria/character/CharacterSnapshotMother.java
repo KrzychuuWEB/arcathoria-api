@@ -36,6 +36,6 @@ public class CharacterSnapshotMother {
     }
 
     CharacterSnapshot build() {
-        return new CharacterSnapshot(characterId, characterName, accountId);
+        return new CharacterSnapshot(characterId, accountId, characterName);
     }
 }

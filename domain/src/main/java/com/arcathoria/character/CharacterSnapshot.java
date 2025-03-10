@@ -7,24 +7,24 @@ import com.arcathoria.character.vo.CharacterName;
 class CharacterSnapshot {
 
     private final CharacterId characterId;
-    private final CharacterName name;
     private final AccountId accountId;
+    private final CharacterName name;
 
-    CharacterSnapshot(final CharacterId characterId, final CharacterName name, final AccountId accountId) {
+    CharacterSnapshot(final CharacterId characterId, final AccountId accountId, final CharacterName name) {
         this.characterId = characterId;
-        this.name = name;
         this.accountId = accountId;
+        this.name = name;
     }
 
     CharacterId getCharacterId() {
         return characterId;
     }
 
-    CharacterName getName() {
-        return name;
-    }
-
     AccountId getAccountId() {
         return accountId;
+    }
+
+    CharacterName getName() {
+        return name;
     }
 }
