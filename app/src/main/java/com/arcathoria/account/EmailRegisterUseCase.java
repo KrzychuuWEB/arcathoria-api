@@ -29,14 +29,14 @@ class EmailRegisterUseCase implements RegisterUseCase {
         Email email = new Email(registerDTO.email());
 
         if (accountRepository.existsByEmail(email)) {
-            throw new EmailExistsException(email.getValue());
+            throw new EmailExistsException(email.value());
         }
 
         Account account = accountRepository.save(
                 accountFactory.from(email, encodePassword(registerDTO.password()))
         );
 
-        logger.info("Account with email {} has been registered!", email.getValue());
+        logger.info("Account with email {} has been registered!", email.value());
 
         return account;
     }
