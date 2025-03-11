@@ -43,7 +43,7 @@ class EmailRegisterUseCaseTest {
         Account result = registerUseCase.register(registerDTO);
 
         assertThat(result).isNotNull();
-        assertThat(result.getSnapshot().getEmail().getValue()).isEqualTo(registerDTO.email());
+        assertThat(result.getSnapshot().getEmail().value()).isEqualTo(registerDTO.email());
         assertThat(result.getSnapshot().getPassword().getValue()).isEqualTo("hashed_" + registerDTO.password());
 
         verify(accountRepository).save(any(Account.class));

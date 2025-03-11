@@ -26,12 +26,17 @@ class AccountRepositoryAdapter implements AccountRepository {
 
     @Override
     public boolean existsByEmail(final Email email) {
-        return accountJpaRepository.existsByEmail(email.getValue());
+        return accountJpaRepository.existsByEmail(email.value());
     }
 
     @Override
     public Optional<Account> findByEmail(final Email email) {
-        return accountJpaRepository.findByEmail(email.getValue()).map(this::mapToDomain);
+        return accountJpaRepository.findByEmail(email.value()).map(this::mapToDomain);
+    }
+
+    @Override
+    public Optional<Account> findById(final AccountId accountId) {
+        return accountJpaRepository.findById(accountId.value()).map(this::mapToDomain);
     }
 
     @Override
@@ -53,8 +58,8 @@ class AccountRepositoryAdapter implements AccountRepository {
 
     private AccountEntity mapToEntity(Account domain) {
         return new AccountEntity(
-                domain.getSnapshot().getAccountId().getValue(),
-                domain.getSnapshot().getEmail().getValue(),
+                domain.getSnapshot().getAccountId().value(),
+                domain.getSnapshot().getEmail().value(),
                 domain.getSnapshot().getPassword().getValue()
         );
     }

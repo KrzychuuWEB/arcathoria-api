@@ -1,0 +1,26 @@
+package com.arcathoria.account;
+
+import com.arcathoria.account.dto.AccountDTO;
+
+import java.util.UUID;
+
+public class AccountQueryFacade {
+
+    private final GetAccountByIdUseCase getAccountByIdUseCase;
+
+    AccountQueryFacade(final GetAccountByIdUseCase getAccountByIdUseCase) {
+        this.getAccountByIdUseCase = getAccountByIdUseCase;
+    }
+
+    public AccountDTO getById(UUID uuid) {
+        return toDto(getAccountByIdUseCase.execute(uuid));
+    }
+
+    private AccountDTO toDto(Account account) {
+        AccountSnapshot snapshot = account.getSnapshot();
+        return new AccountDTO(
+                snapshot.getAccountId().value(),
+                snapshot.getEmail().value()
+        );
+    }
+}
