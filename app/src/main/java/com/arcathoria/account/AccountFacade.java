@@ -17,6 +17,6 @@ public class AccountFacade {
 
     private AccountDTO toDto(Account account) {
         AccountSnapshot snapshot = account.getSnapshot();
-        return new AccountDTO(snapshot.getAccountId().getValue(), snapshot.getEmail().getValue());
+        return new AccountDTO(snapshot.getAccountId().value(), snapshot.getEmail().value());
     }
 }
