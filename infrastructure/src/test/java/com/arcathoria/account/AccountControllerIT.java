@@ -44,7 +44,7 @@ class AccountControllerIT extends PostgreSQLTestContainerConfig {
     @Sql(statements = "TRUNCATE TABLE accounts RESTART IDENTITY", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void should_return_409_when_email_already_exists() {
         Email email = new Email("account@email.com");
-        RegisterDTO registerDTO = new RegisterDTO(email.getValue(), "secret_password");
+        RegisterDTO registerDTO = new RegisterDTO(email.value(), "secret_password");
 
         accountFacade.createNewAccount(registerDTO);
 

@@ -1,6 +1,7 @@
 package com.arcathoria.account;
 
 import com.arcathoria.ApiErrorResponse;
+import com.arcathoria.account.exception.AccountNotFoundException;
 import com.arcathoria.account.exception.EmailExistsException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
@@ -23,6 +24,20 @@ class AccountExceptionHandler {
 
     AccountExceptionHandler(final MessageSource messageSource) {
         this.messageSource = messageSource;
+    }
+
+    @ExceptionHandler(AccountNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    ApiErrorResponse handleAccountNotFound(AccountNotFoundException ex, HttpServletRequest request, Locale locale) {
+        logger.warn("Account with id {} not found", ex.getUuid());
+
+        return new ApiErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                messageSource.getMessage(ex.getMessage(), new Object[]{ex.getUuid()}, locale),
+                ex.getErrorCode(),
+                request.getRequestURI()
+        );
     }
 
     @ExceptionHandler(EmailExistsException.class)

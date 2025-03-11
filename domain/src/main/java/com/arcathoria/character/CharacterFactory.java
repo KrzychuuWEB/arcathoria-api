@@ -1,0 +1,17 @@
+package com.arcathoria.character;
+
+import com.arcathoria.account.vo.AccountId;
+import com.arcathoria.character.vo.CharacterName;
+
+class CharacterFactory {
+
+    Character createCharacter(AccountId accountId, CharacterName name) {
+        return Character.restore(
+                new CharacterSnapshot(
+                        null,
+                        accountId,
+                        name
+                )
+        );
+    }
+}

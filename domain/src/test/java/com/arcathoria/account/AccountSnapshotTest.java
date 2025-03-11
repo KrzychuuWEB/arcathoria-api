@@ -13,8 +13,8 @@ class AccountSnapshotTest {
         UUID uuid = UUID.randomUUID();
         AccountSnapshot snapshot = AccountSnapshotMother.create().withAccountId(uuid).build();
 
-        assertThat(snapshot.getAccountId().getValue()).isEqualTo(uuid);
-        assertThat(snapshot.getEmail().getValue()).isEqualTo("default@email.com");
-        assertThat(snapshot.getPassword().getValue()).isEqualTo("secret");
+        assertThat(snapshot.getAccountId().value()).isEqualTo(uuid);
+        assertThat(snapshot.getEmail().value()).isEqualTo(AccountSnapshotMother.DEFAULT_EMAIL);
+        assertThat(snapshot.getPassword().getValue()).isEqualTo(AccountSnapshotMother.DEFAULT_HASHED_PASSWORD);
     }
 }

@@ -1,6 +1,7 @@
 package com.arcathoria.account;
 
 import com.arcathoria.PostgreSQLTestContainerConfig;
+import com.arcathoria.account.vo.AccountId;
 import com.arcathoria.account.vo.Email;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
@@ -24,8 +25,8 @@ class AccountRepositoryAdapterTest extends PostgreSQLTestContainerConfig {
         Account result = accountRepositoryAdapter.save(account);
 
         assertThat(result).isNotNull();
-        assertThat(result.getSnapshot().getAccountId().getValue()).isNotNull();
-        assertThat(result.getSnapshot().getEmail().getValue()).isEqualTo(AccountSnapshotMother.DEFAULT_EMAIL);
+        assertThat(result.getSnapshot().getAccountId().value()).isNotNull();
+        assertThat(result.getSnapshot().getEmail().value()).isEqualTo(AccountSnapshotMother.DEFAULT_EMAIL);
         assertThat(result.getSnapshot().getPassword().getValue()).isEqualTo(AccountSnapshotMother.DEFAULT_HASHED_PASSWORD);
     }
 
@@ -36,8 +37,8 @@ class AccountRepositoryAdapterTest extends PostgreSQLTestContainerConfig {
         Optional<Account> result = accountRepositoryAdapter.findByEmail(account.getSnapshot().getEmail());
 
         assertThat(result).isPresent();
-        assertThat(result.get().getSnapshot().getAccountId().getValue()).isNotNull();
-        assertThat(result.get().getSnapshot().getEmail().getValue()).isEqualTo(AccountSnapshotMother.DEFAULT_EMAIL);
+        assertThat(result.get().getSnapshot().getAccountId().value()).isNotNull();
+        assertThat(result.get().getSnapshot().getEmail().value()).isEqualTo(AccountSnapshotMother.DEFAULT_EMAIL);
         assertThat(result.get().getSnapshot().getPassword().getValue()).isEqualTo(AccountSnapshotMother.DEFAULT_HASHED_PASSWORD);
     }
 
@@ -51,11 +52,25 @@ class AccountRepositoryAdapterTest extends PostgreSQLTestContainerConfig {
     @Test
     void should_return_true_if_email_exists() {
         Email usedEmail = new Email("used@email.com");
-        persistAccount(AccountSnapshotMother.create().withAccountId(null).withEmail(usedEmail.getValue()).build());
+        persistAccount(AccountSnapshotMother.create().withAccountId(null).withEmail(usedEmail.value()).build());
 
         boolean result = accountRepositoryAdapter.existsByEmail(usedEmail);
 
         assertThat(result).isTrue();
+    }
+
+    @Test
+    void should_return_account_by_id() {
+        Email accountEmail = new Email("example@email.com");
+        Account account = persistAccount(AccountSnapshotMother.create().withEmail(accountEmail.value()).withAccountId(null).build());
+
+        AccountId accountId = account.getSnapshot().getAccountId();
+
+        Optional<Account> result = accountRepositoryAdapter.findById(accountId);
+
+        assertThat(result).isNotEmpty();
+        assertThat(result.get().getSnapshot().getAccountId()).isEqualTo(accountId);
+        assertThat(result.get().getSnapshot().getEmail()).isEqualTo(accountEmail);
     }
 
     @Test
