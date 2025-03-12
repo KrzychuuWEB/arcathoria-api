@@ -19,7 +19,7 @@ class CharacterTest {
 
         assertThat(result).isNotNull();
         assertThat(result.getSnapshot().getCharacterId()).isEqualTo(snapshot.getCharacterId());
-        assertThat(result.getSnapshot().getName().value()).isEqualTo(CharacterSnapshotMother.DEFAULT_CHARACTER_NAME);
+        assertThat(result.getSnapshot().getCharacterName().value()).isEqualTo(CharacterSnapshotMother.DEFAULT_CHARACTER_NAME);
         assertThat(result.getSnapshot().getAccountId()).isEqualTo(snapshot.getAccountId());
     }
 
@@ -34,7 +34,7 @@ class CharacterTest {
         CharacterSnapshot result = character.getSnapshot();
 
         assertThat(result.getCharacterId()).isEqualTo(snapshot.getCharacterId());
-        assertThat(result.getName().value()).isEqualTo(CharacterSnapshotMother.DEFAULT_CHARACTER_NAME);
+        assertThat(result.getCharacterName().value()).isEqualTo(CharacterSnapshotMother.DEFAULT_CHARACTER_NAME);
         assertThat(result.getAccountId()).isEqualTo(snapshot.getAccountId());
     }
 }

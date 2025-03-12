@@ -22,7 +22,7 @@ public class CharacterFacade {
         CharacterSnapshot snapshot = character.getSnapshot();
         return new CharacterDTO(
                 snapshot.getCharacterId().value(),
-                snapshot.getName().value()
+                snapshot.getCharacterName().value()
         );
     }
 }

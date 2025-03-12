@@ -57,7 +57,7 @@ class CreateCharacterUseCaseTest {
 
         assertThat(result).isNotNull();
         assertThat(result.getSnapshot().getAccountId().value()).isEqualTo(accountDTO.id());
-        assertThat(result.getSnapshot().getName().value()).isEqualTo(createCharacterDTO.characterName());
+        assertThat(result.getSnapshot().getCharacterName().value()).isEqualTo(createCharacterDTO.characterName());
 
         verify(accountQueryFacade).getById(any(UUID.class));
         verify(checkCharacterNameIsExistsUseCase).execute(any(CharacterName.class));

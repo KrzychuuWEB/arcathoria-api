@@ -8,12 +8,12 @@ class CharacterSnapshot {
 
     private final CharacterId characterId;
     private final AccountId accountId;
-    private final CharacterName name;
+    private final CharacterName characterName;
 
-    CharacterSnapshot(final CharacterId characterId, final AccountId accountId, final CharacterName name) {
+    CharacterSnapshot(final CharacterId characterId, final AccountId accountId, final CharacterName characterName) {
         this.characterId = characterId;
         this.accountId = accountId;
-        this.name = name;
+        this.characterName = characterName;
     }
 
     CharacterId getCharacterId() {
@@ -24,7 +24,7 @@ class CharacterSnapshot {
         return accountId;
     }
 
-    CharacterName getName() {
-        return name;
+    CharacterName getCharacterName() {
+        return characterName;
     }
 }
