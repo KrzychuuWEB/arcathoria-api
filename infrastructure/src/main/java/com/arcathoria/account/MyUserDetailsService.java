@@ -9,15 +9,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class MyUserDetailsService implements UserDetailsService {
 
-    private final AccountRepositoryAdapter accountRepository;
+    private final AccountQueryRepositoryAdapter accountQueryRepositoryAdapter;
 
-    MyUserDetailsService(final AccountRepositoryAdapter accountRepository) {
-        this.accountRepository = accountRepository;
+    MyUserDetailsService(final AccountQueryRepositoryAdapter accountQueryRepositoryAdapter) {
+        this.accountQueryRepositoryAdapter = accountQueryRepositoryAdapter;
     }
 
     @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
-        Account account = accountRepository.findByEmail(new Email(username))
+        Account account = accountQueryRepositoryAdapter.findByEmail(new Email(username))
                 .orElseThrow(() -> new UsernameNotFoundException("Account not found"));
 
         return new MyUserDetails(account);

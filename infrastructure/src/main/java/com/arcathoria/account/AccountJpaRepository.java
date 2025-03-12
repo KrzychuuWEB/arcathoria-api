@@ -6,13 +6,10 @@ import com.arcathoria.account.vo.HashedPassword;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
 import java.util.UUID;
 
 interface AccountJpaRepository extends JpaRepository<AccountEntity, UUID> {
-    boolean existsByEmail(String email);
 
-    Optional<AccountEntity> findByEmail(String email);
 }
 
 @Repository
@@ -22,21 +19,6 @@ class AccountRepositoryAdapter implements AccountRepository {
 
     AccountRepositoryAdapter(final AccountJpaRepository accountJpaRepository) {
         this.accountJpaRepository = accountJpaRepository;
-    }
-
-    @Override
-    public boolean existsByEmail(final Email email) {
-        return accountJpaRepository.existsByEmail(email.value());
-    }
-
-    @Override
-    public Optional<Account> findByEmail(final Email email) {
-        return accountJpaRepository.findByEmail(email.value()).map(this::mapToDomain);
-    }
-
-    @Override
-    public Optional<Account> findById(final AccountId accountId) {
-        return accountJpaRepository.findById(accountId.value()).map(this::mapToDomain);
     }
 
     @Override
