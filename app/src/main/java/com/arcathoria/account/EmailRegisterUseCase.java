@@ -11,15 +11,18 @@ class EmailRegisterUseCase implements RegisterUseCase {
 
     private static final Logger logger = LogManager.getLogger(EmailRegisterUseCase.class);
     private final AccountRepository accountRepository;
+    private final AccountQueryRepository accountQueryRepository;
     private final PasswordEncoder passwordEncoder;
     private final AccountFactory accountFactory;
 
     EmailRegisterUseCase(
             final AccountRepository accountRepository,
+            final AccountQueryRepository accountQueryRepository,
             final PasswordEncoder passwordEncoder,
             final AccountFactory accountFactory
     ) {
         this.accountRepository = accountRepository;
+        this.accountQueryRepository = accountQueryRepository;
         this.passwordEncoder = passwordEncoder;
         this.accountFactory = accountFactory;
     }
@@ -28,7 +31,7 @@ class EmailRegisterUseCase implements RegisterUseCase {
     public Account register(RegisterDTO registerDTO) {
         Email email = new Email(registerDTO.email());
 
-        if (accountRepository.existsByEmail(email)) {
+        if (accountQueryRepository.existsByEmail(email)) {
             throw new EmailExistsException(email.value());
         }
 

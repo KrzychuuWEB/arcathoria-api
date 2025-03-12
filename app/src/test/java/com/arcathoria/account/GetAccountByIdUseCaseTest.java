@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 class GetAccountByIdUseCaseTest {
 
     @Mock
-    private AccountRepository accountRepository;
+    private AccountQueryRepository accountQueryRepository;
 
     @InjectMocks
     private GetAccountByIdUseCase getAccountByIdUseCase;
@@ -31,7 +31,7 @@ class GetAccountByIdUseCaseTest {
         AccountId accountId = new AccountId(UUID.randomUUID());
         Account account = Account.restore(AccountSnapshotMother.create().withAccountId(accountId.value()).build());
 
-        when(accountRepository.findById(any(AccountId.class))).thenReturn(Optional.of(account));
+        when(accountQueryRepository.findById(any(AccountId.class))).thenReturn(Optional.of(account));
 
         Account result = getAccountByIdUseCase.execute(accountId.value());
 
@@ -39,17 +39,17 @@ class GetAccountByIdUseCaseTest {
         assertThat(result.getSnapshot().getAccountId()).isEqualTo(accountId);
         assertThat(result.getSnapshot().getEmail().value()).isEqualTo(AccountSnapshotMother.DEFAULT_EMAIL);
 
-        verify(accountRepository).findById(any(AccountId.class));
+        verify(accountQueryRepository).findById(any(AccountId.class));
     }
 
     @Test
     void should_get_account_by_id_throw_account_not_found_exception() {
-        when(accountRepository.findById(any(AccountId.class))).thenReturn(Optional.empty());
+        when(accountQueryRepository.findById(any(AccountId.class))).thenReturn(Optional.empty());
 
         assertThatThrownBy(
                 () -> getAccountByIdUseCase.execute(UUID.randomUUID())
         ).isInstanceOf(AccountNotFoundException.class);
 
-        verify(accountRepository).findById(any(AccountId.class));
+        verify(accountQueryRepository).findById(any(AccountId.class));
     }
 }

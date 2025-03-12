@@ -22,6 +22,9 @@ class EmailRegisterUseCaseTest {
     private AccountRepository accountRepository;
 
     @Mock
+    private AccountQueryRepository accountQueryRepository;
+
+    @Mock
     private PasswordEncoder passwordEncoder;
 
     @Mock
@@ -35,7 +38,7 @@ class EmailRegisterUseCaseTest {
         RegisterDTO registerDTO = new RegisterDTO("good@email.com", "secret_password");
         Account expectedAccount = new AccountFactory().from(new Email(registerDTO.email()), new HashedPassword("hashed_" + registerDTO.password()));
 
-        when(accountRepository.existsByEmail(any(Email.class))).thenReturn(false);
+        when(accountQueryRepository.existsByEmail(any(Email.class))).thenReturn(false);
         when(accountRepository.save(any(Account.class))).thenReturn(expectedAccount);
         when(passwordEncoder.encode(registerDTO.password())).thenReturn("hashed_secret_password");
         when(accountFactory.from(any(Email.class), any(HashedPassword.class))).thenReturn(expectedAccount);
@@ -54,7 +57,7 @@ class EmailRegisterUseCaseTest {
     void should_throw_exception_when_email_already_exists() {
         RegisterDTO registerDTO = new RegisterDTO("taken@email.com", "secret_password");
 
-        when(accountRepository.existsByEmail(any(Email.class))).thenReturn(true);
+        when(accountQueryRepository.existsByEmail(any(Email.class))).thenReturn(true);
 
         assertThatThrownBy(() -> registerUseCase.register(registerDTO)).isInstanceOf(EmailExistsException.class);
 
@@ -66,7 +69,7 @@ class EmailRegisterUseCaseTest {
         RegisterDTO registerDTO = new RegisterDTO("test@email.com", "password");
         Account account = mock(Account.class);
 
-        when(accountRepository.existsByEmail(any(Email.class))).thenReturn(false);
+        when(accountQueryRepository.existsByEmail(any(Email.class))).thenReturn(false);
         when(passwordEncoder.encode(registerDTO.password())).thenReturn("hashed_password");
         when(accountFactory.from(any(Email.class), any(HashedPassword.class))).thenReturn(account);
         when(accountRepository.save(any(Account.class))).thenReturn(account);

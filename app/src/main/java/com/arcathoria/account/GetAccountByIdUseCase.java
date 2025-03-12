@@ -2,22 +2,28 @@ package com.arcathoria.account;
 
 import com.arcathoria.account.exception.AccountNotFoundException;
 import com.arcathoria.account.vo.AccountId;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.UUID;
 
 class GetAccountByIdUseCase {
 
-    private final AccountRepository accountRepository;
+    private static final Logger logger = LogManager.getLogger(GetAccountByIdUseCase.class);
+    private final AccountQueryRepository accountQueryRepository;
 
-    GetAccountByIdUseCase(final AccountRepository accountRepository) {
-        this.accountRepository = accountRepository;
+    GetAccountByIdUseCase(final AccountQueryRepository accountQueryRepository) {
+        this.accountQueryRepository = accountQueryRepository;
     }
 
     Account execute(UUID uuid) {
         AccountId accountId = new AccountId(uuid);
 
-        return accountRepository.findById(accountId).orElseThrow(
-                () -> new AccountNotFoundException(accountId.value())
+        return accountQueryRepository.findById(accountId).orElseThrow(
+                () -> {
+                    logger.warn("Account not found for ID: {}", accountId.value());
+                    return new AccountNotFoundException(accountId.value());
+                }
         );
     }
 }
