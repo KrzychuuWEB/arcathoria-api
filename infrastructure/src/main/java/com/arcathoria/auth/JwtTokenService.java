@@ -11,6 +11,7 @@ import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 
 @Service
@@ -22,8 +23,10 @@ class JwtTokenService {
         this.properties = properties;
     }
 
-    String generateToken(String username) {
+    String generateToken(String username, UUID id) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("id", id.toString());
+
         return Jwts.builder()
                 .claims()
                 .add(claims)
