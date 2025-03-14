@@ -1,9 +1,9 @@
 package com.arcathoria.auth;
 
+import com.arcathoria.account.MyUserDetails;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,7 +22,7 @@ class VerifyService {
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(authRequestDTO.email(), authRequestDTO.password()));
 
-        var user = (UserDetails) authentication.getPrincipal();
-        return jwtTokenService.generateToken(user.getUsername());
+        var user = (MyUserDetails) authentication.getPrincipal();
+        return jwtTokenService.generateToken(user.getUsername(), user.getId());
     }
 }

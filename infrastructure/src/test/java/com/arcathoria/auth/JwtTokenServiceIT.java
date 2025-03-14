@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.UUID;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -21,11 +23,12 @@ class JwtTokenServiceIT extends PostgreSQLTestContainerConfig {
     @Autowired
     private JwtConfigurationProperties properties;
 
-    private final String USERNAME = "test@example.com";
+    private final String username = "test@example.com";
+    private final UUID userId = UUID.randomUUID();
 
     @Test
     void should_generate_valid_token() {
-        String token = jwtTokenService.generateToken(USERNAME);
+        String token = jwtTokenService.generateToken(username, userId);
 
         assertThat(token).isNotNull();
         assertThat(token.split("\\.")).hasSize(3);
@@ -33,18 +36,18 @@ class JwtTokenServiceIT extends PostgreSQLTestContainerConfig {
 
     @Test
     void should_extract_username_from_token() {
-        String token = jwtTokenService.generateToken(USERNAME);
+        String token = jwtTokenService.generateToken(username, userId);
         String extractedUsername = jwtTokenService.extractUserName(token);
 
-        assertThat(extractedUsername).isEqualTo(USERNAME);
+        assertThat(extractedUsername).isEqualTo(username);
     }
 
     @Test
     void should_validate_token_successfully() {
-        String token = jwtTokenService.generateToken(USERNAME);
+        String token = jwtTokenService.generateToken(username, userId);
 
         UserDetails userDetails = User.builder()
-                .username(USERNAME)
+                .username(username)
                 .password("password")
                 .roles("USER")
                 .build();
@@ -55,7 +58,7 @@ class JwtTokenServiceIT extends PostgreSQLTestContainerConfig {
     @Test
     void should_invalidate_token_for_incorrect_username() {
         properties.setValidity(1000L);
-        String token = jwtTokenService.generateToken(USERNAME);
+        String token = jwtTokenService.generateToken(username, userId);
 
         UserDetails otherUser = User.builder()
                 .username("other@example.com")
@@ -70,10 +73,10 @@ class JwtTokenServiceIT extends PostgreSQLTestContainerConfig {
     void should_invalidate_expired_token() {
         properties.setValidity(-1L);
 
-        String token = jwtTokenService.generateToken(USERNAME);
+        String token = jwtTokenService.generateToken(username, userId);
 
         UserDetails userDetails = User.builder()
-                .username(USERNAME)
+                .username(username)
                 .password("password")
                 .roles("USER")
                 .build();

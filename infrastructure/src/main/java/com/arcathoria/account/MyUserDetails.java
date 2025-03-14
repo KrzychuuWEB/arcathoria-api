@@ -6,13 +6,22 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.UUID;
 
-class MyUserDetails implements UserDetails {
+public class MyUserDetails implements UserDetails {
 
-    private final Account account;
+    private final UUID id;
+    private final String email;
+    private final String password;
 
-    MyUserDetails(final Account account) {
-        this.account = account;
+    public MyUserDetails(final UUID id, final String email, final String password) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+    }
+
+    public UUID getId() {
+        return id;
     }
 
     @Override
@@ -22,12 +31,12 @@ class MyUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return account.getSnapshot().getPassword().getValue();
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return account.getSnapshot().getEmail().value();
+        return email;
     }
 
     @Override
