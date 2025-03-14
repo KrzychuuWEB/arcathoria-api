@@ -20,6 +20,10 @@ public class MyUserDetailsService implements UserDetailsService {
         Account account = accountQueryRepositoryAdapter.findByEmail(new Email(username))
                 .orElseThrow(() -> new UsernameNotFoundException("Account not found"));
 
-        return new MyUserDetails(account);
+        return new MyUserDetails(
+                account.getSnapshot().getAccountId().value(),
+                account.getSnapshot().getEmail().value(),
+                account.getSnapshot().getPassword().getValue()
+        );
     }
 }
