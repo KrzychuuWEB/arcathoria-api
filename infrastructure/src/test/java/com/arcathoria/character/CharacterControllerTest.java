@@ -72,4 +72,13 @@ class CharacterControllerTest extends PostgreSQLTestContainerConfig {
 
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
     }
+
+    @Test
+    void should_return_unauthorized_for_create_character() {
+        CreateCharacterDTO dto = new CreateCharacterDTO("exampleName");
+
+        ResponseEntity<ApiErrorResponse> result = restTemplate.postForEntity(BASE_URL, new HttpEntity<>(dto), ApiErrorResponse.class);
+
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
 }
