@@ -2,22 +2,11 @@ Configuration:
   name: Default
 
   Properties:
-    Property:
-      name: log-path
-      value: "logs"
-
   Appenders:
     Console:
       name: Console_Appender
       target: SYSTEM_OUT
       PatternLayout:
-        pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"
-
-    File:
-      name: File_Appender
-      fileName: ${log-path}/logfile_test.log
-      PatternLayout:
-        pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"
 
   Loggers:
     Root:
@@ -36,5 +25,4 @@ Configuration:
         level: debug
         additivity: false
         AppenderRef:
-          - ref: File_Appender
           - ref: Console_Appender
