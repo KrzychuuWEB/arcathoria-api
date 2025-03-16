@@ -5,8 +5,6 @@ import com.arcathoria.account.vo.AccountId;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.UUID;
-
 class GetAccountByIdUseCase {
 
     private static final Logger logger = LogManager.getLogger(GetAccountByIdUseCase.class);
@@ -16,9 +14,7 @@ class GetAccountByIdUseCase {
         this.accountQueryRepository = accountQueryRepository;
     }
 
-    Account execute(final UUID uuid) {
-        AccountId accountId = new AccountId(uuid);
-
+    Account execute(final AccountId accountId) {
         return accountQueryRepository.findById(accountId).orElseThrow(
                 () -> {
                     logger.warn("Account not found for ID: {}", accountId.value());

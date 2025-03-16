@@ -18,7 +18,7 @@ public class CharacterFacade {
         return toDto(characterUseCase.execute(dto, new AccountId(id)));
     }
 
-    private CharacterDTO toDto(Character character) {
+    private CharacterDTO toDto(final Character character) {
         CharacterSnapshot snapshot = character.getSnapshot();
         return new CharacterDTO(
                 snapshot.getCharacterId().value(),

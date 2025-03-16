@@ -1,6 +1,7 @@
 package com.arcathoria.account;
 
 import com.arcathoria.account.dto.AccountDTO;
+import com.arcathoria.account.vo.AccountId;
 
 import java.util.UUID;
 
@@ -13,7 +14,7 @@ public class AccountQueryFacade {
     }
 
     public AccountDTO getById(final UUID uuid) {
-        return toDto(getAccountByIdUseCase.execute(uuid));
+        return toDto(getAccountByIdUseCase.execute(new AccountId(uuid)));
     }
 
     private AccountDTO toDto(final Account account) {

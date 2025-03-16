@@ -25,7 +25,7 @@ class CreateCharacterUseCase {
         this.characterRepository = characterRepository;
     }
 
-    Character execute(CreateCharacterDTO dto, AccountId accountId) {
+    Character execute(final CreateCharacterDTO dto, final AccountId accountId) {
         AccountDTO account = accountQueryFacade.getById(accountId.value());
         CharacterName characterName = new CharacterName(dto.characterName());
 

@@ -33,7 +33,7 @@ class GetAccountByIdUseCaseTest {
 
         when(accountQueryRepository.findById(any(AccountId.class))).thenReturn(Optional.of(account));
 
-        Account result = getAccountByIdUseCase.execute(accountId.value());
+        Account result = getAccountByIdUseCase.execute(new AccountId(accountId.value()));
 
         assertThat(result).isNotNull();
         assertThat(result.getSnapshot().getAccountId()).isEqualTo(accountId);
@@ -47,7 +47,7 @@ class GetAccountByIdUseCaseTest {
         when(accountQueryRepository.findById(any(AccountId.class))).thenReturn(Optional.empty());
 
         assertThatThrownBy(
-                () -> getAccountByIdUseCase.execute(UUID.randomUUID())
+                () -> getAccountByIdUseCase.execute(new AccountId(UUID.randomUUID()))
         ).isInstanceOf(AccountNotFoundException.class);
 
         verify(accountQueryRepository).findById(any(AccountId.class));

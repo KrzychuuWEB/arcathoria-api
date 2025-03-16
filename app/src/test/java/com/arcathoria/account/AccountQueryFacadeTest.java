@@ -1,6 +1,7 @@
 package com.arcathoria.account;
 
 import com.arcathoria.account.dto.AccountDTO;
+import com.arcathoria.account.vo.AccountId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,7 +27,7 @@ class AccountQueryFacadeTest {
     void should_get_account_by_id_and_map_to_dto() {
         Account account = Account.restore(AccountSnapshotMother.create().withAccountId(UUID.randomUUID()).build());
 
-        when(getAccountByIdUseCase.execute(any(UUID.class))).thenReturn(account);
+        when(getAccountByIdUseCase.execute(any(AccountId.class))).thenReturn(account);
 
         AccountDTO result = accountQueryFacade.getById(UUID.randomUUID());
 
