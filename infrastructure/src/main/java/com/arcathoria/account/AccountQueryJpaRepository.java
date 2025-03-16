@@ -2,7 +2,6 @@ package com.arcathoria.account;
 
 import com.arcathoria.account.vo.AccountId;
 import com.arcathoria.account.vo.Email;
-import com.arcathoria.account.vo.HashedPassword;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -32,21 +31,11 @@ class AccountQueryRepositoryAdapter implements AccountQueryRepository {
 
     @Override
     public Optional<Account> findByEmail(final Email email) {
-        return jpaRepository.findByEmail(email.value()).map(this::mapToDomain);
+        return jpaRepository.findByEmail(email.value()).map(AccountMapper::mapToDomain);
     }
 
     @Override
     public Optional<Account> findById(final AccountId accountId) {
-        return jpaRepository.findById(accountId.value()).map(this::mapToDomain);
-    }
-
-    private Account mapToDomain(AccountEntity entity) {
-        return Account.restore(
-                new AccountSnapshot(
-                        new AccountId(entity.getId()),
-                        new Email(entity.getEmail()),
-                        new HashedPassword(entity.getPassword()
-                        )
-                ));
+        return jpaRepository.findById(accountId.value()).map(AccountMapper::mapToDomain);
     }
 }

@@ -1,7 +1,6 @@
 package com.arcathoria.account;
 
 import com.arcathoria.account.dto.RegisterDTO;
-import com.arcathoria.account.exception.EmailExistsException;
 import com.arcathoria.account.vo.Email;
 import com.arcathoria.account.vo.HashedPassword;
 import org.apache.logging.log4j.LogManager;
@@ -11,29 +10,27 @@ class EmailRegisterUseCase implements RegisterUseCase {
 
     private static final Logger logger = LogManager.getLogger(EmailRegisterUseCase.class);
     private final AccountRepository accountRepository;
-    private final AccountQueryRepository accountQueryRepository;
+    private final AccountQueryFacade accountQueryFacade;
     private final PasswordEncoder passwordEncoder;
     private final AccountFactory accountFactory;
 
     EmailRegisterUseCase(
             final AccountRepository accountRepository,
-            final AccountQueryRepository accountQueryRepository,
+            final AccountQueryFacade accountQueryFacade,
             final PasswordEncoder passwordEncoder,
             final AccountFactory accountFactory
     ) {
         this.accountRepository = accountRepository;
-        this.accountQueryRepository = accountQueryRepository;
+        this.accountQueryFacade = accountQueryFacade;
         this.passwordEncoder = passwordEncoder;
         this.accountFactory = accountFactory;
     }
 
     @Override
-    public Account register(RegisterDTO registerDTO) {
+    public Account register(final RegisterDTO registerDTO) {
         Email email = new Email(registerDTO.email());
 
-        if (accountQueryRepository.existsByEmail(email)) {
-            throw new EmailExistsException(email.value());
-        }
+        accountQueryFacade.checkWhetherEmailIsExists(email.value());
 
         Account account = accountRepository.save(
                 accountFactory.from(email, encodePassword(registerDTO.password()))
@@ -44,7 +41,7 @@ class EmailRegisterUseCase implements RegisterUseCase {
         return account;
     }
 
-    private HashedPassword encodePassword(String rawPassword) {
+    private HashedPassword encodePassword(final String rawPassword) {
         return HashedPassword.fromRawPassword(rawPassword, passwordEncoder);
     }
 }

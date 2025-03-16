@@ -4,7 +4,7 @@ import com.arcathoria.account.vo.AccountId;
 import com.arcathoria.character.vo.CharacterId;
 import com.arcathoria.character.vo.CharacterName;
 
-class CharacterMapper {
+final class CharacterMapper {
 
     CharacterMapper() {
     }
