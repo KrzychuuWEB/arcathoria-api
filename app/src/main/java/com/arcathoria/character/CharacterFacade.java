@@ -6,6 +6,8 @@ import com.arcathoria.character.dto.CreateCharacterDTO;
 
 import java.util.UUID;
 
+import static com.arcathoria.character.CharacterDTOMapper.toCharacterDTO;
+
 public class CharacterFacade {
 
     private final CreateCharacterUseCase characterUseCase;
@@ -15,14 +17,6 @@ public class CharacterFacade {
     }
 
     public CharacterDTO createCharacter(final CreateCharacterDTO dto, final UUID id) {
-        return toDto(characterUseCase.execute(dto, new AccountId(id)));
-    }
-
-    private CharacterDTO toDto(final Character character) {
-        CharacterSnapshot snapshot = character.getSnapshot();
-        return new CharacterDTO(
-                snapshot.getCharacterId().value(),
-                snapshot.getCharacterName().value()
-        );
+        return toCharacterDTO(characterUseCase.execute(dto, new AccountId(id)));
     }
 }

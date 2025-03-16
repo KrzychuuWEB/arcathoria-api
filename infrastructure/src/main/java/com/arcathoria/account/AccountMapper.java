@@ -4,7 +4,7 @@ import com.arcathoria.account.vo.AccountId;
 import com.arcathoria.account.vo.Email;
 import com.arcathoria.account.vo.HashedPassword;
 
-class AccountMapper {
+final class AccountMapper {
 
     AccountMapper() {
     }

@@ -6,6 +6,8 @@ import com.arcathoria.account.vo.Email;
 
 import java.util.UUID;
 
+import static com.arcathoria.account.AccountDTOMapper.toAccountDTO;
+
 public class AccountQueryFacade {
 
     private final GetAccountByIdUseCase getAccountByIdUseCase;
@@ -18,18 +20,10 @@ public class AccountQueryFacade {
     }
 
     public AccountDTO getById(final UUID uuid) {
-        return toDto(getAccountByIdUseCase.execute(new AccountId(uuid)));
+        return toAccountDTO(getAccountByIdUseCase.execute(new AccountId(uuid)));
     }
 
     public void checkWhetherEmailIsExists(final String email) {
         checkEmailExistsUseCase.execute(new Email(email));
-    }
-
-    private AccountDTO toDto(final Account account) {
-        AccountSnapshot snapshot = account.getSnapshot();
-        return new AccountDTO(
-                snapshot.getAccountId().value(),
-                snapshot.getEmail().value()
-        );
     }
 }

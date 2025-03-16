@@ -3,6 +3,8 @@ package com.arcathoria.account;
 import com.arcathoria.account.dto.AccountDTO;
 import com.arcathoria.account.dto.RegisterDTO;
 
+import static com.arcathoria.account.AccountDTOMapper.toAccountDTO;
+
 public class AccountFacade {
 
     private final RegisterUseCase registerUseCase;
@@ -12,11 +14,6 @@ public class AccountFacade {
     }
 
     public AccountDTO createNewAccount(final RegisterDTO registerDTO) {
-        return toDto(registerUseCase.register(registerDTO));
-    }
-
-    private AccountDTO toDto(final Account account) {
-        AccountSnapshot snapshot = account.getSnapshot();
-        return new AccountDTO(snapshot.getAccountId().value(), snapshot.getEmail().value());
+        return toAccountDTO(registerUseCase.register(registerDTO));
     }
 }
