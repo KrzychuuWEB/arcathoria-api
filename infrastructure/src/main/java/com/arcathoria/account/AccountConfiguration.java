@@ -9,10 +9,10 @@ class AccountConfiguration {
     @Bean
     RegisterUseCase registerUseCase(
             final AccountRepository accountRepository,
-            final AccountQueryRepository accountQueryRepository,
+            final AccountQueryFacade accountQueryFacade,
             final PasswordEncoder passwordEncoder
     ) {
-        return new EmailRegisterUseCase(accountRepository, accountQueryRepository, passwordEncoder, new AccountFactory());
+        return new EmailRegisterUseCase(accountRepository, accountQueryFacade, passwordEncoder, new AccountFactory());
     }
 
     @Bean
@@ -21,8 +21,16 @@ class AccountConfiguration {
     }
 
     @Bean
-    AccountQueryFacade accountQueryFacade(final GetAccountByIdUseCase getAccountByIdUseCase) {
-        return new AccountQueryFacade(getAccountByIdUseCase);
+    CheckEmailExistsUseCase checkEmailExistsUseCase(final AccountQueryRepository accountQueryRepository) {
+        return new CheckEmailExistsUseCase(accountQueryRepository);
+    }
+
+    @Bean
+    AccountQueryFacade accountQueryFacade(
+            final GetAccountByIdUseCase getAccountByIdUseCase,
+            final CheckEmailExistsUseCase checkEmailExistsUseCase
+    ) {
+        return new AccountQueryFacade(getAccountByIdUseCase, checkEmailExistsUseCase);
     }
 
     @Bean
