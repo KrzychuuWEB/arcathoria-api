@@ -28,7 +28,7 @@ class EmailRegisterUseCase implements RegisterUseCase {
     }
 
     @Override
-    public Account register(RegisterDTO registerDTO) {
+    public Account register(final RegisterDTO registerDTO) {
         Email email = new Email(registerDTO.email());
 
         if (accountQueryRepository.existsByEmail(email)) {
@@ -44,7 +44,7 @@ class EmailRegisterUseCase implements RegisterUseCase {
         return account;
     }
 
-    private HashedPassword encodePassword(String rawPassword) {
+    private HashedPassword encodePassword(final String rawPassword) {
         return HashedPassword.fromRawPassword(rawPassword, passwordEncoder);
     }
 }

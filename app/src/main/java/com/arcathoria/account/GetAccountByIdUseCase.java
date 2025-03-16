@@ -16,7 +16,7 @@ class GetAccountByIdUseCase {
         this.accountQueryRepository = accountQueryRepository;
     }
 
-    Account execute(UUID uuid) {
+    Account execute(final UUID uuid) {
         AccountId accountId = new AccountId(uuid);
 
         return accountQueryRepository.findById(accountId).orElseThrow(

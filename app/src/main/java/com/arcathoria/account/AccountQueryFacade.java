@@ -12,11 +12,11 @@ public class AccountQueryFacade {
         this.getAccountByIdUseCase = getAccountByIdUseCase;
     }
 
-    public AccountDTO getById(UUID uuid) {
+    public AccountDTO getById(final UUID uuid) {
         return toDto(getAccountByIdUseCase.execute(uuid));
     }
 
-    private AccountDTO toDto(Account account) {
+    private AccountDTO toDto(final Account account) {
         AccountSnapshot snapshot = account.getSnapshot();
         return new AccountDTO(
                 snapshot.getAccountId().value(),

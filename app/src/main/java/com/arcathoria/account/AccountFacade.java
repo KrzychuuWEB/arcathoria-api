@@ -11,11 +11,11 @@ public class AccountFacade {
         this.registerUseCase = registerUseCase;
     }
 
-    public AccountDTO createNewAccount(RegisterDTO registerDTO) {
+    public AccountDTO createNewAccount(final RegisterDTO registerDTO) {
         return toDto(registerUseCase.register(registerDTO));
     }
 
-    private AccountDTO toDto(Account account) {
+    private AccountDTO toDto(final Account account) {
         AccountSnapshot snapshot = account.getSnapshot();
         return new AccountDTO(snapshot.getAccountId().value(), snapshot.getEmail().value());
     }
