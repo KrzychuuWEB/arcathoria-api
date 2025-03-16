@@ -1,12 +1,12 @@
 package com.arcathoria.account;
 
-import com.arcathoria.account.vo.AccountId;
-import com.arcathoria.account.vo.Email;
-import com.arcathoria.account.vo.HashedPassword;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
+
+import static com.arcathoria.account.AccountMapper.mapToDomain;
+import static com.arcathoria.account.AccountMapper.mapToEntity;
 
 interface AccountJpaRepository extends JpaRepository<AccountEntity, UUID> {
 
@@ -26,24 +26,6 @@ class AccountRepositoryAdapter implements AccountRepository {
         AccountEntity entity = mapToEntity(account);
         AccountEntity savedAccount = accountJpaRepository.save(entity);
         return mapToDomain(savedAccount);
-    }
-
-    private Account mapToDomain(AccountEntity entity) {
-        return Account.restore(
-                new AccountSnapshot(
-                        new AccountId(entity.getId()),
-                        new Email(entity.getEmail()),
-                        new HashedPassword(entity.getPassword()
-                        )
-                ));
-    }
-
-    private AccountEntity mapToEntity(Account domain) {
-        return new AccountEntity(
-                domain.getSnapshot().getAccountId().value(),
-                domain.getSnapshot().getEmail().value(),
-                domain.getSnapshot().getPassword().getValue()
-        );
     }
 }
 
