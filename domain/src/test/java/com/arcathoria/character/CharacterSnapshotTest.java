@@ -22,7 +22,7 @@ class CharacterSnapshotTest {
 
         assertThat(snapshot).isNotNull();
         assertThat(snapshot.getCharacterId()).isEqualTo(characterId);
-        assertThat(snapshot.getName().value()).isEqualTo(CharacterSnapshotMother.DEFAULT_CHARACTER_NAME);
+        assertThat(snapshot.getCharacterName().value()).isEqualTo(CharacterSnapshotMother.DEFAULT_CHARACTER_NAME);
         assertThat(snapshot.getAccountId()).isEqualTo(accountId);
     }
 }

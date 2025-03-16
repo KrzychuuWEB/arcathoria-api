@@ -10,25 +10,25 @@ class Character {
         return new Character(
                 snapshot.getCharacterId(),
                 snapshot.getAccountId(),
-                snapshot.getName()
+                snapshot.getCharacterName()
         );
     }
 
     private final CharacterId characterId;
     private final AccountId accountId;
-    private final CharacterName name;
+    private final CharacterName characterName;
 
-    private Character(final CharacterId characterId, final AccountId accountId, final CharacterName name) {
+    private Character(final CharacterId characterId, final AccountId accountId, final CharacterName characterName) {
         this.characterId = characterId;
         this.accountId = accountId;
-        this.name = name;
+        this.characterName = characterName;
     }
 
     CharacterSnapshot getSnapshot() {
         return new CharacterSnapshot(
                 characterId,
                 accountId,
-                name
+                characterName
         );
     }
 }

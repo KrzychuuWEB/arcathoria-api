@@ -1,12 +1,28 @@
 Configuration:
-  status: warn
+  name: Default
 
+  Properties:
   Appenders:
-    Null:
-      name: NullAppender
+    Console:
+      name: Console_Appender
+      target: SYSTEM_OUT
+      PatternLayout:
 
   Loggers:
     Root:
-      level: off
+      level: info
       AppenderRef:
-        - ref: NullAppender
+        - ref: Console_Appender
+
+    Logger:
+      - name: org.springframework
+        level: debug
+        additivity: false
+        AppenderRef:
+          - ref: Console_Appender
+
+      - name: com.arcathoria
+        level: debug
+        additivity: false
+        AppenderRef:
+          - ref: Console_Appender
