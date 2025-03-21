@@ -3,27 +3,27 @@ package com.arcathoria.character;
 import com.arcathoria.AccountManagerTest;
 import com.arcathoria.ApiErrorResponse;
 import com.arcathoria.PostgreSQLTestContainerConfig;
+import com.arcathoria.UUIDGenerator;
 import com.arcathoria.account.AccountFacade;
 import com.arcathoria.character.dto.CharacterDTO;
 import com.arcathoria.character.dto.CreateCharacterDTO;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.*;
 import org.springframework.test.context.jdbc.Sql;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class CharacterControllerTest extends PostgreSQLTestContainerConfig {
+class CharacterControllerIT extends PostgreSQLTestContainerConfig {
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -47,9 +47,8 @@ class CharacterControllerTest extends PostgreSQLTestContainerConfig {
     }
 
     @Test
-    @Transactional
     void should_create_new_character_with_valid_data() {
-        CreateCharacterDTO dto = new CreateCharacterDTO("exampleName");
+        CreateCharacterDTO dto = new CreateCharacterDTO("exampleName_cr");
 
         HttpHeaders headers = accountManagerTest.getAuthorizationHeader(accountManagerTest.getToken());
         ResponseEntity<CharacterDTO> result = restTemplate.postForEntity(BASE_URL, new HttpEntity<>(dto, headers), CharacterDTO.class);
@@ -61,7 +60,7 @@ class CharacterControllerTest extends PostgreSQLTestContainerConfig {
     }
 
     @Test
-    @Sql(statements = "TRUNCATE TABLE characters RESTART IDENTITY", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Sql(statements = "TRUNCATE TABLE characters", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void should_create_new_character_return_characterNameExistsException() {
         CreateCharacterDTO dto = new CreateCharacterDTO("exampleName");
 
@@ -80,5 +79,48 @@ class CharacterControllerTest extends PostgreSQLTestContainerConfig {
         ResponseEntity<ApiErrorResponse> result = restTemplate.postForEntity(BASE_URL, new HttpEntity<>(dto), ApiErrorResponse.class);
 
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    @Test
+    void should_return_all_account_characters() {
+        List<CharacterDTO> characters = List.of(
+                characterFacade.createCharacter(new CreateCharacterDTO("all" + UUIDGenerator.generate(15)), accountManagerTest.getId()),
+                characterFacade.createCharacter(new CreateCharacterDTO("all" + UUIDGenerator.generate(15)), accountManagerTest.getId())
+        );
+
+        HttpHeaders headers = accountManagerTest.getAuthorizationHeader(accountManagerTest.getToken());
+        HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<List<CharacterDTO>> response = restTemplate.exchange(
+                BASE_URL,
+                HttpMethod.GET,
+                requestEntity,
+                new ParameterizedTypeReference<>() {
+                }
+        );
+
+        List<CharacterDTO> result = response.getBody();
+
+        assertThat(result).hasSameSizeAs(characters);
+        assertThat(result).isNotEmpty();
+    }
+
+    @Test
+    @Sql(statements = "TRUNCATE TABLE characters", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void should_return_empty_list_if_account_not_have_characters() {
+        HttpHeaders headers = accountManagerTest.getAuthorizationHeader(accountManagerTest.getToken());
+        HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<List<CharacterDTO>> response = restTemplate.exchange(
+                BASE_URL,
+                HttpMethod.GET,
+                requestEntity,
+                new ParameterizedTypeReference<>() {
+                }
+        );
+
+        List<CharacterDTO> result = response.getBody();
+
+        assertThat(result).isEmpty();
     }
 }

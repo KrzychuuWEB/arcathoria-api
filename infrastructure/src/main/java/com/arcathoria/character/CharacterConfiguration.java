@@ -33,6 +33,21 @@ class CharacterConfiguration {
     }
 
     @Bean
+    GetAllCharactersByAccountIdUseCase getAllCharactersByAccountIdUseCase(
+            final CharacterQueryRepository characterQueryRepository,
+            final AccountQueryFacade accountQueryFacade
+    ) {
+        return new GetAllCharactersByAccountIdUseCase(characterQueryRepository, accountQueryFacade);
+    }
+
+    @Bean
+    CharacterQueryFacade characterQueryFacade(
+            final GetAllCharactersByAccountIdUseCase getAllCharactersByAccountIdUseCase
+    ) {
+        return new CharacterQueryFacade(getAllCharactersByAccountIdUseCase);
+    }
+
+    @Bean
     CharacterFacade characterFacade(final CreateCharacterUseCase characterUseCase) {
         return new CharacterFacade(characterUseCase);
     }
