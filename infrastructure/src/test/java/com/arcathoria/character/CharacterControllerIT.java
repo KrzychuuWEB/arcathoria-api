@@ -92,7 +92,7 @@ class CharacterControllerIT extends PostgreSQLTestContainerConfig {
         HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
 
         ResponseEntity<List<CharacterDTO>> response = restTemplate.exchange(
-                BASE_URL,
+                BASE_URL + "/selects",
                 HttpMethod.GET,
                 requestEntity,
                 new ParameterizedTypeReference<>() {
@@ -112,7 +112,7 @@ class CharacterControllerIT extends PostgreSQLTestContainerConfig {
         HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
 
         ResponseEntity<List<CharacterDTO>> response = restTemplate.exchange(
-                BASE_URL,
+                BASE_URL + "/selects",
                 HttpMethod.GET,
                 requestEntity,
                 new ParameterizedTypeReference<>() {

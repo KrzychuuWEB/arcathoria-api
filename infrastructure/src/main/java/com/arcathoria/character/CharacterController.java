@@ -25,6 +25,12 @@ class CharacterController {
         this.characterQueryFacade = characterQueryFacade;
     }
 
+    @GetMapping("/selects")
+    @ResponseStatus(HttpStatus.OK)
+    List<CharacterDTO> getAllByAccountId(@AuthenticationPrincipal MyUserDetails details) {
+        return characterQueryFacade.getAllByAccountId(details.getId());
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     CharacterDTO create(
@@ -32,11 +38,5 @@ class CharacterController {
             @AuthenticationPrincipal MyUserDetails details
     ) {
         return characterFacade.createCharacter(dto, details.getId());
-    }
-    
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    List<CharacterDTO> getAllByAccountId(@AuthenticationPrincipal MyUserDetails details) {
-        return characterQueryFacade.getAllByAccountId(details.getId());
     }
 }
