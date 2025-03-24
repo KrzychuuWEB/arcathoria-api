@@ -2,6 +2,7 @@ package com.arcathoria.character;
 
 import com.arcathoria.ApiErrorResponse;
 import com.arcathoria.character.exception.CharacterNameExistsException;
+import com.arcathoria.character.exception.CharacterNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,6 +35,20 @@ class CharacterExceptionHandler {
                 HttpStatus.CONFLICT.value(),
                 HttpStatus.CONFLICT.getReasonPhrase(),
                 messageSource.getMessage(ex.getMessage(), new Object[]{ex.getCharacterName()}, locale),
+                ex.getErrorCode(),
+                request.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(CharacterNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    ApiErrorResponse handleCharacterNotFound(CharacterNotFoundException ex, HttpServletRequest request, Locale locale) {
+        logger.warn("Character not found with key {}", ex.getValue());
+
+        return new ApiErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                messageSource.getMessage(ex.getMessage(), new Object[]{ex.getValue()}, locale),
                 ex.getErrorCode(),
                 request.getRequestURI()
         );
