@@ -1,11 +1,13 @@
 package com.arcathoria.character;
 
 import com.arcathoria.account.vo.AccountId;
+import com.arcathoria.character.vo.CharacterId;
 import com.arcathoria.character.vo.CharacterName;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 interface CharacterJpaQueryRepository extends JpaRepository<CharacterEntity, UUID> {
@@ -35,5 +37,10 @@ class CharacterQueryRepositoryAdapter implements CharacterQueryRepository {
                 .stream()
                 .map(CharacterMapper::toDomain)
                 .toList();
+    }
+
+    @Override
+    public Optional<Character> getById(final CharacterId characterId) {
+        return repository.findById(characterId.value()).map(CharacterMapper::toDomain);
     }
 }
