@@ -41,10 +41,24 @@ class CharacterConfiguration {
     }
 
     @Bean
-    CharacterQueryFacade characterQueryFacade(
-            final GetAllCharactersByAccountIdUseCase getAllCharactersByAccountIdUseCase
+    CharacterOwnershipValidator ownershipValidator() {
+        return new CharacterOwnershipValidator();
+    }
+
+    @Bean
+    GetCharacterByIdUseCase getCharacterByIdUseCase(
+            final CharacterQueryRepository characterQueryRepository,
+            final CharacterOwnershipValidator ownershipValidator
     ) {
-        return new CharacterQueryFacade(getAllCharactersByAccountIdUseCase);
+        return new GetCharacterByIdUseCase(characterQueryRepository, ownershipValidator);
+    }
+
+    @Bean
+    CharacterQueryFacade characterQueryFacade(
+            final GetAllCharactersByAccountIdUseCase getAllCharactersByAccountIdUseCase,
+            final GetCharacterByIdUseCase getCharacterByIdUseCase
+    ) {
+        return new CharacterQueryFacade(getAllCharactersByAccountIdUseCase, getCharacterByIdUseCase);
     }
 
     @Bean
