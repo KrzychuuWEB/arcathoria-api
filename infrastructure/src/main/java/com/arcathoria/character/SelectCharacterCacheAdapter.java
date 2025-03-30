@@ -1,6 +1,7 @@
 package com.arcathoria.character;
 
 import com.arcathoria.account.vo.AccountId;
+import com.arcathoria.character.exception.NotFoundSelectedCharacterException;
 import com.arcathoria.character.vo.CharacterId;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -31,7 +32,7 @@ class SelectCharacterCacheAdapter implements SelectCharacterCachePort {
         String value = redisTemplate.opsForValue().get(key);
 
         if (value == null) {
-            throw new IllegalArgumentException("No active character");
+            throw new NotFoundSelectedCharacterException();
         }
 
         redisTemplate.expire(key, TTL);
