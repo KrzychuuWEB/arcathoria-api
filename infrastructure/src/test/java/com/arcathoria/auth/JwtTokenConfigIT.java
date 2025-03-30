@@ -1,6 +1,6 @@
 package com.arcathoria.auth;
 
-import com.arcathoria.PostgreSQLTestContainerConfig;
+import com.arcathoria.IntegrationTestContainersConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @ActiveProfiles("test")
-class JwtTokenServiceIT extends PostgreSQLTestContainerConfig {
+class JwtTokenConfigIT extends IntegrationTestContainersConfig {
 
     @Autowired
     private JwtTokenService jwtTokenService;

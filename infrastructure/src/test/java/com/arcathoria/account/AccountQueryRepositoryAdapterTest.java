@@ -1,6 +1,6 @@
 package com.arcathoria.account;
 
-import com.arcathoria.PostgreSQLTestContainerConfig;
+import com.arcathoria.IntegrationTestContainersConfig;
 import com.arcathoria.account.vo.AccountId;
 import com.arcathoria.account.vo.Email;
 import jakarta.transaction.Transactional;
@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
-class AccountQueryRepositoryAdapterTest extends PostgreSQLTestContainerConfig {
+class AccountQueryRepositoryAdapterTest extends IntegrationTestContainersConfig {
 
     @Autowired
     private AccountQueryRepositoryAdapter accountQueryRepositoryAdapter;

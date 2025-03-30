@@ -2,7 +2,7 @@ package com.arcathoria.character;
 
 import com.arcathoria.AccountManagerTest;
 import com.arcathoria.ApiErrorResponse;
-import com.arcathoria.PostgreSQLTestContainerConfig;
+import com.arcathoria.IntegrationTestContainersConfig;
 import com.arcathoria.UUIDGenerator;
 import com.arcathoria.account.AccountFacade;
 import com.arcathoria.character.dto.CharacterDTO;
@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class CharacterControllerIT extends PostgreSQLTestContainerConfig {
+class CharacterControllerIT extends IntegrationTestContainersConfig {
 
     @Autowired
     private TestRestTemplate restTemplate;

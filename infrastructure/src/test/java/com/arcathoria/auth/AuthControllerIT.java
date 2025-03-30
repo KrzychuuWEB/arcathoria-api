@@ -1,7 +1,7 @@
 package com.arcathoria.auth;
 
 import com.arcathoria.ApiErrorResponse;
-import com.arcathoria.PostgreSQLTestContainerConfig;
+import com.arcathoria.IntegrationTestContainersConfig;
 import com.arcathoria.account.AccountFacade;
 import com.arcathoria.account.dto.RegisterDTO;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-class AuthControllerIT extends PostgreSQLTestContainerConfig {
+class AuthControllerIT extends IntegrationTestContainersConfig {
 
     @Autowired
     private AccountFacade accountFacade;

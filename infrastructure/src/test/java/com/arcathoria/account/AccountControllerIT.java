@@ -1,7 +1,7 @@
 package com.arcathoria.account;
 
 import com.arcathoria.ApiErrorResponse;
-import com.arcathoria.PostgreSQLTestContainerConfig;
+import com.arcathoria.IntegrationTestContainersConfig;
 import com.arcathoria.account.dto.AccountDTO;
 import com.arcathoria.account.dto.RegisterDTO;
 import com.arcathoria.account.vo.Email;
@@ -18,7 +18,7 @@ import org.springframework.test.context.jdbc.Sql;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class AccountControllerIT extends PostgreSQLTestContainerConfig {
+class AccountControllerIT extends IntegrationTestContainersConfig {
 
     @Autowired
     private AccountFacade accountFacade;
