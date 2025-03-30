@@ -31,7 +31,6 @@ public abstract class IntegrationTestContainersConfig {
             .withReuse(true);
 
     static {
-        postgresContainer.start();
         redisContainer.start();
     }
 

@@ -35,6 +35,10 @@ dependencies {
     testImplementation 'org.testcontainers:postgresql'
 }
 
+test {
+    jvmArgs "-javaagent:${configurations.testRuntimeClasspath.find { it.name.contains('mockito-core') }}", '-Xshare:off'
+}
+
 bootJar {
     enabled = false
 }
