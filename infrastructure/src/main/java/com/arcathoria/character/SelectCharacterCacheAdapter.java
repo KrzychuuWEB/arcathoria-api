@@ -1,7 +1,7 @@
 package com.arcathoria.character;
 
 import com.arcathoria.account.vo.AccountId;
-import com.arcathoria.character.exception.NotFoundSelectedCharacterException;
+import com.arcathoria.character.exception.SelectedCharacterNotFoundException;
 import com.arcathoria.character.vo.CharacterId;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -21,18 +21,18 @@ class SelectCharacterCacheAdapter implements SelectCharacterCachePort {
     }
 
     @Override
-    public void set(final CharacterId characterId, final AccountId accountId) {
+    public void setValueAndSetExpiredTime(final CharacterId characterId, final AccountId accountId) {
         String key = getKey(accountId.value());
         redisTemplate.opsForValue().set(key, characterId.value().toString(), TTL);
     }
 
     @Override
-    public CharacterId get(final AccountId accountId) {
+    public CharacterId getAndSetNewExpiredTime(final AccountId accountId) {
         String key = getKey(accountId.value());
         String value = redisTemplate.opsForValue().get(key);
 
         if (value == null) {
-            throw new NotFoundSelectedCharacterException();
+            throw new SelectedCharacterNotFoundException(accountId.value());
         }
 
         redisTemplate.expire(key, TTL);

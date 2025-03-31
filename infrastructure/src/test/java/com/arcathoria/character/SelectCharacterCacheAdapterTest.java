@@ -2,7 +2,7 @@ package com.arcathoria.character;
 
 import com.arcathoria.IntegrationTestContainersConfig;
 import com.arcathoria.account.vo.AccountId;
-import com.arcathoria.character.exception.NotFoundSelectedCharacterException;
+import com.arcathoria.character.exception.SelectedCharacterNotFoundException;
 import com.arcathoria.character.vo.CharacterId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,30 +28,30 @@ class SelectCharacterCacheAdapterTest extends IntegrationTestContainersConfig {
     private CharacterId characterId;
 
     @BeforeEach
-    void setUp() {
+    void setValueAndSetExpiredTimeUp() {
         accountId = new AccountId(UUID.randomUUID());
         characterId = new CharacterId(UUID.randomUUID());
     }
 
     @Test
     void should_store_character_id_in_redis() {
-        characterCacheAdapter.set(this.characterId, this.accountId);
+        characterCacheAdapter.setValueAndSetExpiredTime(this.characterId, this.accountId);
 
-        CharacterId result = characterCacheAdapter.get(this.accountId);
+        CharacterId result = characterCacheAdapter.getAndSetNewExpiredTime(this.accountId);
 
         assertThat(result).isEqualTo(characterId);
     }
 
     @Test
     void should_extend_ttl_when_character_id_is_retrieved() {
-        characterCacheAdapter.set(characterId, accountId);
+        characterCacheAdapter.setValueAndSetExpiredTime(characterId, accountId);
 
         sleep(1500);
 
         String redisKey = "active-character:" + this.accountId.value();
         Long ttlBefore = redisTemplate.getExpire(redisKey);
 
-        characterCacheAdapter.get(accountId);
+        characterCacheAdapter.getAndSetNewExpiredTime(accountId);
 
         Long ttlAfter = redisTemplate.getExpire(redisKey);
 
@@ -62,17 +62,17 @@ class SelectCharacterCacheAdapterTest extends IntegrationTestContainersConfig {
 
     @Test
     void should_remove_character_id_from_redis() {
-        characterCacheAdapter.set(this.characterId, this.accountId);
+        characterCacheAdapter.setValueAndSetExpiredTime(this.characterId, this.accountId);
         characterCacheAdapter.remove(this.accountId);
 
-        assertThatThrownBy(() -> characterCacheAdapter.get(this.accountId))
-                .isInstanceOf(NotFoundSelectedCharacterException.class);
+        assertThatThrownBy(() -> characterCacheAdapter.getAndSetNewExpiredTime(this.accountId))
+                .isInstanceOf(SelectedCharacterNotFoundException.class);
     }
 
     @Test
     void should_throw_exception_when_character_id_is_not_in_redis() {
-        assertThatThrownBy(() -> characterCacheAdapter.get(this.accountId))
-                .isInstanceOf(NotFoundSelectedCharacterException.class);
+        assertThatThrownBy(() -> characterCacheAdapter.getAndSetNewExpiredTime(this.accountId))
+                .isInstanceOf(SelectedCharacterNotFoundException.class);
     }
 
     private void sleep(long millis) {

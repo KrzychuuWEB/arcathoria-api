@@ -5,9 +5,9 @@ import com.arcathoria.character.vo.CharacterId;
 
 interface SelectCharacterCachePort {
 
-    void set(final CharacterId characterId, final AccountId accountId);
+    void setValueAndSetExpiredTime(final CharacterId characterId, final AccountId accountId);
 
-    CharacterId get(final AccountId accountId);
+    CharacterId getAndSetNewExpiredTime(final AccountId accountId);
 
     void remove(final AccountId accountId);
 }

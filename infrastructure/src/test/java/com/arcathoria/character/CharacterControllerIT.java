@@ -5,8 +5,11 @@ import com.arcathoria.ApiErrorResponse;
 import com.arcathoria.IntegrationTestContainersConfig;
 import com.arcathoria.UUIDGenerator;
 import com.arcathoria.account.AccountFacade;
+import com.arcathoria.account.dto.AccountDTO;
+import com.arcathoria.account.dto.RegisterDTO;
 import com.arcathoria.character.dto.CharacterDTO;
 import com.arcathoria.character.dto.CreateCharacterDTO;
+import com.arcathoria.character.dto.SelectCharacterDTO;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -18,6 +21,7 @@ import org.springframework.http.*;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -82,6 +86,7 @@ class CharacterControllerIT extends IntegrationTestContainersConfig {
     }
 
     @Test
+    @Sql(statements = "TRUNCATE TABLE characters", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void should_return_all_account_characters() {
         List<CharacterDTO> characters = List.of(
                 characterFacade.createCharacter(new CreateCharacterDTO("all" + UUIDGenerator.generate(15)), accountManagerTest.getId()),
@@ -122,5 +127,43 @@ class CharacterControllerIT extends IntegrationTestContainersConfig {
         List<CharacterDTO> result = response.getBody();
 
         assertThat(result).isEmpty();
+    }
+
+    @Test
+    void should_set_character_in_cache_and_return_character_when_data_is_valid() {
+        CharacterDTO character = createNewCharacterWithGenerateUniqueValues(this.accountManagerTest.getId());
+        SelectCharacterDTO dto = new SelectCharacterDTO(character.id());
+
+        HttpHeaders headers = accountManagerTest.getAuthorizationHeader(accountManagerTest.getToken());
+        ResponseEntity<CharacterDTO> result = restTemplate.postForEntity(BASE_URL + "/selects", new HttpEntity<>(dto, headers), CharacterDTO.class);
+
+        assertThat(result.getBody()).isEqualTo(character);
+    }
+
+    @Test
+    void should_return_CharacterNotFoundException_when_character_to_select_not_found() {
+        SelectCharacterDTO dto = new SelectCharacterDTO(UUID.randomUUID());
+
+        HttpHeaders headers = accountManagerTest.getAuthorizationHeader(accountManagerTest.getToken());
+        ResponseEntity<ApiErrorResponse> result = restTemplate.postForEntity(BASE_URL + "/selects", new HttpEntity<>(dto, headers), ApiErrorResponse.class);
+
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void should_return_AccessDeniedException_when_selected_character_is_not_owned_for_logged_account() {
+        AccountDTO accountDTO = accountFacade.createNewAccount(new RegisterDTO(UUIDGenerator.generate(15) + "@email.com", "secret_password"));
+        CharacterDTO characterDTO = createNewCharacterWithGenerateUniqueValues(accountDTO.id());
+        SelectCharacterDTO dto = new SelectCharacterDTO(characterDTO.id());
+
+        HttpHeaders headers = accountManagerTest.getAuthorizationHeader(accountManagerTest.getToken());
+        ResponseEntity<ApiErrorResponse> result = restTemplate.postForEntity(BASE_URL + "/selects", new HttpEntity<>(dto, headers), ApiErrorResponse.class);
+
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    private CharacterDTO createNewCharacterWithGenerateUniqueValues(final UUID accountId) {
+        CreateCharacterDTO characterDTO = new CreateCharacterDTO("characterName_" + UUIDGenerator.generate(5));
+        return characterFacade.createCharacter(characterDTO, accountId);
     }
 }

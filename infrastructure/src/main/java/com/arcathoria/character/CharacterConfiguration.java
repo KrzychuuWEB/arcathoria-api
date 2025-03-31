@@ -46,6 +46,14 @@ class CharacterConfiguration {
     }
 
     @Bean
+    SelectCharacterUseCase selectCharacterUseCase(
+            final GetCharacterByIdUseCase getCharacterByIdUseCase,
+            final SelectCharacterCachePort selectCharacterCachePort
+    ) {
+        return new SelectCharacterUseCase(getCharacterByIdUseCase, selectCharacterCachePort);
+    }
+
+    @Bean
     GetCharacterByIdUseCase getCharacterByIdUseCase(
             final CharacterQueryRepository characterQueryRepository,
             final CharacterOwnershipValidator ownershipValidator
@@ -62,7 +70,10 @@ class CharacterConfiguration {
     }
 
     @Bean
-    CharacterFacade characterFacade(final CreateCharacterUseCase characterUseCase) {
-        return new CharacterFacade(characterUseCase);
+    CharacterFacade characterFacade(
+            final CreateCharacterUseCase characterUseCase,
+            final SelectCharacterUseCase selectCharacterUseCase
+    ) {
+        return new CharacterFacade(characterUseCase, selectCharacterUseCase);
     }
 }
