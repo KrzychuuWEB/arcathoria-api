@@ -41,14 +41,39 @@ class CharacterConfiguration {
     }
 
     @Bean
-    CharacterQueryFacade characterQueryFacade(
-            final GetAllCharactersByAccountIdUseCase getAllCharactersByAccountIdUseCase
-    ) {
-        return new CharacterQueryFacade(getAllCharactersByAccountIdUseCase);
+    CharacterOwnershipValidator ownershipValidator() {
+        return new CharacterOwnershipValidator();
     }
 
     @Bean
-    CharacterFacade characterFacade(final CreateCharacterUseCase characterUseCase) {
-        return new CharacterFacade(characterUseCase);
+    SelectCharacterUseCase selectCharacterUseCase(
+            final GetCharacterByIdUseCase getCharacterByIdUseCase,
+            final SelectCharacterCachePort selectCharacterCachePort
+    ) {
+        return new SelectCharacterUseCase(getCharacterByIdUseCase, selectCharacterCachePort);
+    }
+
+    @Bean
+    GetCharacterByIdUseCase getCharacterByIdUseCase(
+            final CharacterQueryRepository characterQueryRepository,
+            final CharacterOwnershipValidator ownershipValidator
+    ) {
+        return new GetCharacterByIdUseCase(characterQueryRepository, ownershipValidator);
+    }
+
+    @Bean
+    CharacterQueryFacade characterQueryFacade(
+            final GetAllCharactersByAccountIdUseCase getAllCharactersByAccountIdUseCase,
+            final GetCharacterByIdUseCase getCharacterByIdUseCase
+    ) {
+        return new CharacterQueryFacade(getAllCharactersByAccountIdUseCase, getCharacterByIdUseCase);
+    }
+
+    @Bean
+    CharacterFacade characterFacade(
+            final CreateCharacterUseCase characterUseCase,
+            final SelectCharacterUseCase selectCharacterUseCase
+    ) {
+        return new CharacterFacade(characterUseCase, selectCharacterUseCase);
     }
 }

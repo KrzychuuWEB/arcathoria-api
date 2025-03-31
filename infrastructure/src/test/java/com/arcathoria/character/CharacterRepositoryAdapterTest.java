@@ -1,6 +1,6 @@
 package com.arcathoria.character;
 
-import com.arcathoria.PostgreSQLTestContainerConfig;
+import com.arcathoria.IntegrationTestContainersConfig;
 import com.arcathoria.account.AccountFacade;
 import com.arcathoria.account.dto.AccountDTO;
 import com.arcathoria.account.dto.RegisterDTO;
@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
-class CharacterRepositoryAdapterTest extends PostgreSQLTestContainerConfig {
+class CharacterRepositoryAdapterTest extends IntegrationTestContainersConfig {
 
     @Autowired
     private CharacterRepositoryAdapter repository;

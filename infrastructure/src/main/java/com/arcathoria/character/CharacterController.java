@@ -3,6 +3,7 @@ package com.arcathoria.character;
 import com.arcathoria.account.MyUserDetails;
 import com.arcathoria.character.dto.CharacterDTO;
 import com.arcathoria.character.dto.CreateCharacterDTO;
+import com.arcathoria.character.dto.SelectCharacterDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,6 +30,15 @@ class CharacterController {
     @ResponseStatus(HttpStatus.OK)
     List<CharacterDTO> getAllByAccountId(@AuthenticationPrincipal MyUserDetails details) {
         return characterQueryFacade.getAllByAccountId(details.getId());
+    }
+
+    @PostMapping("/selects")
+    @ResponseStatus(HttpStatus.OK)
+    CharacterDTO selectCharacter(
+            @Valid @RequestBody SelectCharacterDTO dto,
+            @AuthenticationPrincipal MyUserDetails details
+    ) {
+        return characterFacade.selectCharacter(dto, details.getId());
     }
 
     @PostMapping

@@ -1,6 +1,7 @@
 package com.arcathoria.character;
 
 import com.arcathoria.character.dto.CharacterDTO;
+import com.arcathoria.character.dto.CharacterPublicDTO;
 
 import java.util.List;
 
@@ -24,5 +25,12 @@ final class CharacterDTOMapper {
                         character.getSnapshot().getCharacterName().value()
                 ))
                 .toList();
+    }
+
+    static CharacterPublicDTO toCharacterPublicDTO(final Character character) {
+        return new CharacterPublicDTO(
+                character.getSnapshot().getCharacterId().value(),
+                character.getSnapshot().getCharacterName().value()
+        );
     }
 }

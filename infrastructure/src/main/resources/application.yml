@@ -7,6 +7,12 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+  data:
+    redis:
+      host: redis
+      port: 6379
+      password: secret
+      timeout: 60000
 
 jwt:
   secret: "Z2VrSHNAbEYmJkEqekVuTSo3SHB1NCVqUlZLME9BeU0="

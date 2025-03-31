@@ -1,5 +1,6 @@
 package com.arcathoria;
 
+import com.arcathoria.exception.AccessDeniedException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.context.MessageSource;
@@ -23,7 +24,21 @@ class GlobalExceptionHandler {
     GlobalExceptionHandler(final MessageSource messageSource) {
         this.messageSource = messageSource;
     }
-    
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    ApiErrorResponse handleAccessDeniedException(
+            AccessDeniedException ex, HttpServletRequest request, Locale locale) {
+
+        return new ApiErrorResponse(
+                HttpStatus.FORBIDDEN.value(),
+                HttpStatus.FORBIDDEN.getReasonPhrase(),
+                messageSource.getMessage(ex.getMessage(), null, locale),
+                ex.getErrorCode(),
+                request.getRequestURI()
+        );
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiErrorResponse handleValidationException(MethodArgumentNotValidException ex, HttpServletRequest request, Locale locale) {

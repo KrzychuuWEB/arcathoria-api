@@ -10,7 +10,7 @@ import java.util.Locale;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-class MessageSourceIT extends PostgreSQLTestContainerConfig {
+class MessageSourceIT extends IntegrationTestContainersConfig {
 
     @Autowired
     private MessageSource messageSource;

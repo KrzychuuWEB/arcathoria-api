@@ -1,10 +1,11 @@
 package com.arcathoria.character;
 
-import com.arcathoria.PostgreSQLTestContainerConfig;
+import com.arcathoria.IntegrationTestContainersConfig;
 import com.arcathoria.account.AccountFacade;
 import com.arcathoria.account.dto.AccountDTO;
 import com.arcathoria.account.dto.RegisterDTO;
 import com.arcathoria.account.vo.AccountId;
+import com.arcathoria.character.vo.CharacterId;
 import com.arcathoria.character.vo.CharacterName;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
@@ -13,12 +14,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-class CharacterQueryRepositoryAdapterTest extends PostgreSQLTestContainerConfig {
+@Transactional
+class CharacterQueryRepositoryAdapterTest extends IntegrationTestContainersConfig {
 
     @Autowired
     private CharacterRepository repository;
@@ -30,7 +33,6 @@ class CharacterQueryRepositoryAdapterTest extends PostgreSQLTestContainerConfig 
     private CharacterQueryRepositoryAdapter queryRepository;
 
     @Test
-    @Transactional
     void should_return_true_if_character_name_exist() {
         Character character = Character.restore(
                 CharacterSnapshotMother.create()
@@ -46,7 +48,6 @@ class CharacterQueryRepositoryAdapterTest extends PostgreSQLTestContainerConfig 
     }
 
     @Test
-    @Transactional
     void should_return_false_if_character_name_not_exist() {
         Character character = Character.restore(
                 CharacterSnapshotMother.create()
@@ -85,6 +86,28 @@ class CharacterQueryRepositoryAdapterTest extends PostgreSQLTestContainerConfig 
                 .isEqualTo(sortedCharacterAndGetByIndex(characters, 1).getCharacterId());
         assertThat(sortedCharacterAndGetByIndex(result, 1).getCharacterName())
                 .isEqualTo(sortedCharacterAndGetByIndex(characters, 1).getCharacterName());
+    }
+
+    @Test
+    void should_get_character_by_id() {
+        Character character = repository.save(Character.restore(CharacterSnapshotMother.create()
+                .withAccountId(UUID.randomUUID())
+                .withCharacterName("characterName")
+                .build()
+        ));
+
+        Optional<Character> result = queryRepository.getById(character.getSnapshot().getCharacterId());
+
+        assertThat(result).isNotEmpty();
+        assertThat(result.get().getSnapshot().getCharacterName()).isEqualTo(character.getSnapshot().getCharacterName());
+        assertThat(result.get().getSnapshot().getCharacterId()).isEqualTo(character.getSnapshot().getCharacterId());
+    }
+
+    @Test
+    void should_return_empty_optional_if_character_id_is_not_exists() {
+        Optional<Character> result = queryRepository.getById(new CharacterId(UUID.randomUUID()));
+
+        assertThat(result).isEmpty();
     }
 
     private CharacterSnapshot sortedCharacterAndGetByIndex(List<Character> characters, Integer index) {

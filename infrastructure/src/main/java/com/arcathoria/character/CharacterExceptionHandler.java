@@ -2,6 +2,8 @@ package com.arcathoria.character;
 
 import com.arcathoria.ApiErrorResponse;
 import com.arcathoria.character.exception.CharacterNameExistsException;
+import com.arcathoria.character.exception.CharacterNotFoundException;
+import com.arcathoria.character.exception.SelectedCharacterNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,6 +36,34 @@ class CharacterExceptionHandler {
                 HttpStatus.CONFLICT.value(),
                 HttpStatus.CONFLICT.getReasonPhrase(),
                 messageSource.getMessage(ex.getMessage(), new Object[]{ex.getCharacterName()}, locale),
+                ex.getErrorCode(),
+                request.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(CharacterNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    ApiErrorResponse handleCharacterNotFound(CharacterNotFoundException ex, HttpServletRequest request, Locale locale) {
+        logger.warn("Character not found with key {}", ex.getValue());
+
+        return new ApiErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                messageSource.getMessage(ex.getMessage(), new Object[]{ex.getValue()}, locale),
+                ex.getErrorCode(),
+                request.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(SelectedCharacterNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    ApiErrorResponse handleSelectedCharacterNotFoundException(SelectedCharacterNotFoundException ex, HttpServletRequest request, Locale locale) {
+        logger.warn("Selected character not found for account {}", ex.getId());
+
+        return new ApiErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                messageSource.getMessage(ex.getMessage(), null, locale),
                 ex.getErrorCode(),
                 request.getRequestURI()
         );

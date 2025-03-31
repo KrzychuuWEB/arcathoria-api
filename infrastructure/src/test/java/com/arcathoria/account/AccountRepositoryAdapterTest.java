@@ -1,6 +1,6 @@
 package com.arcathoria.account;
 
-import com.arcathoria.PostgreSQLTestContainerConfig;
+import com.arcathoria.IntegrationTestContainersConfig;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
-class AccountRepositoryAdapterTest extends PostgreSQLTestContainerConfig {
+class AccountRepositoryAdapterTest extends IntegrationTestContainersConfig {
 
     @Autowired
     private AccountRepositoryAdapter accountRepositoryAdapter;
