@@ -3,9 +3,7 @@ package com.arcathoria.character;
 import com.arcathoria.account.vo.AccountId;
 import com.arcathoria.character.dto.CharacterDTO;
 import com.arcathoria.character.dto.CharacterPublicDTO;
-import com.arcathoria.character.exception.CharacterNotFoundException;
 import com.arcathoria.character.vo.CharacterId;
-import com.arcathoria.exception.AccessDeniedException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,7 +16,6 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -31,6 +28,9 @@ class CharacterQueryFacadeTest {
 
     @Mock
     private GetCharacterByIdUseCase getCharacterByIdUseCase;
+
+    @Mock
+    private GetSelectedCharacterFromCacheUseCase getSelectedCharacterFromCacheUseCase;
 
     @InjectMocks
     private CharacterQueryFacade characterQueryFacade;
@@ -82,12 +82,23 @@ class CharacterQueryFacadeTest {
     }
 
     @Test
-    void should_return_AccessDeniedException_when_character_not_owned() {
-        when(getCharacterByIdUseCase.getOwned(any(CharacterId.class), any(AccountId.class))).thenThrow(AccessDeniedException.class);
+    void should_return_selected_character_and_map_to_dto() {
+        CharacterId characterId = new CharacterId(UUID.randomUUID());
+        AccountId accountId = new AccountId(UUID.randomUUID());
+        Character character = Character.restore(CharacterSnapshotMother.create()
+                .withCharacterId(characterId.value())
+                .withAccountId(accountId.value())
+                .build());
 
-        assertThatThrownBy(() -> characterQueryFacade.getOwnedCharacterById(UUID.randomUUID(), UUID.randomUUID())).isInstanceOf(AccessDeniedException.class);
+        when(getSelectedCharacterFromCacheUseCase.execute(any(AccountId.class))).thenReturn(character);
 
-        verify(getCharacterByIdUseCase).getOwned(any(CharacterId.class), any(AccountId.class));
+        CharacterDTO result = characterQueryFacade.getSelectedCharacter(accountId.value());
+
+        assertThat(result).isNotNull();
+        assertThat(result.id()).isEqualTo(characterId.value());
+        assertThat(result.characterName()).isEqualTo(CharacterSnapshotMother.DEFAULT_CHARACTER_NAME);
+
+        verify(getSelectedCharacterFromCacheUseCase).execute(any(AccountId.class));
     }
 
     @Test
@@ -104,15 +115,6 @@ class CharacterQueryFacadeTest {
 
         assertThat(result.id()).isEqualTo(characterId.value());
         assertThat(result.characterName()).isEqualTo(CharacterSnapshotMother.DEFAULT_CHARACTER_NAME);
-
-        verify(getCharacterByIdUseCase).get(any(CharacterId.class));
-    }
-
-    @Test
-    void should_return_CharacterNotFoundException_when_character_id_is_wrong() {
-        when(getCharacterByIdUseCase.get(any(CharacterId.class))).thenThrow(CharacterNotFoundException.class);
-
-        assertThatThrownBy(() -> characterQueryFacade.getPublicCharacterById(UUID.randomUUID())).isInstanceOf(CharacterNotFoundException.class);
 
         verify(getCharacterByIdUseCase).get(any(CharacterId.class));
     }

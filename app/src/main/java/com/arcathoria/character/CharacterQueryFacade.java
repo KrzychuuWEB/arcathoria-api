@@ -12,13 +12,16 @@ public class CharacterQueryFacade {
 
     private final GetAllCharactersByAccountIdUseCase getAllCharactersByAccountIdUseCase;
     private final GetCharacterByIdUseCase getCharacterByIdUseCase;
+    private final GetSelectedCharacterFromCacheUseCase getSelectedCharacterFromCacheUseCase;
 
     CharacterQueryFacade(
             final GetAllCharactersByAccountIdUseCase getAllCharactersByAccountIdUseCase,
-            final GetCharacterByIdUseCase getCharacterByIdUseCase
+            final GetCharacterByIdUseCase getCharacterByIdUseCase,
+            final GetSelectedCharacterFromCacheUseCase getSelectedCharacterFromCacheUseCase
     ) {
         this.getAllCharactersByAccountIdUseCase = getAllCharactersByAccountIdUseCase;
         this.getCharacterByIdUseCase = getCharacterByIdUseCase;
+        this.getSelectedCharacterFromCacheUseCase = getSelectedCharacterFromCacheUseCase;
     }
 
     public List<CharacterDTO> getAllByAccountId(final UUID uuid) {
@@ -28,6 +31,12 @@ public class CharacterQueryFacade {
     public CharacterDTO getOwnedCharacterById(final UUID characterId, final UUID accountId) {
         return CharacterDTOMapper.toCharacterDTO(
                 getCharacterByIdUseCase.getOwned(new CharacterId(characterId), new AccountId(accountId))
+        );
+    }
+
+    public CharacterDTO getSelectedCharacter(final UUID accountId) {
+        return CharacterDTOMapper.toCharacterDTO(
+                getSelectedCharacterFromCacheUseCase.execute(new AccountId(accountId))
         );
     }
 

@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.*;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -37,6 +38,9 @@ class CharacterControllerIT extends IntegrationTestContainersConfig {
 
     @Autowired
     private AccountFacade accountFacade;
+
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
 
     private AccountManagerTest accountManagerTest;
 
@@ -160,6 +164,45 @@ class CharacterControllerIT extends IntegrationTestContainersConfig {
         ResponseEntity<ApiErrorResponse> result = restTemplate.postForEntity(BASE_URL + "/selects", new HttpEntity<>(dto, headers), ApiErrorResponse.class);
 
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    @Test
+    void should_return_selected_character_for_logged_account() {
+        CharacterDTO character = createNewCharacterWithGenerateUniqueValues(accountManagerTest.getId());
+        SelectCharacterDTO dto = new SelectCharacterDTO(character.id());
+
+        HttpHeaders headers = accountManagerTest.getAuthorizationHeader(accountManagerTest.getToken());
+        restTemplate.postForEntity(BASE_URL + "/selects", new HttpEntity<>(dto, headers), CharacterDTO.class);
+
+        HttpEntity<Void> request = new HttpEntity<>(headers);
+        ResponseEntity<CharacterDTO> result = restTemplate.exchange(
+                BASE_URL + "/selects/me",
+                HttpMethod.GET,
+                request,
+                CharacterDTO.class
+        );
+
+        assertThat(result.getBody()).isNotNull();
+        assertThat(result.getBody().id()).isEqualTo(character.id());
+        assertThat(result.getBody().characterName()).isEqualTo(character.characterName());
+    }
+
+    @Test
+    void should_return_not_found_when_not_selected_character() {
+        redisTemplate.delete("active-character:" + accountManagerTest.getId());
+        HttpHeaders headers = accountManagerTest.getAuthorizationHeader(accountManagerTest.getToken());
+
+        HttpEntity<Void> request = new HttpEntity<>(headers);
+        ResponseEntity<ApiErrorResponse> result = restTemplate.exchange(
+                BASE_URL + "/selects/me",
+                HttpMethod.GET,
+                request,
+                ApiErrorResponse.class
+        );
+
+        assertThat(result.getBody()).isNotNull();
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(result.getBody().getErrorCode()).isEqualTo("ERR_CHARACTER_SELECTED_NOT_FOUND-404");
     }
 
     private CharacterDTO createNewCharacterWithGenerateUniqueValues(final UUID accountId) {

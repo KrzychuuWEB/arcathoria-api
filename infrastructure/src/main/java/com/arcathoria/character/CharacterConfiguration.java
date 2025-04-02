@@ -62,11 +62,20 @@ class CharacterConfiguration {
     }
 
     @Bean
+    GetSelectedCharacterFromCacheUseCase getSelectedCharacterFromCacheUseCase(
+            final GetCharacterByIdUseCase getCharacterByIdUseCase,
+            final SelectCharacterCachePort selectCharacterCachePort
+    ) {
+        return new GetSelectedCharacterFromCacheUseCase(getCharacterByIdUseCase, selectCharacterCachePort);
+    }
+
+    @Bean
     CharacterQueryFacade characterQueryFacade(
             final GetAllCharactersByAccountIdUseCase getAllCharactersByAccountIdUseCase,
-            final GetCharacterByIdUseCase getCharacterByIdUseCase
+            final GetCharacterByIdUseCase getCharacterByIdUseCase,
+            final GetSelectedCharacterFromCacheUseCase getSelectedCharacterFromCacheUseCase
     ) {
-        return new CharacterQueryFacade(getAllCharactersByAccountIdUseCase, getCharacterByIdUseCase);
+        return new CharacterQueryFacade(getAllCharactersByAccountIdUseCase, getCharacterByIdUseCase, getSelectedCharacterFromCacheUseCase);
     }
 
     @Bean

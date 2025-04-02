@@ -41,6 +41,12 @@ class CharacterController {
         return characterFacade.selectCharacter(dto, details.getId());
     }
 
+    @GetMapping("/selects/me")
+    @ResponseStatus(HttpStatus.OK)
+    CharacterDTO getSelectedCharacter(@AuthenticationPrincipal MyUserDetails details) {
+        return characterQueryFacade.getSelectedCharacter(details.getId());
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     CharacterDTO create(
