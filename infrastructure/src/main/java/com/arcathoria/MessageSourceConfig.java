@@ -13,7 +13,9 @@ class MessageSourceConfig {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
         messageSource.setBasenames(
                 "classpath:i18n/account/messages",
-                "classpath:i18n/validation/messages"
+                "classpath:i18n/character/messages",
+                "classpath:i18n/validation/messages",
+                "classpath:i18n/messages"
         );
         messageSource.setDefaultEncoding("UTF-8");
         messageSource.setUseCodeAsDefaultMessage(true);
