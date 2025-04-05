@@ -222,6 +222,18 @@ class CharacterControllerIT extends IntegrationTestContainersConfig {
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
+    @Test
+    void should_remove_selected_character_when_character_is_not_selected() {
+        redisTemplate.delete("active-character:" + accountManagerTest.getId());
+        HttpHeaders headers = accountManagerTest.getAuthorizationHeader(accountManagerTest.getToken());
+        HttpEntity<Void> request = new HttpEntity<>(headers);
+        ResponseEntity<ApiErrorResponse> result = restTemplate.exchange(BASE_URL + "/selects", HttpMethod.DELETE, request, ApiErrorResponse.class);
+
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(result.getBody()).isNotNull();
+        assertThat(result.getBody().getErrorCode()).isEqualTo("ERR_CHARACTER_SELECTED_NOT_FOUND-404");
+    }
+
     private CharacterDTO createNewCharacterWithGenerateUniqueValues(final UUID accountId) {
         CreateCharacterDTO characterDTO = new CreateCharacterDTO("characterName_" + UUIDGenerator.generate(5));
         return characterFacade.createCharacter(characterDTO, accountId);
