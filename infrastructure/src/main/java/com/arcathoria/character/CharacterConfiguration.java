@@ -70,6 +70,14 @@ class CharacterConfiguration {
     }
 
     @Bean
+    RemoveSelectedCharacterUseCase removeSelectedCharacterUseCase(
+            final GetSelectedCharacterFromCacheUseCase getSelectedCharacterFromCacheUseCase,
+            final SelectCharacterCachePort selectCharacterCachePort
+    ) {
+        return new RemoveSelectedCharacterUseCase(selectCharacterCachePort, getSelectedCharacterFromCacheUseCase);
+    }
+
+    @Bean
     CharacterQueryFacade characterQueryFacade(
             final GetAllCharactersByAccountIdUseCase getAllCharactersByAccountIdUseCase,
             final GetCharacterByIdUseCase getCharacterByIdUseCase,
@@ -81,8 +89,9 @@ class CharacterConfiguration {
     @Bean
     CharacterFacade characterFacade(
             final CreateCharacterUseCase characterUseCase,
-            final SelectCharacterUseCase selectCharacterUseCase
+            final SelectCharacterUseCase selectCharacterUseCase,
+            final RemoveSelectedCharacterUseCase removeSelectedCharacterUseCase
     ) {
-        return new CharacterFacade(characterUseCase, selectCharacterUseCase);
+        return new CharacterFacade(characterUseCase, selectCharacterUseCase, removeSelectedCharacterUseCase);
     }
 }

@@ -15,8 +15,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CharacterFacadeTest {
@@ -26,6 +25,9 @@ class CharacterFacadeTest {
 
     @Mock
     private SelectCharacterUseCase selectCharacterUseCase;
+
+    @Mock
+    private RemoveSelectedCharacterUseCase removeSelectedCharacterUseCase;
 
     @InjectMocks
     private CharacterFacade characterFacade;
@@ -72,5 +74,14 @@ class CharacterFacadeTest {
         assertThat(result.id()).isEqualTo(characterId.value());
 
         verify(selectCharacterUseCase).execute(any(CharacterId.class), any(AccountId.class));
+    }
+
+    @Test
+    void should_remove_selected_character() {
+        doNothing().when(removeSelectedCharacterUseCase).execute(any(AccountId.class));
+
+        characterFacade.removeSelectedCharacter(UUID.randomUUID());
+
+        verify(removeSelectedCharacterUseCase).execute(any(AccountId.class));
     }
 }

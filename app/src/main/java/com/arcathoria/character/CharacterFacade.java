@@ -14,19 +14,26 @@ public class CharacterFacade {
 
     private final CreateCharacterUseCase characterUseCase;
     private final SelectCharacterUseCase selectCharacterUseCase;
+    private final RemoveSelectedCharacterUseCase removeSelectedCharacterUseCase;
 
     CharacterFacade(final CreateCharacterUseCase characterUseCase,
-                    final SelectCharacterUseCase selectCharacterUseCase
+                    final SelectCharacterUseCase selectCharacterUseCase,
+                    final RemoveSelectedCharacterUseCase removeSelectedCharacterUseCase
     ) {
         this.characterUseCase = characterUseCase;
         this.selectCharacterUseCase = selectCharacterUseCase;
+        this.removeSelectedCharacterUseCase = removeSelectedCharacterUseCase;
     }
 
     public CharacterDTO createCharacter(final CreateCharacterDTO dto, final UUID accountId) {
         return toCharacterDTO(characterUseCase.execute(dto, new AccountId(accountId)));
     }
 
-    CharacterDTO selectCharacter(final SelectCharacterDTO dto, final UUID accountId) {
+    public CharacterDTO selectCharacter(final SelectCharacterDTO dto, final UUID accountId) {
         return toCharacterDTO(selectCharacterUseCase.execute(new CharacterId(dto.characterId()), new AccountId(accountId)));
+    }
+
+    public void removeSelectedCharacter(final UUID accountId) {
+        removeSelectedCharacterUseCase.execute(new AccountId(accountId));
     }
 }

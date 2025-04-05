@@ -47,6 +47,12 @@ class CharacterController {
         return characterQueryFacade.getSelectedCharacter(details.getId());
     }
 
+    @DeleteMapping("/selects")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void removeSelectedCharacter(@AuthenticationPrincipal MyUserDetails details) {
+        characterFacade.removeSelectedCharacter(details.getId());
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     CharacterDTO create(

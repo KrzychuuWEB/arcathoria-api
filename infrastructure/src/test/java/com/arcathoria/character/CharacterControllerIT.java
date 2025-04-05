@@ -205,6 +205,23 @@ class CharacterControllerIT extends IntegrationTestContainersConfig {
         assertThat(result.getBody().getErrorCode()).isEqualTo("ERR_CHARACTER_SELECTED_NOT_FOUND-404");
     }
 
+    @Test
+    void should_remove_selected_character_when_character_is_select() {
+        CharacterDTO character = createNewCharacterWithGenerateUniqueValues(accountManagerTest.getId());
+        SelectCharacterDTO dto = new SelectCharacterDTO(character.id());
+
+        HttpHeaders headers = accountManagerTest.getAuthorizationHeader(accountManagerTest.getToken());
+        restTemplate.postForEntity(BASE_URL + "/selects", new HttpEntity<>(dto, headers), CharacterDTO.class);
+
+        HttpEntity<Void> request = new HttpEntity<>(headers);
+        ResponseEntity<Void> resultDelete = restTemplate.exchange(BASE_URL + "/selects", HttpMethod.DELETE, request, Void.class);
+
+        ResponseEntity<ApiErrorResponse> result = restTemplate.exchange(BASE_URL + "/selects/me", HttpMethod.GET, request, ApiErrorResponse.class);
+
+        assertThat(resultDelete.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
     private CharacterDTO createNewCharacterWithGenerateUniqueValues(final UUID accountId) {
         CreateCharacterDTO characterDTO = new CreateCharacterDTO("characterName_" + UUIDGenerator.generate(5));
         return characterFacade.createCharacter(characterDTO, accountId);
