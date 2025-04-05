@@ -17,13 +17,16 @@ class CharacterController {
 
     private final CharacterFacade characterFacade;
     private final CharacterQueryFacade characterQueryFacade;
+    private final CreateCharacterTransactionalAdapter createCharacterTransactionalAdapter;
 
     CharacterController(
             final CharacterFacade characterFacade,
-            final CharacterQueryFacade characterQueryFacade
+            final CharacterQueryFacade characterQueryFacade,
+            final CreateCharacterTransactionalAdapter createCharacterTransactionalAdapter
     ) {
         this.characterFacade = characterFacade;
         this.characterQueryFacade = characterQueryFacade;
+        this.createCharacterTransactionalAdapter = createCharacterTransactionalAdapter;
     }
 
     @GetMapping("/selects")
@@ -59,6 +62,6 @@ class CharacterController {
             @Valid @RequestBody CreateCharacterDTO dto,
             @AuthenticationPrincipal MyUserDetails details
     ) {
-        return characterFacade.createCharacter(dto, details.getId());
+        return createCharacterTransactionalAdapter.transactionalCreateCharacter(dto, details.getId());
     }
 }
