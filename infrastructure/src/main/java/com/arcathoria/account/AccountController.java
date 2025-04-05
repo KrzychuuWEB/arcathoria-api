@@ -10,15 +10,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/accounts")
 class AccountController {
 
-    private final AccountFacade accountFacade;
+    private final CreateAccountTransactionalAdapter createAccountTransactionalAdapter;
 
-    AccountController(final AccountFacade accountFacade) {
-        this.accountFacade = accountFacade;
+    AccountController(final CreateAccountTransactionalAdapter createAccountTransactionalAdapter) {
+        this.createAccountTransactionalAdapter = createAccountTransactionalAdapter;
     }
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     AccountDTO registerRequest(@Valid @RequestBody RegisterDTO registerDTO) {
-        return accountFacade.createNewAccount(registerDTO);
+        return createAccountTransactionalAdapter.transactionalCreateAccount(registerDTO);
     }
 }
