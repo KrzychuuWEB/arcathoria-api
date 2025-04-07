@@ -1,7 +1,6 @@
 package com.arcathoria.account;
 
-import com.arcathoria.account.dto.RegisterDTO;
-import com.arcathoria.account.vo.Email;
+import com.arcathoria.account.command.CreateAccountCommand;
 import com.arcathoria.account.vo.HashedPassword;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,16 +26,14 @@ class EmailRegisterUseCase implements RegisterUseCase {
     }
 
     @Override
-    public Account register(final RegisterDTO registerDTO) {
-        Email email = new Email(registerDTO.email());
-
-        accountQueryFacade.checkWhetherEmailIsExists(email.value());
+    public Account register(final CreateAccountCommand command) {
+        accountQueryFacade.checkWhetherEmailIsExists(command.email().value());
 
         Account account = accountRepository.save(
-                accountFactory.from(email, encodePassword(registerDTO.password()))
+                accountFactory.from(command.email(), encodePassword(command.password().getValue()))
         );
 
-        logger.info("Account with email {} has been registered!", email.value());
+        logger.info("Account with email {} has been registered!", command.email().value());
 
         return account;
     }

@@ -1,10 +1,7 @@
 package com.arcathoria.character;
 
 import com.arcathoria.account.AccountQueryFacade;
-import com.arcathoria.account.dto.AccountDTO;
-import com.arcathoria.account.vo.AccountId;
-import com.arcathoria.character.dto.CreateCharacterDTO;
-import com.arcathoria.character.vo.CharacterName;
+import com.arcathoria.character.command.CreateCharacterCommand;
 
 class CreateCharacterUseCase {
 
@@ -25,14 +22,13 @@ class CreateCharacterUseCase {
         this.characterRepository = characterRepository;
     }
 
-    Character execute(final CreateCharacterDTO dto, final AccountId accountId) {
-        AccountDTO account = accountQueryFacade.getById(accountId.value());
-        CharacterName characterName = new CharacterName(dto.characterName());
+    Character execute(final CreateCharacterCommand command) {
+        accountQueryFacade.getById(command.accountId().value());
 
-        checkCharacterNameIsExistsUseCase.execute(characterName);
+        checkCharacterNameIsExistsUseCase.execute(command.characterName());
 
         return characterRepository.save(
-                characterFactory.createCharacter(new AccountId(account.id()), characterName)
+                characterFactory.createCharacter(command.accountId(), command.characterName())
         );
     }
 }

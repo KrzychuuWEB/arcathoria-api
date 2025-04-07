@@ -1,7 +1,6 @@
 package com.arcathoria.character;
 
-import com.arcathoria.account.vo.AccountId;
-import com.arcathoria.character.vo.CharacterId;
+import com.arcathoria.character.command.SelectCharacterCommand;
 
 class SelectCharacterUseCase {
 
@@ -15,10 +14,10 @@ class SelectCharacterUseCase {
         this.selectCharacterCachePort = selectCharacterCachePort;
     }
 
-    Character execute(final CharacterId characterId, final AccountId accountId) {
-        Character character = getCharacterByIdUseCase.getOwned(characterId, accountId);
+    Character execute(final SelectCharacterCommand command) {
+        Character character = getCharacterByIdUseCase.getOwned(command.characterId(), command.accountId());
 
-        selectCharacterCachePort.setValueAndSetExpiredTime(characterId, accountId);
+        selectCharacterCachePort.setValueAndSetExpiredTime(command.characterId(), command.accountId());
 
         return character;
     }

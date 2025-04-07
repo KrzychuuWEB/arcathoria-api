@@ -1,6 +1,7 @@
 package com.arcathoria.character;
 
 import com.arcathoria.account.vo.AccountId;
+import com.arcathoria.character.command.SelectCharacterCommand;
 import com.arcathoria.character.exception.CharacterNotFoundException;
 import com.arcathoria.character.vo.CharacterId;
 import com.arcathoria.exception.AccessDeniedException;
@@ -9,8 +10,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -32,20 +31,19 @@ class SelectCharacterUseCaseTest {
 
     @Test
     void should_return_character_when_account_owned_character() {
-        AccountId accountId = new AccountId(UUID.randomUUID());
-        CharacterId characterId = new CharacterId(UUID.randomUUID());
+        SelectCharacterCommand command = SelectCharacterCommandMother.aSelectCharacterCommand().build();
         Character character = Character.restore(CharacterSnapshotMother.create()
-                .withCharacterId(characterId.value())
-                .withAccountId(accountId.value())
+                .withCharacterId(command.characterId().value())
+                .withAccountId(command.accountId().value())
                 .build());
 
         when(getCharacterByIdUseCase.getOwned(any(CharacterId.class), any(AccountId.class))).thenReturn(character);
 
-        Character result = selectCharacterUseCase.execute(characterId, accountId);
+        Character result = selectCharacterUseCase.execute(command);
 
         assertThat(result).isNotNull();
-        assertThat(result.getSnapshot().getCharacterId()).isEqualTo(characterId);
-        assertThat(result.getSnapshot().getAccountId()).isEqualTo(accountId);
+        assertThat(result.getSnapshot().getCharacterId()).isEqualTo(command.characterId());
+        assertThat(result.getSnapshot().getAccountId()).isEqualTo(command.accountId());
 
         verify(getCharacterByIdUseCase).getOwned(any(CharacterId.class), any(AccountId.class));
         verify(selectCharacterCachePort).setValueAndSetExpiredTime(any(CharacterId.class), any(AccountId.class));
@@ -56,8 +54,7 @@ class SelectCharacterUseCaseTest {
         when(getCharacterByIdUseCase.getOwned(any(CharacterId.class), any(AccountId.class))).thenThrow(CharacterNotFoundException.class);
 
         assertThatThrownBy(() -> selectCharacterUseCase.execute(
-                new CharacterId(UUID.randomUUID()),
-                new AccountId(UUID.randomUUID())
+                SelectCharacterCommandMother.aSelectCharacterCommand().build()
         )).isInstanceOf(CharacterNotFoundException.class);
     }
 
@@ -66,8 +63,7 @@ class SelectCharacterUseCaseTest {
         when(getCharacterByIdUseCase.getOwned(any(CharacterId.class), any(AccountId.class))).thenThrow(AccessDeniedException.class);
 
         assertThatThrownBy(() -> selectCharacterUseCase.execute(
-                new CharacterId(UUID.randomUUID()),
-                new AccountId(UUID.randomUUID())
+                SelectCharacterCommandMother.aSelectCharacterCommand().build()
         )).isInstanceOf(AccessDeniedException.class);
     }
 }
