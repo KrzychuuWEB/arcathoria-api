@@ -1,10 +1,13 @@
 package com.arcathoria.character;
 
 import com.arcathoria.account.vo.AccountId;
+import com.arcathoria.character.command.CreateCharacterCommand;
+import com.arcathoria.character.command.SelectCharacterCommand;
 import com.arcathoria.character.dto.CharacterDTO;
 import com.arcathoria.character.dto.CreateCharacterDTO;
 import com.arcathoria.character.dto.SelectCharacterDTO;
 import com.arcathoria.character.vo.CharacterId;
+import com.arcathoria.character.vo.CharacterName;
 
 import java.util.UUID;
 
@@ -26,11 +29,20 @@ public class CharacterFacade {
     }
 
     public CharacterDTO createCharacter(final CreateCharacterDTO dto, final UUID accountId) {
-        return toCharacterDTO(characterUseCase.execute(dto, new AccountId(accountId)));
+        CreateCharacterCommand command = new CreateCharacterCommand(
+                new AccountId(accountId),
+                new CharacterName(dto.characterName())
+        );
+
+        return toCharacterDTO(characterUseCase.execute(command));
     }
 
     public CharacterDTO selectCharacter(final SelectCharacterDTO dto, final UUID accountId) {
-        return toCharacterDTO(selectCharacterUseCase.execute(new CharacterId(dto.characterId()), new AccountId(accountId)));
+        SelectCharacterCommand command = new SelectCharacterCommand(
+                new AccountId(accountId),
+                new CharacterId(dto.characterId())
+        );
+        return toCharacterDTO(selectCharacterUseCase.execute(command));
     }
 
     public void removeSelectedCharacter(final UUID accountId) {

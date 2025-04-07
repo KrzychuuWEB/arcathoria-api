@@ -19,8 +19,8 @@ public class AccountQueryFacade {
         this.checkEmailExistsUseCase = checkEmailExistsUseCase;
     }
 
-    public AccountDTO getById(final UUID uuid) {
-        return toAccountDTO(getAccountByIdUseCase.execute(new AccountId(uuid)));
+    public AccountDTO getById(final UUID accountId) {
+        return toAccountDTO(getAccountByIdUseCase.execute(new AccountId(accountId)));
     }
 
     public void checkWhetherEmailIsExists(final String email) {

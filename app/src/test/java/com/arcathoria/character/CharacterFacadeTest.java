@@ -1,10 +1,11 @@
 package com.arcathoria.character;
 
 import com.arcathoria.account.vo.AccountId;
+import com.arcathoria.character.command.CreateCharacterCommand;
+import com.arcathoria.character.command.SelectCharacterCommand;
 import com.arcathoria.character.dto.CharacterDTO;
 import com.arcathoria.character.dto.CreateCharacterDTO;
 import com.arcathoria.character.dto.SelectCharacterDTO;
-import com.arcathoria.character.vo.CharacterId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -44,7 +45,7 @@ class CharacterFacadeTest {
                         .build()
         );
 
-        when(createCharacterUseCase.execute(any(CreateCharacterDTO.class), any(AccountId.class))).thenReturn(character);
+        when(createCharacterUseCase.execute(any(CreateCharacterCommand.class))).thenReturn(character);
 
         CharacterDTO result = characterFacade.createCharacter(dto, accountId.value());
 
@@ -52,28 +53,27 @@ class CharacterFacadeTest {
         assertThat(result.id()).isNotNull();
         assertThat(result.characterName()).isEqualTo(dto.characterName());
 
-        verify(createCharacterUseCase).execute(any(CreateCharacterDTO.class), any(AccountId.class));
+        verify(createCharacterUseCase).execute(any(CreateCharacterCommand.class));
     }
 
     @Test
     void should_return_select_character_when_valid_ids() {
-        AccountId accountId = new AccountId(UUID.randomUUID());
-        CharacterId characterId = new CharacterId(UUID.randomUUID());
+        SelectCharacterCommand command = SelectCharacterCommandMother.aSelectCharacterCommand().build();
         Character character = Character.restore(
                 CharacterSnapshotMother.create()
-                        .withCharacterId(characterId.value())
-                        .withAccountId(accountId.value())
+                        .withCharacterId(command.characterId().value())
+                        .withAccountId(command.accountId().value())
                         .build()
         );
 
-        when(selectCharacterUseCase.execute(any(CharacterId.class), any(AccountId.class))).thenReturn(character);
+        when(selectCharacterUseCase.execute(any(SelectCharacterCommand.class))).thenReturn(character);
 
-        CharacterDTO result = characterFacade.selectCharacter(new SelectCharacterDTO(characterId.value()), accountId.value());
+        CharacterDTO result = characterFacade.selectCharacter(new SelectCharacterDTO(command.characterId().value()), command.accountId().value());
 
         assertThat(result).isInstanceOf(CharacterDTO.class);
-        assertThat(result.id()).isEqualTo(characterId.value());
+        assertThat(result.id()).isEqualTo(command.characterId().value());
 
-        verify(selectCharacterUseCase).execute(any(CharacterId.class), any(AccountId.class));
+        verify(selectCharacterUseCase).execute(any(SelectCharacterCommand.class));
     }
 
     @Test
