@@ -3,7 +3,7 @@ package com.arcathoria.character;
 import com.arcathoria.account.vo.AccountId;
 
 class RemoveSelectedCharacterUseCase {
-
+    
     private final SelectCharacterCachePort selectCharacterCachePort;
     private final GetSelectedCharacterFromCacheUseCase getSelectedCharacterFromCacheUseCase;
 
