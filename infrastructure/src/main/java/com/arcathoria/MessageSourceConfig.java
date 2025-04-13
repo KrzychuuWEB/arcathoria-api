@@ -14,6 +14,7 @@ class MessageSourceConfig {
         messageSource.setBasenames(
                 "classpath:i18n/account/messages",
                 "classpath:i18n/character/messages",
+                "classpath:i18n/auth/messages",
                 "classpath:i18n/validation/messages",
                 "classpath:i18n/messages"
         );

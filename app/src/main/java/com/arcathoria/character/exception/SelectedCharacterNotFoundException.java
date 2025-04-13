@@ -9,7 +9,7 @@ public class SelectedCharacterNotFoundException extends ApiException {
     private UUID id = null;
 
     public SelectedCharacterNotFoundException(final UUID id) {
-        super("character.get.character.selected.not.found", "ERR_CHARACTER_SELECTED_NOT_FOUND-404");
+        super("The selected character was not found for id: " + id, "ERR_CHARACTER_SELECTED_NOT_FOUND-404");
         this.id = id;
     }
 
