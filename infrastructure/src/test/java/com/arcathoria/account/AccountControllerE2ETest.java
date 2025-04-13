@@ -2,6 +2,7 @@ package com.arcathoria.account;
 
 import com.arcathoria.ApiErrorResponse;
 import com.arcathoria.IntegrationTestContainersConfig;
+import com.arcathoria.SetLocaleHelper;
 import com.arcathoria.account.dto.AccountDTO;
 import com.arcathoria.account.dto.RegisterDTO;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -39,8 +41,14 @@ class AccountControllerE2ETest extends IntegrationTestContainersConfig {
 
         restTemplate.postForEntity(registerUrl, new HttpEntity<>(registerDTO), AccountDTO.class);
 
-        ResponseEntity<ApiErrorResponse> result = restTemplate.postForEntity(registerUrl, new HttpEntity<>(registerDTO), ApiErrorResponse.class);
+        HttpHeaders headers = new HttpHeaders();
+        SetLocaleHelper.withLocale(headers, "pl");
+
+        ResponseEntity<ApiErrorResponse> result = restTemplate.postForEntity(registerUrl, new HttpEntity<>(registerDTO, headers), ApiErrorResponse.class);
 
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+        assertThat(result.getBody()).isNotNull();
+        assertThat(result.getBody().getErrorCode()).isEqualTo("ERR_ACCOUNT_EMAIL_EXISTS-409");
+        assertThat(result.getBody().getMessage()).contains("już istnieje");
     }
 }

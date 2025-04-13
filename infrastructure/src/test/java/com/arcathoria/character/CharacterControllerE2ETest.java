@@ -2,6 +2,7 @@ package com.arcathoria.character;
 
 import com.arcathoria.ApiErrorResponse;
 import com.arcathoria.IntegrationTestContainersConfig;
+import com.arcathoria.SetLocaleHelper;
 import com.arcathoria.UUIDGenerator;
 import com.arcathoria.account.AccountManagerE2EHelper;
 import com.arcathoria.character.dto.CharacterDTO;
@@ -60,6 +61,7 @@ class CharacterControllerE2ETest extends IntegrationTestContainersConfig {
     void should_return_CharacterNameExistsException_when_character_name_is_taken() {
         CreateCharacterDTO createCharacterDTO = CreateCharacterDTOMother.aCreateCharacterDTO().withCharacterName("takeCharacterName").build();
         HttpHeaders headers = accountManagerE2EHelper.registerAndGetAuthHeaders("createCharacterNameException@email.com");
+        SetLocaleHelper.withLocale(headers, "pl");
 
         createCharacterE2EHelper.create(createCharacterDTO, headers);
 
@@ -67,6 +69,7 @@ class CharacterControllerE2ETest extends IntegrationTestContainersConfig {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getBody().getErrorCode()).isEqualTo("ERR_CHARACTER_NAME_EXISTS-409");
+        assertThat(response.getBody().getMessage()).contains("Nazwa postaci");
     }
 
     @Test
@@ -124,6 +127,7 @@ class CharacterControllerE2ETest extends IntegrationTestContainersConfig {
     @Test
     void should_return_CharacterNotFoundException_when_character_to_select_not_found() {
         HttpHeaders headers = accountManagerE2EHelper.registerAndGetAuthHeaders("selectNotFoundException@email.com");
+        SetLocaleHelper.withLocale(headers, "pl");
         SelectCharacterDTO selectCharacterDTO = new SelectCharacterDTO(UUID.randomUUID());
 
         ResponseEntity<ApiErrorResponse> response = restTemplate.postForEntity(baseSelectCharacterUrl, new HttpEntity<>(selectCharacterDTO, headers), ApiErrorResponse.class);
@@ -131,12 +135,15 @@ class CharacterControllerE2ETest extends IntegrationTestContainersConfig {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getBody().getErrorCode()).isEqualTo("ERR_CHARACTER_NOT_FOUND-404");
+        assertThat(response.getBody().getMessage()).contains("Postać z podanym");
     }
 
     @Test
     void should_return_AccessDeniedException_when_selected_character_is_not_owned_for_logged_account() {
         HttpHeaders account1 = accountManagerE2EHelper.registerAndGetAuthHeaders("setCharacterAccessDenied1@email.com");
         HttpHeaders account2 = accountManagerE2EHelper.registerAndGetAuthHeaders("setCharacterAccessDenied2@email.com");
+        SetLocaleHelper.withLocale(account2, "pl");
+
         CharacterDTO responseForAccount1 = createCharacterE2EHelper.create(
                 CreateCharacterDTOMother.aCreateCharacterDTO().withCharacterName(randomCharacterName).build(),
                 account1
@@ -149,6 +156,7 @@ class CharacterControllerE2ETest extends IntegrationTestContainersConfig {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getBody().getErrorCode()).isEqualTo("ERR_ACCESS_DENIED-403");
+        assertThat(response.getBody().getMessage()).contains("Brak dostepu");
     }
 
     @Test
@@ -175,6 +183,7 @@ class CharacterControllerE2ETest extends IntegrationTestContainersConfig {
     @Test
     void should_return_SelectedCharacterNotFoundException_when_not_selected_character() {
         HttpHeaders headers = accountManagerE2EHelper.registerAndGetAuthHeaders("selectedNotFoundException@email.com");
+        SetLocaleHelper.withLocale(headers, "pl");
 
         HttpEntity<Void> request = new HttpEntity<>(headers);
         ResponseEntity<ApiErrorResponse> response = restTemplate.exchange(
@@ -187,6 +196,7 @@ class CharacterControllerE2ETest extends IntegrationTestContainersConfig {
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getBody().getErrorCode()).isEqualTo("ERR_CHARACTER_SELECTED_NOT_FOUND-404");
+        assertThat(response.getBody().getMessage()).contains("Postać nie została wybrana");
     }
 
     @Test
@@ -209,6 +219,7 @@ class CharacterControllerE2ETest extends IntegrationTestContainersConfig {
     @Test
     void should_remove_selected_character_when_character_is_not_selected() {
         HttpHeaders headers = accountManagerE2EHelper.registerAndGetAuthHeaders("removeSelectedCharacterWhenCharacterNotSelected@email.com");
+        SetLocaleHelper.withLocale(headers, "pl");
 
         HttpEntity<Void> request = new HttpEntity<>(headers);
         ResponseEntity<ApiErrorResponse> response = restTemplate.exchange(baseSelectCharacterUrl, HttpMethod.DELETE, request, ApiErrorResponse.class);
@@ -216,5 +227,6 @@ class CharacterControllerE2ETest extends IntegrationTestContainersConfig {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getBody().getErrorCode()).isEqualTo("ERR_CHARACTER_SELECTED_NOT_FOUND-404");
+        assertThat(response.getBody().getMessage()).contains("Postać nie została wybrana");
     }
 }
