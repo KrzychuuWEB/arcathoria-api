@@ -28,12 +28,12 @@ class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     ApiErrorResponse handleAccessDeniedException(
-            AccessDeniedException ex, HttpServletRequest request, Locale locale) {
+            final AccessDeniedException ex, final HttpServletRequest request, final Locale locale) {
 
         return new ApiErrorResponse(
                 HttpStatus.FORBIDDEN.value(),
                 HttpStatus.FORBIDDEN.getReasonPhrase(),
-                messageSource.getMessage(ex.getMessage(), null, locale),
+                messageSource.getMessage("access.denied", null, locale),
                 ex.getErrorCode(),
                 request.getRequestURI()
         );
@@ -41,7 +41,7 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiErrorResponse handleValidationException(MethodArgumentNotValidException ex, HttpServletRequest request, Locale locale) {
+    public ApiErrorResponse handleValidationException(final MethodArgumentNotValidException ex, final HttpServletRequest request, final Locale locale) {
         ApiErrorResponse response = new ApiErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST.getReasonPhrase(),
@@ -65,7 +65,7 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiErrorResponse handleConstraintViolationException(ConstraintViolationException ex, HttpServletRequest request, Locale locale) {
+    public ApiErrorResponse handleConstraintViolationException(final ConstraintViolationException ex, final HttpServletRequest request, final Locale locale) {
         ApiErrorResponse response = new ApiErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST.getReasonPhrase(),
@@ -88,12 +88,12 @@ class GlobalExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     ApiErrorResponse handleIllegalArgumentException(
-            IllegalArgumentException ex, HttpServletRequest request) {
+            final IllegalArgumentException ex, final HttpServletRequest request, final Locale locale) {
 
         return new ApiErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                ex.getMessage(),
+                messageSource.getMessage("internal.error", null, locale),
                 "ERR-JAVA-ILLEGAL_ARGUMENT-400",
                 request.getRequestURI()
         );
@@ -102,12 +102,12 @@ class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     ApiErrorResponse handleAllExceptions(
-            Exception ex, HttpServletRequest request) {
+            final Exception ex, final HttpServletRequest request, final Locale locale) {
 
         return new ApiErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
-                "An unexpected error occurred",
+                messageSource.getMessage("internal.error", null, locale),
                 "ERR-SERVER-500",
                 request.getRequestURI()
         );

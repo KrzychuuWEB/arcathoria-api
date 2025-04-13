@@ -29,13 +29,13 @@ class CharacterExceptionHandler {
 
     @ExceptionHandler(CharacterNameExistsException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    ApiErrorResponse handleCharacterNameExists(CharacterNameExistsException ex, HttpServletRequest request, Locale locale) {
+    ApiErrorResponse handleCharacterNameExists(final CharacterNameExistsException ex, final HttpServletRequest request, final Locale locale) {
         logger.warn("Character name {} exist", ex.getCharacterName());
 
         return new ApiErrorResponse(
                 HttpStatus.CONFLICT.value(),
                 HttpStatus.CONFLICT.getReasonPhrase(),
-                messageSource.getMessage(ex.getMessage(), new Object[]{ex.getCharacterName()}, locale),
+                messageSource.getMessage("character.create.character.name.exists", new Object[]{ex.getCharacterName()}, locale),
                 ex.getErrorCode(),
                 request.getRequestURI()
         );
@@ -43,13 +43,13 @@ class CharacterExceptionHandler {
 
     @ExceptionHandler(CharacterNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    ApiErrorResponse handleCharacterNotFound(CharacterNotFoundException ex, HttpServletRequest request, Locale locale) {
+    ApiErrorResponse handleCharacterNotFound(final CharacterNotFoundException ex, final HttpServletRequest request, final Locale locale) {
         logger.warn("Character not found with key {}", ex.getValue());
 
         return new ApiErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
                 HttpStatus.NOT_FOUND.getReasonPhrase(),
-                messageSource.getMessage(ex.getMessage(), new Object[]{ex.getValue()}, locale),
+                messageSource.getMessage("character.get.not.found", new Object[]{ex.getValue()}, locale),
                 ex.getErrorCode(),
                 request.getRequestURI()
         );
@@ -57,13 +57,13 @@ class CharacterExceptionHandler {
 
     @ExceptionHandler(SelectedCharacterNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    ApiErrorResponse handleSelectedCharacterNotFoundException(SelectedCharacterNotFoundException ex, HttpServletRequest request, Locale locale) {
+    ApiErrorResponse handleSelectedCharacterNotFoundException(final SelectedCharacterNotFoundException ex, final HttpServletRequest request, final Locale locale) {
         logger.warn("Selected character not found for account {}", ex.getId());
 
         return new ApiErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
                 HttpStatus.NOT_FOUND.getReasonPhrase(),
-                messageSource.getMessage(ex.getMessage(), null, locale),
+                messageSource.getMessage("character.get.character.selected.not.found", null, locale),
                 ex.getErrorCode(),
                 request.getRequestURI()
         );

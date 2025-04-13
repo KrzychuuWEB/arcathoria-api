@@ -28,13 +28,13 @@ class AccountExceptionHandler {
 
     @ExceptionHandler(AccountNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    ApiErrorResponse handleAccountNotFound(AccountNotFoundException ex, HttpServletRequest request, Locale locale) {
+    ApiErrorResponse handleAccountNotFound(final AccountNotFoundException ex, final HttpServletRequest request, final Locale locale) {
         logger.warn("Account with id {} not found", ex.getUuid());
 
         return new ApiErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
                 HttpStatus.NOT_FOUND.getReasonPhrase(),
-                messageSource.getMessage(ex.getMessage(), new Object[]{ex.getUuid()}, locale),
+                messageSource.getMessage("account.get.account.not.found", new Object[]{ex.getUuid()}, locale),
                 ex.getErrorCode(),
                 request.getRequestURI()
         );
@@ -42,13 +42,13 @@ class AccountExceptionHandler {
 
     @ExceptionHandler(EmailExistsException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    ApiErrorResponse handleEmailExistsException(EmailExistsException ex, HttpServletRequest request, Locale locale) {
+    ApiErrorResponse handleEmailExistsException(final EmailExistsException ex, final HttpServletRequest request, final Locale locale) {
         logger.warn("Email {} has been exists", ex.getEmail());
 
         return new ApiErrorResponse(
                 HttpStatus.CONFLICT.value(),
                 HttpStatus.CONFLICT.getReasonPhrase(),
-                messageSource.getMessage(ex.getMessage(), new Object[]{ex.getEmail()}, locale),
+                messageSource.getMessage("account.registration.email.exists", new Object[]{ex.getEmail()}, locale),
                 ex.getErrorCode(),
                 request.getRequestURI()
         );
