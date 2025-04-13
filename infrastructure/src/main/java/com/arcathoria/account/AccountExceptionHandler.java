@@ -34,7 +34,7 @@ class AccountExceptionHandler {
         return new ApiErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
                 HttpStatus.NOT_FOUND.getReasonPhrase(),
-                messageSource.getMessage("account.get.account.not.found", new Object[]{ex.getUuid()}, locale),
+                messageSource.getMessage("account.get.account.not.found", new Object[]{ex.getUuid()}, ex.getMessage(), locale),
                 ex.getErrorCode(),
                 request.getRequestURI()
         );
@@ -48,7 +48,7 @@ class AccountExceptionHandler {
         return new ApiErrorResponse(
                 HttpStatus.CONFLICT.value(),
                 HttpStatus.CONFLICT.getReasonPhrase(),
-                messageSource.getMessage("account.registration.email.exists", new Object[]{ex.getEmail()}, locale),
+                messageSource.getMessage("account.registration.email.exists", new Object[]{ex.getEmail()}, ex.getMessage(), locale),
                 ex.getErrorCode(),
                 request.getRequestURI()
         );

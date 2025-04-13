@@ -33,7 +33,7 @@ class GlobalExceptionHandler {
         return new ApiErrorResponse(
                 HttpStatus.FORBIDDEN.value(),
                 HttpStatus.FORBIDDEN.getReasonPhrase(),
-                messageSource.getMessage("access.denied", null, locale),
+                messageSource.getMessage("access.denied", null, ex.getMessage(), locale),
                 ex.getErrorCode(),
                 request.getRequestURI()
         );

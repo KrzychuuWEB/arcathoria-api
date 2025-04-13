@@ -35,7 +35,7 @@ class CharacterExceptionHandler {
         return new ApiErrorResponse(
                 HttpStatus.CONFLICT.value(),
                 HttpStatus.CONFLICT.getReasonPhrase(),
-                messageSource.getMessage("character.create.character.name.exists", new Object[]{ex.getCharacterName()}, locale),
+                messageSource.getMessage("character.create.character.name.exists", new Object[]{ex.getCharacterName()}, ex.getMessage(), locale),
                 ex.getErrorCode(),
                 request.getRequestURI()
         );
@@ -49,7 +49,7 @@ class CharacterExceptionHandler {
         return new ApiErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
                 HttpStatus.NOT_FOUND.getReasonPhrase(),
-                messageSource.getMessage("character.get.not.found", new Object[]{ex.getValue()}, locale),
+                messageSource.getMessage("character.get.not.found", new Object[]{ex.getValue()}, ex.getMessage(), locale),
                 ex.getErrorCode(),
                 request.getRequestURI()
         );
@@ -63,7 +63,7 @@ class CharacterExceptionHandler {
         return new ApiErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
                 HttpStatus.NOT_FOUND.getReasonPhrase(),
-                messageSource.getMessage("character.get.character.selected.not.found", null, locale),
+                messageSource.getMessage("character.get.character.selected.not.found", null, ex.getMessage(), locale),
                 ex.getErrorCode(),
                 request.getRequestURI()
         );

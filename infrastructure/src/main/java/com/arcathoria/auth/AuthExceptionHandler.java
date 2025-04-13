@@ -32,7 +32,7 @@ class AuthExceptionHandler {
         return new ApiErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                messageSource.getMessage("auth.bad.credentials", null, locale),
+                messageSource.getMessage("auth.bad.credentials", null, ex.getMessage(), locale),
                 "ERR-AUTH-BAD_CREDENTIALS-400",
                 request.getRequestURI()
         );
@@ -46,7 +46,7 @@ class AuthExceptionHandler {
         return new ApiErrorResponse(
                 HttpStatus.FORBIDDEN.value(),
                 HttpStatus.FORBIDDEN.getReasonPhrase(),
-                messageSource.getMessage("auth.access.denied", null, locale),
+                messageSource.getMessage("auth.access.denied", null, ex.getMessage(), locale),
                 "ERR-AUTH-FORBIDDEN-403",
                 request.getRequestURI()
         );
@@ -60,7 +60,7 @@ class AuthExceptionHandler {
         return new ApiErrorResponse(
                 HttpStatus.UNAUTHORIZED.value(),
                 HttpStatus.UNAUTHORIZED.getReasonPhrase(),
-                messageSource.getMessage("auth.jwt.token.expired", null, locale),
+                messageSource.getMessage("auth.jwt.token.expired", null, ex.getMessage(), locale),
                 "ERR-AUTH-EXPIRED_TOKEN-401",
                 request.getRequestURI()
         );
