@@ -3,6 +3,7 @@ package com.arcathoria.character;
 import com.arcathoria.account.vo.AccountId;
 import com.arcathoria.character.vo.CharacterId;
 import com.arcathoria.character.vo.CharacterName;
+import com.arcathoria.character.vo.Health;
 
 import java.util.UUID;
 
@@ -15,27 +16,33 @@ public class CharacterSnapshotMother {
     private CharacterId characterId = new CharacterId(DEFAULT_CHARACTER_ID);
     private CharacterName characterName = new CharacterName(DEFAULT_CHARACTER_NAME);
     private AccountId accountId = new AccountId(DEFAULT_ACCOUNT_ID);
+    private Health health = new Health(100.0, 100.0);
 
     static CharacterSnapshotMother create() {
         return new CharacterSnapshotMother();
     }
 
-    CharacterSnapshotMother withCharacterId(UUID uuid) {
+    CharacterSnapshotMother withCharacterId(final UUID uuid) {
         this.characterId = new CharacterId(uuid);
         return this;
     }
 
-    CharacterSnapshotMother withCharacterName(String name) {
+    CharacterSnapshotMother withCharacterName(final String name) {
         this.characterName = new CharacterName(name);
         return this;
     }
 
-    CharacterSnapshotMother withAccountId(UUID uuid) {
+    CharacterSnapshotMother withAccountId(final UUID uuid) {
         this.accountId = new AccountId(uuid);
         return this;
     }
 
+    CharacterSnapshotMother withHealth(final Double current, final Double max) {
+        this.health = new Health(current, max);
+        return this;
+    }
+
     CharacterSnapshot build() {
-        return new CharacterSnapshot(characterId, accountId, characterName);
+        return new CharacterSnapshot(characterId, accountId, characterName, health);
     }
 }
