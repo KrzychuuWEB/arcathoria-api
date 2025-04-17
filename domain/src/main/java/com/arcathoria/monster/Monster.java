@@ -1,24 +1,34 @@
 package com.arcathoria.monster;
 
 import com.arcathoria.character.vo.Health;
+import com.arcathoria.monster.vo.MonsterId;
+import com.arcathoria.monster.vo.MonsterName;
 
 class Monster {
 
     static Monster restore(final MonsterSnapshot snapshot) {
-        return new Monster();
+        return new Monster(
+                snapshot.getMonsterId(),
+                snapshot.getMonsterName(),
+                snapshot.getHealth()
+        );
     }
 
-    private final String monsterCode;
-    private final String monsterName;
+    private final MonsterId monsterId;
+    private final MonsterName monsterName;
     private final Health health;
 
-    private Monster(final String monsterCode, final String monsterName, final Health health) {
-        this.monsterCode = monsterCode;
+    private Monster(final MonsterId monsterId, final MonsterName monsterName, final Health health) {
+        this.monsterId = monsterId;
         this.monsterName = monsterName;
         this.health = health;
     }
 
     MonsterSnapshot getSnapshot() {
-        return new MonsterSnapshot();
+        return new MonsterSnapshot(
+                monsterId,
+                monsterName,
+                health
+        );
     }
 }
