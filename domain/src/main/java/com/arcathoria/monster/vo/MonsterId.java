@@ -1,4 +1,4 @@
 package com.arcathoria.monster.vo;
 
-public record MonsterId(String monsterId) {
+public record MonsterId(String value) {
 }
