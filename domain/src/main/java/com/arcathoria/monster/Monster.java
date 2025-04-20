@@ -8,9 +8,9 @@ class Monster {
 
     static Monster restore(final MonsterSnapshot snapshot) {
         return new Monster(
-                snapshot.getMonsterId(),
-                snapshot.getMonsterName(),
-                snapshot.getHealth()
+                snapshot.monsterId(),
+                snapshot.monsterName(),
+                snapshot.health()
         );
     }
 
