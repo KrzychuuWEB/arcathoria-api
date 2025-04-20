@@ -16,8 +16,8 @@ class MonsterTest {
 
         Monster result = Monster.restore(snapshot);
 
-        assertThat(result.getSnapshot().getMonsterId()).isEqualTo(monsterId);
-        assertThat(result.getSnapshot().getMonsterName()).isEqualTo(MonsterSnapshotMother.DEFAULT_MONSTER_NAME);
-        assertThat(result.getSnapshot().getHealth()).isEqualTo(MonsterSnapshotMother.DEFAULT_HEALTH);
+        assertThat(result.getSnapshot().monsterId()).isEqualTo(monsterId);
+        assertThat(result.getSnapshot().monsterName()).isEqualTo(MonsterSnapshotMother.DEFAULT_MONSTER_NAME);
+        assertThat(result.getSnapshot().health()).isEqualTo(MonsterSnapshotMother.DEFAULT_HEALTH);
     }
 }

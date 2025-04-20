@@ -14,8 +14,8 @@ class MonsterSnapshotTest {
         MonsterId id = new MonsterId(UUID.randomUUID());
         MonsterSnapshot snapshot = MonsterSnapshotMother.aMonsterSnapshot().withMonsterId(id).build();
 
-        assertThat(snapshot.getMonsterId()).isEqualTo(id);
-        assertThat(snapshot.getMonsterName()).isEqualTo(MonsterSnapshotMother.DEFAULT_MONSTER_NAME);
-        assertThat(snapshot.getHealth()).isEqualTo(MonsterSnapshotMother.DEFAULT_HEALTH);
+        assertThat(snapshot.monsterId()).isEqualTo(id);
+        assertThat(snapshot.monsterName()).isEqualTo(MonsterSnapshotMother.DEFAULT_MONSTER_NAME);
+        assertThat(snapshot.health()).isEqualTo(MonsterSnapshotMother.DEFAULT_HEALTH);
     }
 }
