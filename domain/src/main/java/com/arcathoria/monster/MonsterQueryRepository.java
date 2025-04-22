@@ -2,7 +2,9 @@ package com.arcathoria.monster;
 
 import com.arcathoria.monster.vo.MonsterId;
 
+import java.util.Optional;
+
 interface MonsterQueryRepository {
 
-    Monster getById(final MonsterId monsterId);
+    Optional<Monster> getById(final MonsterId monsterId);
 }

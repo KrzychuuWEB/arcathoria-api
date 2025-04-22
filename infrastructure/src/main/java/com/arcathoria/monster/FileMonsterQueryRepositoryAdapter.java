@@ -3,7 +3,6 @@ package com.arcathoria.monster;
 import com.arcathoria.character.vo.Health;
 import com.arcathoria.monster.dto.FileMonsterDTO;
 import com.arcathoria.monster.exception.MonsterLoadingException;
-import com.arcathoria.monster.exception.MonsterNotFoundException;
 import com.arcathoria.monster.vo.MonsterId;
 import com.arcathoria.monster.vo.MonsterName;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -44,11 +43,10 @@ class FileMonsterQueryRepositoryAdapter implements MonsterQueryRepository {
     }
 
     @Override
-    public Monster getById(final MonsterId monsterId) {
-        FileMonsterDTO dto = Optional.ofNullable(monsterMap.get(monsterId.value()))
-                .orElseThrow(() -> new MonsterNotFoundException(monsterId.value()));
-
-        return toDomain(dto);
+    public Optional<Monster> getById(final MonsterId monsterId) {
+        return Optional.of(
+                toDomain(monsterMap.get(monsterId.value()))
+        );
     }
 
     private Monster toDomain(FileMonsterDTO dto) {
