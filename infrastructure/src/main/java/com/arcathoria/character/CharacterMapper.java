@@ -3,6 +3,7 @@ package com.arcathoria.character;
 import com.arcathoria.account.vo.AccountId;
 import com.arcathoria.character.vo.CharacterId;
 import com.arcathoria.character.vo.CharacterName;
+import com.arcathoria.character.vo.Health;
 
 final class CharacterMapper {
 
@@ -14,7 +15,8 @@ final class CharacterMapper {
                 new CharacterSnapshot(
                         new CharacterId(entity.getId()),
                         new AccountId(entity.getAccountId()),
-                        new CharacterName(entity.getName())
+                        new CharacterName(entity.getName()),
+                        new Health(entity.getMaxHealth(), entity.getMaxHealth())
                 )
         );
     }
@@ -23,7 +25,8 @@ final class CharacterMapper {
         return new CharacterEntity(
                 character.getSnapshot().getCharacterId().value(),
                 character.getSnapshot().getAccountId().value(),
-                character.getSnapshot().getCharacterName().value()
+                character.getSnapshot().getCharacterName().value(),
+                character.getSnapshot().getHealth().getMax()
         );
     }
 }

@@ -3,6 +3,7 @@ package com.arcathoria.character;
 import com.arcathoria.account.vo.AccountId;
 import com.arcathoria.character.vo.CharacterId;
 import com.arcathoria.character.vo.CharacterName;
+import com.arcathoria.character.vo.Health;
 
 class CharacterFactory {
 
@@ -11,7 +12,8 @@ class CharacterFactory {
                 new CharacterSnapshot(
                         new CharacterId(null),
                         accountId,
-                        name
+                        name,
+                        new Health(100.0, 100.0)
                 )
         );
     }

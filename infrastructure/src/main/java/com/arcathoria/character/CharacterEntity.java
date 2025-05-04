@@ -17,13 +17,16 @@ class CharacterEntity {
 
     private String name;
 
+    private Double maxHealth;
+
     protected CharacterEntity() {
     }
 
-    CharacterEntity(final UUID id, final UUID accountId, final String name) {
+    CharacterEntity(final UUID id, final UUID accountId, final String name, final Double maxHealth) {
         this.id = id;
         this.accountId = accountId;
         this.name = name;
+        this.maxHealth = maxHealth;
     }
 
     UUID getId() {
@@ -36,5 +39,9 @@ class CharacterEntity {
 
     String getName() {
         return name;
+    }
+
+    Double getMaxHealth() {
+        return maxHealth;
     }
 }
