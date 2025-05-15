@@ -1,7 +1,8 @@
 package com.arcathoria.monster;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.arcathoria.monster.dto.MonsterDTO;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/monsters")
@@ -13,5 +14,9 @@ class MonsterController {
         this.monsterQueryFacade = monsterQueryFacade;
     }
 
-    
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    MonsterDTO getMonsterById(final @PathVariable String id) {
+        return monsterQueryFacade.getMonsterById(id);
+    }
 }

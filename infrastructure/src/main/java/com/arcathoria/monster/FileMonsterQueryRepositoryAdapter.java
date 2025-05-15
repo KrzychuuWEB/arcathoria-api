@@ -44,9 +44,8 @@ class FileMonsterQueryRepositoryAdapter implements MonsterQueryRepository {
 
     @Override
     public Optional<Monster> getById(final MonsterId monsterId) {
-        return Optional.of(
-                toDomain(monsterMap.get(monsterId.value()))
-        );
+        return Optional.ofNullable(monsterMap.get(monsterId.value()))
+                .map(this::toDomain);
     }
 
     private Monster toDomain(FileMonsterDTO dto) {
