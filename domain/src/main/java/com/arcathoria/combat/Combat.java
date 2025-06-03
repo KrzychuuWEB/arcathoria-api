@@ -1,7 +1,7 @@
 package com.arcathoria.combat;
 
 import com.arcathoria.combat.vo.CombatId;
-import com.arcathoria.monster.vo.Participant;
+import com.arcathoria.combat.vo.Participant;
 
 class Combat {
 
