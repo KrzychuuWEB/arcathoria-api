@@ -23,7 +23,7 @@ public class Participant {
         return health;
     }
 
-    void applyDamage(final double damage) {
+    public void applyDamage(final double damage) {
         health.subtract(damage);
     }
 

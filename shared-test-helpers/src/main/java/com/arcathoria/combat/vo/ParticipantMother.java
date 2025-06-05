@@ -18,12 +18,12 @@ public final class ParticipantMother {
         return new ParticipantMother();
     }
 
-    ParticipantMother withId(final UUID id) {
+    public ParticipantMother withId(final UUID id) {
         this.uuid = id;
         return this;
     }
 
-    ParticipantMother withHealth(final Double current, final Double max) {
+    public ParticipantMother withHealth(final Double current, final Double max) {
         this.health = new Health(current, max);
         return this;
     }

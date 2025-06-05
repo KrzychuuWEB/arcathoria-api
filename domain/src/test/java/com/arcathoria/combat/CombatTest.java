@@ -1,6 +1,7 @@
 package com.arcathoria.combat;
 
 import com.arcathoria.combat.vo.CombatId;
+import com.arcathoria.combat.vo.ParticipantMother;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
@@ -16,5 +17,37 @@ class CombatTest {
         Combat combat = Combat.restore(CombatSnapshotMother.aCombat().withCombatId(combatId).build());
 
         assertThat(combat.getSnapshot().combatId()).isEqualTo(combatId);
+    }
+
+    @Test
+    void should_apply_damage_to_attacker() {
+        Combat combat = Combat.restore(
+                CombatSnapshotMother.aCombat()
+                        .withCombatSide(CombatSide.DEFENDER)
+                        .withAttacker(ParticipantMother.aParticipantBuilder().withHealth(100.0, 100.0).build())
+                        .build()
+        );
+
+        assertThat(combat.getSnapshot().attacker().getHealth().getCurrent()).isEqualTo(100.0);
+
+        combat.applyDamageOpponent(50.0);
+
+        assertThat(combat.getSnapshot().attacker().getHealth().getCurrent()).isEqualTo(50.0);
+    }
+
+    @Test
+    void should_apply_damage_to_defender() {
+        Combat combat = Combat.restore(
+                CombatSnapshotMother.aCombat()
+                        .withCombatSide(CombatSide.ATTACKER)
+                        .withDefender(ParticipantMother.aParticipantBuilder().withHealth(100.0, 100.0).build())
+                        .build()
+        );
+
+        assertThat(combat.getSnapshot().defender().getHealth().getCurrent()).isEqualTo(100.0);
+
+        combat.applyDamageOpponent(50.0);
+
+        assertThat(combat.getSnapshot().defender().getHealth().getCurrent()).isEqualTo(50.0);
     }
 }

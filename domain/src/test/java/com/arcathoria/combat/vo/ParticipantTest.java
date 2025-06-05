@@ -15,12 +15,12 @@ class ParticipantTest {
     }
 
     @Test
-    void should_apply_damage() {
+    void should_reduce_attacker_hp_when_defender_deals_damage() {
         Participant participant = ParticipantMother.aParticipantBuilder()
                 .withHealth(100.0, 100.0)
                 .build();
 
-        participant.applyDamage(50);
+        participant.applyDamage(50.0);
 
         assertThat(participant.getHealth().getCurrent()).isEqualTo(50.0);
     }
