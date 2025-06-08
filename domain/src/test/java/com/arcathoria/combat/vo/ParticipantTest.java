@@ -24,4 +24,24 @@ class ParticipantTest {
 
         assertThat(participant.getHealth().getCurrent()).isEqualTo(50.0);
     }
+
+    @Test
+    void should_return_false_if_participant_is_not_alive() {
+        Participant participant = ParticipantMother.aParticipantBuilder()
+                .withHealth(100.0, 100.0)
+                .build();
+
+        participant.applyDamage(100.0);
+
+        assertThat(participant.isAlive()).isFalse();
+    }
+
+    @Test
+    void should_return_true_if_participant_is_alive() {
+        Participant participant = ParticipantMother.aParticipantBuilder()
+                .withHealth(100.0, 100.0)
+                .build();
+
+        assertThat(participant.isAlive()).isTrue();
+    }
 }

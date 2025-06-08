@@ -27,6 +27,10 @@ public class Participant {
         health.subtract(damage);
     }
 
+    public boolean isAlive() {
+        return health.isAlive();
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (o == null || getClass() != o.getClass()) return false;

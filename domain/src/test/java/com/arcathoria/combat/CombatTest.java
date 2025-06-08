@@ -50,4 +50,56 @@ class CombatTest {
 
         assertThat(combat.getSnapshot().defender().getHealth().getCurrent()).isEqualTo(50.0);
     }
+
+    @Test
+    void should_false_if_defender_is_not_alive() {
+        Combat combat = Combat.restore(
+                CombatSnapshotMother.aCombat()
+                        .withCombatSide(CombatSide.ATTACKER)
+                        .withDefender(ParticipantMother.aParticipantBuilder().withHealth(100.0, 100.0).build())
+                        .build()
+        );
+
+        combat.applyDamageOpponent(100.0);
+
+        assertThat(combat.isDefenderAlive()).isFalse();
+    }
+
+    @Test
+    void should_true_if_defender_is__alive() {
+        Combat combat = Combat.restore(
+                CombatSnapshotMother.aCombat()
+                        .withCombatSide(CombatSide.ATTACKER)
+                        .withDefender(ParticipantMother.aParticipantBuilder().withHealth(100.0, 100.0).build())
+                        .build()
+        );
+
+        assertThat(combat.isDefenderAlive()).isTrue();
+    }
+
+    @Test
+    void should_false_if_attacker_is_not_alive() {
+        Combat combat = Combat.restore(
+                CombatSnapshotMother.aCombat()
+                        .withCombatSide(CombatSide.DEFENDER)
+                        .withAttacker(ParticipantMother.aParticipantBuilder().withHealth(100.0, 100.0).build())
+                        .build()
+        );
+
+        combat.applyDamageOpponent(100.0);
+
+        assertThat(combat.isAttackerAlive()).isFalse();
+    }
+
+    @Test
+    void should_true_if_attacker_is__alive() {
+        Combat combat = Combat.restore(
+                CombatSnapshotMother.aCombat()
+                        .withCombatSide(CombatSide.DEFENDER)
+                        .withAttacker(ParticipantMother.aParticipantBuilder().withHealth(100.0, 100.0).build())
+                        .build()
+        );
+
+        assertThat(combat.isAttackerAlive()).isTrue();
+    }
 }

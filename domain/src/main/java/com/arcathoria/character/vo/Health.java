@@ -6,7 +6,7 @@ public class Health extends Resource {
         super(current, max);
     }
 
-    boolean isAlive() {
+    public boolean isAlive() {
         return getCurrent() > 0;
     }
 }

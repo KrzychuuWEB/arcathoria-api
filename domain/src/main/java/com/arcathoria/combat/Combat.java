@@ -47,4 +47,12 @@ class Combat {
             attacker.applyDamage(damage);
         }
     }
+
+    boolean isDefenderAlive() {
+        return defender.isAlive();
+    }
+
+    boolean isAttackerAlive() {
+        return attacker.isAlive();
+    }
 }
