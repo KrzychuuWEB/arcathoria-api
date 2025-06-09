@@ -7,6 +7,7 @@ record CombatSnapshot(
         CombatId combatId,
         Participant attacker,
         Participant defender,
-        CombatSide combatSide
+        CombatSide combatSide,
+        CombatType combatType
 ) {
 }

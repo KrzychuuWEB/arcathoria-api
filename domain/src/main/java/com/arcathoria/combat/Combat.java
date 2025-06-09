@@ -10,7 +10,8 @@ class Combat {
                 snapshot.combatId(),
                 snapshot.attacker(),
                 snapshot.defender(),
-                snapshot.combatSide()
+                snapshot.combatSide(),
+                snapshot.combatType()
         );
     }
 
@@ -18,17 +19,19 @@ class Combat {
     private final Participant attacker;
     private final Participant defender;
     private final CombatSide combatSide;
+    private final CombatType combatType;
 
     Combat(
             final CombatId combatId,
             final Participant attacker,
             final Participant defender,
-            final CombatSide combatSide
+            final CombatSide combatSide, final CombatType combatType
     ) {
         this.combatId = combatId;
         this.attacker = attacker;
         this.defender = defender;
         this.combatSide = combatSide;
+        this.combatType = combatType;
     }
 
     CombatSnapshot getSnapshot() {
@@ -36,7 +39,8 @@ class Combat {
                 combatId,
                 attacker,
                 defender,
-                combatSide
+                combatSide,
+                combatType
         );
     }
 

@@ -11,11 +11,13 @@ public final class CombatSnapshotMother {
     static final Participant DEFAULT_ATTACKER = ParticipantMother.aParticipantBuilder().withHealth(100.0, 100.0).build();
     static final Participant DEFAULT_DEFENDER = ParticipantMother.aParticipantBuilder().withHealth(80.0, 80.0).build();
     static final CombatSide DEFAULT_COMBAT_SIDE = CombatSide.ATTACKER;
+    static final CombatType DEFAULT_COMBAT_TYPE = CombatType.PVE;
 
     private CombatId combatId = new CombatId(DEFAULT_COMBAT_ID);
     private Participant attacker = DEFAULT_ATTACKER;
     private Participant defender = DEFAULT_DEFENDER;
     private CombatSide combatSide = DEFAULT_COMBAT_SIDE;
+    private CombatType combatType = DEFAULT_COMBAT_TYPE;
 
     static CombatSnapshotMother aCombat() {
         return new CombatSnapshotMother();
@@ -41,7 +43,18 @@ public final class CombatSnapshotMother {
         return this;
     }
 
+    CombatSnapshotMother withCombatType(final CombatType combatType) {
+        this.combatType = combatType;
+        return this;
+    }
+
     CombatSnapshot build() {
-        return new CombatSnapshot(combatId, attacker, defender, combatSide);
+        return new CombatSnapshot(
+                combatId,
+                attacker,
+                defender,
+                combatSide,
+                combatType
+        );
     }
 }
