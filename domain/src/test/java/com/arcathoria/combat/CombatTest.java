@@ -1,6 +1,7 @@
 package com.arcathoria.combat;
 
 import com.arcathoria.combat.vo.CombatId;
+import com.arcathoria.combat.vo.CombatTurn;
 import com.arcathoria.combat.vo.ParticipantMother;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +24,7 @@ class CombatTest {
     void should_apply_damage_to_attacker() {
         Combat combat = Combat.restore(
                 CombatSnapshotMother.aCombat()
-                        .withCombatSide(CombatSide.DEFENDER)
+                        .withCombatTurn(new CombatTurn(CombatSide.DEFENDER))
                         .withAttacker(ParticipantMother.aParticipantBuilder().withHealth(100.0, 100.0).build())
                         .build()
         );
@@ -39,7 +40,7 @@ class CombatTest {
     void should_apply_damage_to_defender() {
         Combat combat = Combat.restore(
                 CombatSnapshotMother.aCombat()
-                        .withCombatSide(CombatSide.ATTACKER)
+                        .withCombatTurn(new CombatTurn(CombatSide.ATTACKER))
                         .withDefender(ParticipantMother.aParticipantBuilder().withHealth(100.0, 100.0).build())
                         .build()
         );
@@ -55,7 +56,7 @@ class CombatTest {
     void should_false_if_defender_is_not_alive() {
         Combat combat = Combat.restore(
                 CombatSnapshotMother.aCombat()
-                        .withCombatSide(CombatSide.ATTACKER)
+                        .withCombatTurn(new CombatTurn(CombatSide.ATTACKER))
                         .withDefender(ParticipantMother.aParticipantBuilder().withHealth(100.0, 100.0).build())
                         .build()
         );
@@ -69,7 +70,7 @@ class CombatTest {
     void should_true_if_defender_is__alive() {
         Combat combat = Combat.restore(
                 CombatSnapshotMother.aCombat()
-                        .withCombatSide(CombatSide.ATTACKER)
+                        .withCombatTurn(new CombatTurn(CombatSide.ATTACKER))
                         .withDefender(ParticipantMother.aParticipantBuilder().withHealth(100.0, 100.0).build())
                         .build()
         );
@@ -81,7 +82,7 @@ class CombatTest {
     void should_false_if_attacker_is_not_alive() {
         Combat combat = Combat.restore(
                 CombatSnapshotMother.aCombat()
-                        .withCombatSide(CombatSide.DEFENDER)
+                        .withCombatTurn(new CombatTurn(CombatSide.DEFENDER))
                         .withAttacker(ParticipantMother.aParticipantBuilder().withHealth(100.0, 100.0).build())
                         .build()
         );
@@ -95,7 +96,7 @@ class CombatTest {
     void should_true_if_attacker_is__alive() {
         Combat combat = Combat.restore(
                 CombatSnapshotMother.aCombat()
-                        .withCombatSide(CombatSide.DEFENDER)
+                        .withCombatTurn(new CombatTurn(CombatSide.DEFENDER))
                         .withAttacker(ParticipantMother.aParticipantBuilder().withHealth(100.0, 100.0).build())
                         .build()
         );

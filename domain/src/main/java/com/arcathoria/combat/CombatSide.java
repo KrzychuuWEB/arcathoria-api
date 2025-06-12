@@ -1,6 +1,6 @@
 package com.arcathoria.combat;
 
-enum CombatSide {
+public enum CombatSide {
     ATTACKER,
     DEFENDER
 }

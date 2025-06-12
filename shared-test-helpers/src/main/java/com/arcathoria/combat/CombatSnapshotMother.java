@@ -1,6 +1,7 @@
 package com.arcathoria.combat;
 
 import com.arcathoria.combat.vo.CombatId;
+import com.arcathoria.combat.vo.CombatTurn;
 import com.arcathoria.combat.vo.Participant;
 import com.arcathoria.combat.vo.ParticipantMother;
 
@@ -10,13 +11,13 @@ public final class CombatSnapshotMother {
     static final UUID DEFAULT_COMBAT_ID = null;
     static final Participant DEFAULT_ATTACKER = ParticipantMother.aParticipantBuilder().withHealth(100.0, 100.0).build();
     static final Participant DEFAULT_DEFENDER = ParticipantMother.aParticipantBuilder().withHealth(80.0, 80.0).build();
-    static final CombatSide DEFAULT_COMBAT_SIDE = CombatSide.ATTACKER;
+    static final CombatTurn DEFAULT_COMBAT_TURN = new CombatTurn(CombatSide.ATTACKER);
     static final CombatType DEFAULT_COMBAT_TYPE = CombatType.PVE;
 
     private CombatId combatId = new CombatId(DEFAULT_COMBAT_ID);
     private Participant attacker = DEFAULT_ATTACKER;
     private Participant defender = DEFAULT_DEFENDER;
-    private CombatSide combatSide = DEFAULT_COMBAT_SIDE;
+    private CombatTurn combatTurn = DEFAULT_COMBAT_TURN;
     private CombatType combatType = DEFAULT_COMBAT_TYPE;
 
     static CombatSnapshotMother aCombat() {
@@ -38,8 +39,8 @@ public final class CombatSnapshotMother {
         return this;
     }
 
-    CombatSnapshotMother withCombatSide(final CombatSide combatSide) {
-        this.combatSide = combatSide;
+    CombatSnapshotMother withCombatTurn(final CombatTurn combatTurn) {
+        this.combatTurn = combatTurn;
         return this;
     }
 
@@ -53,7 +54,7 @@ public final class CombatSnapshotMother {
                 combatId,
                 attacker,
                 defender,
-                combatSide,
+                combatTurn,
                 combatType
         );
     }

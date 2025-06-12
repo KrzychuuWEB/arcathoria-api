@@ -1,6 +1,7 @@
 package com.arcathoria.combat;
 
 import com.arcathoria.combat.vo.CombatId;
+import com.arcathoria.combat.vo.CombatTurn;
 import com.arcathoria.combat.vo.Participant;
 
 class Combat {
@@ -10,7 +11,7 @@ class Combat {
                 snapshot.combatId(),
                 snapshot.attacker(),
                 snapshot.defender(),
-                snapshot.combatSide(),
+                snapshot.combatTurn(),
                 snapshot.combatType()
         );
     }
@@ -18,19 +19,20 @@ class Combat {
     private final CombatId combatId;
     private final Participant attacker;
     private final Participant defender;
-    private final CombatSide combatSide;
+    private final CombatTurn combatTurn;
     private final CombatType combatType;
 
     Combat(
             final CombatId combatId,
             final Participant attacker,
             final Participant defender,
-            final CombatSide combatSide, final CombatType combatType
+            final CombatTurn combatTurn,
+            final CombatType combatType
     ) {
         this.combatId = combatId;
         this.attacker = attacker;
         this.defender = defender;
-        this.combatSide = combatSide;
+        this.combatTurn = combatTurn;
         this.combatType = combatType;
     }
 
@@ -39,13 +41,13 @@ class Combat {
                 combatId,
                 attacker,
                 defender,
-                combatSide,
+                combatTurn,
                 combatType
         );
     }
 
     void applyDamageOpponent(final double damage) {
-        if (combatSide.equals(CombatSide.ATTACKER)) {
+        if (combatTurn.current().equals(CombatSide.ATTACKER)) {
             defender.applyDamage(damage);
         } else {
             attacker.applyDamage(damage);
