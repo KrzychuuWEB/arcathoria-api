@@ -11,15 +11,15 @@ class CombatTurnTest {
     void should_return_attacker_turn() {
         CombatTurn combatTurn = new CombatTurn(CombatSide.ATTACKER);
 
-        assertThat(combatTurn.current()).isEqualTo(CombatSide.ATTACKER);
+        assertThat(combatTurn.getCurrent()).isEqualTo(CombatSide.ATTACKER);
     }
 
     @Test
     void should_return_defender_after_change_turn() {
         CombatTurn combatTurn = new CombatTurn(CombatSide.ATTACKER);
 
-        CombatTurn changeTurn = combatTurn.changeTurn();
+        combatTurn.changeTurn();
 
-        assertThat(changeTurn.current()).isEqualTo(CombatSide.DEFENDER);
+        assertThat(combatTurn.getCurrent()).isEqualTo(CombatSide.DEFENDER);
     }
 }

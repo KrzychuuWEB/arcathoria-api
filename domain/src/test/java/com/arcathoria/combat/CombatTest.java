@@ -103,4 +103,19 @@ class CombatTest {
 
         assertThat(combat.isAttackerAlive()).isTrue();
     }
+
+    @Test
+    void change_turn_from_attacker_to_defender_and_get_current_turn() {
+        Combat combat = Combat.restore(
+                CombatSnapshotMother.aCombat()
+                        .withCombatTurn(new CombatTurn(CombatSide.ATTACKER))
+                        .build()
+        );
+
+        assertThat(combat.getCurrentTurn()).isEqualTo(CombatSide.ATTACKER);
+
+        combat.changeTurn();
+
+        assertThat(combat.getCurrentTurn()).isEqualTo(CombatSide.DEFENDER);
+    }
 }

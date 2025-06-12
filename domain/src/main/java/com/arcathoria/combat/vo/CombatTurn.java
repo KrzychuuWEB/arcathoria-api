@@ -2,9 +2,19 @@ package com.arcathoria.combat.vo;
 
 import com.arcathoria.combat.CombatSide;
 
-public record CombatTurn(CombatSide current) {
+public class CombatTurn {
 
-    CombatTurn changeTurn() {
-        return new CombatTurn(current == CombatSide.ATTACKER ? CombatSide.DEFENDER : CombatSide.ATTACKER);
+    private CombatSide current;
+
+    public CombatTurn(final CombatSide current) {
+        this.current = current;
+    }
+
+    public void changeTurn() {
+        this.current = current == CombatSide.ATTACKER ? CombatSide.DEFENDER : CombatSide.ATTACKER;
+    }
+
+    public CombatSide getCurrent() {
+        return current;
     }
 }
