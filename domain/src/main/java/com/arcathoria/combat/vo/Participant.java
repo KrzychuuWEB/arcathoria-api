@@ -1,6 +1,7 @@
 package com.arcathoria.combat.vo;
 
 import com.arcathoria.character.vo.Health;
+import com.arcathoria.character.vo.Intelligence;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -9,10 +10,12 @@ public class Participant {
 
     private final UUID id;
     private final Health health;
+    private final Attributes attributes;
 
-    public Participant(final UUID id, final Health health) {
+    public Participant(final UUID id, final Health health, final Attributes attributes) {
         this.id = id;
         this.health = health;
+        this.attributes = attributes;
     }
 
     public UUID getId() {
@@ -21,6 +24,10 @@ public class Participant {
 
     public Health getHealth() {
         return health;
+    }
+
+    public Intelligence getIntelligence() {
+        return attributes.intelligence();
     }
 
     public void applyDamage(final double damage) {
