@@ -1,7 +1,6 @@
 package com.arcathoria.combat.vo;
 
 import com.arcathoria.character.vo.Health;
-import com.arcathoria.character.vo.Intelligence;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -26,8 +25,8 @@ public class Participant {
         return health;
     }
 
-    public Intelligence getIntelligence() {
-        return attributes.intelligence();
+    public int getIntelligenceLevel() {
+        return attributes.intelligence().getLevel();
     }
 
     public void applyDamage(final double damage) {

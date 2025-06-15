@@ -50,12 +50,16 @@ class Combat {
         return combatTurn.getCurrent();
     }
 
+    Participant getCurrentTurnParticipant() {
+        return getCurrentTurn() == CombatSide.ATTACKER ? attacker : defender;
+    }
+
     void changeTurn() {
         combatTurn.changeTurn();
     }
 
     void applyDamageOpponent(final double damage) {
-        if (combatTurn.getCurrent().equals(CombatSide.ATTACKER)) {
+        if (getCurrentTurn() == CombatSide.ATTACKER) {
             defender.applyDamage(damage);
         } else {
             attacker.applyDamage(damage);

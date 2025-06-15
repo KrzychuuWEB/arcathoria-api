@@ -2,6 +2,7 @@ package com.arcathoria.combat;
 
 import com.arcathoria.combat.vo.CombatId;
 import com.arcathoria.combat.vo.CombatTurn;
+import com.arcathoria.combat.vo.Participant;
 import com.arcathoria.combat.vo.ParticipantMother;
 import org.junit.jupiter.api.Test;
 
@@ -117,5 +118,39 @@ class CombatTest {
         combat.changeTurn();
 
         assertThat(combat.getCurrentTurn()).isEqualTo(CombatSide.DEFENDER);
+    }
+
+    @Test
+    void should_return_attacker_for_attacker_turn() {
+        UUID uuid = UUID.randomUUID();
+        Participant participant = ParticipantMother.aParticipantBuilder().withId(uuid).build();
+        Combat combat = Combat.restore(
+                CombatSnapshotMother.aCombat()
+                        .withAttacker(participant)
+                        .withDefender(ParticipantMother.aParticipantBuilder().build())
+                        .withCombatTurn(new CombatTurn(CombatSide.ATTACKER))
+                        .build()
+        );
+
+        assertThat(combat.getCurrentTurn()).isEqualTo(CombatSide.ATTACKER);
+        assertThat(combat.getCurrentTurnParticipant()).isEqualTo(participant);
+        assertThat(combat.getCurrentTurnParticipant().getId()).isEqualTo(uuid);
+    }
+
+    @Test
+    void should_return_defender_for_defender_turn() {
+        UUID uuid = UUID.randomUUID();
+        Participant participant = ParticipantMother.aParticipantBuilder().withId(uuid).build();
+        Combat combat = Combat.restore(
+                CombatSnapshotMother.aCombat()
+                        .withDefender(participant)
+                        .withAttacker(ParticipantMother.aParticipantBuilder().build())
+                        .withCombatTurn(new CombatTurn(CombatSide.DEFENDER))
+                        .build()
+        );
+
+        assertThat(combat.getCurrentTurn()).isEqualTo(CombatSide.DEFENDER);
+        assertThat(combat.getCurrentTurnParticipant()).isEqualTo(participant);
+        assertThat(combat.getCurrentTurnParticipant().getId()).isEqualTo(uuid);
     }
 }
