@@ -6,9 +6,9 @@ import com.arcathoria.character.vo.Intelligence;
 import java.util.UUID;
 
 public final class ParticipantMother {
-    static final UUID DEFAULT_ID = UUID.randomUUID();
-    static final Health DEFAULT_HEALTH = new Health(100.0, 100.0);
-    static final Intelligence DEFAULT_INTELLIGENCE = new Intelligence(1);
+    public static final UUID DEFAULT_ID = UUID.randomUUID();
+    public static final Health DEFAULT_HEALTH = new Health(100.0, 100.0);
+    public static final Intelligence DEFAULT_INTELLIGENCE = new Intelligence(1);
 
     private UUID uuid = DEFAULT_ID;
     private Health health = DEFAULT_HEALTH;
