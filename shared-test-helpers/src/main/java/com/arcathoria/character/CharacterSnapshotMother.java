@@ -4,6 +4,8 @@ import com.arcathoria.account.vo.AccountId;
 import com.arcathoria.character.vo.CharacterId;
 import com.arcathoria.character.vo.CharacterName;
 import com.arcathoria.character.vo.Health;
+import com.arcathoria.character.vo.Intelligence;
+import com.arcathoria.combat.vo.Attributes;
 
 import java.util.UUID;
 
@@ -17,6 +19,9 @@ public class CharacterSnapshotMother {
     private CharacterName characterName = new CharacterName(DEFAULT_CHARACTER_NAME);
     private AccountId accountId = new AccountId(DEFAULT_ACCOUNT_ID);
     private Health health = new Health(100.0, 100.0);
+    private Attributes attributes = new Attributes(
+            new Intelligence(1)
+    );
 
     static CharacterSnapshotMother create() {
         return new CharacterSnapshotMother();
@@ -37,12 +42,7 @@ public class CharacterSnapshotMother {
         return this;
     }
 
-    CharacterSnapshotMother withHealth(final Double current, final Double max) {
-        this.health = new Health(current, max);
-        return this;
-    }
-
     CharacterSnapshot build() {
-        return new CharacterSnapshot(characterId, accountId, characterName, health);
+        return new CharacterSnapshot(characterId, accountId, characterName, health, attributes);
     }
 }

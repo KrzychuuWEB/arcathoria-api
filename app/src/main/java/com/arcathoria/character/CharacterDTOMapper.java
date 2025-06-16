@@ -14,7 +14,9 @@ final class CharacterDTOMapper {
         CharacterSnapshot snapshot = character.getSnapshot();
         return new CharacterDTO(
                 snapshot.getCharacterId().value(),
-                snapshot.getCharacterName().value()
+                snapshot.getCharacterName().value(),
+                snapshot.getHealth().getMax(),
+                snapshot.getAttributes().intelligence().getLevel()
         );
     }
 
@@ -22,7 +24,9 @@ final class CharacterDTOMapper {
         return characters.stream()
                 .map(character -> new CharacterDTO(
                         character.getSnapshot().getCharacterId().value(),
-                        character.getSnapshot().getCharacterName().value()
+                        character.getSnapshot().getCharacterName().value(),
+                        character.getSnapshot().getHealth().getMax(),
+                        character.getSnapshot().getAttributes().intelligence().getLevel()
                 ))
                 .toList();
     }

@@ -4,6 +4,8 @@ import com.arcathoria.account.vo.AccountId;
 import com.arcathoria.character.vo.CharacterId;
 import com.arcathoria.character.vo.CharacterName;
 import com.arcathoria.character.vo.Health;
+import com.arcathoria.character.vo.Intelligence;
+import com.arcathoria.combat.vo.Attributes;
 
 final class CharacterMapper {
 
@@ -16,7 +18,10 @@ final class CharacterMapper {
                         new CharacterId(entity.getId()),
                         new AccountId(entity.getAccountId()),
                         new CharacterName(entity.getName()),
-                        new Health(entity.getMaxHealth(), entity.getMaxHealth())
+                        new Health(entity.getMaxHealth(), entity.getMaxHealth()),
+                        new Attributes(
+                                new Intelligence(entity.getIntelligence())
+                        )
                 )
         );
     }
@@ -26,7 +31,8 @@ final class CharacterMapper {
                 character.getSnapshot().getCharacterId().value(),
                 character.getSnapshot().getAccountId().value(),
                 character.getSnapshot().getCharacterName().value(),
-                character.getSnapshot().getHealth().getMax()
+                character.getSnapshot().getHealth().getMax(),
+                character.getSnapshot().getAttributes().intelligence().getLevel()
         );
     }
 }
