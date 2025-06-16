@@ -1,6 +1,8 @@
 package com.arcathoria.monster;
 
 import com.arcathoria.character.vo.Health;
+import com.arcathoria.character.vo.Intelligence;
+import com.arcathoria.combat.vo.Attributes;
 import com.arcathoria.monster.dto.FileMonsterDTO;
 import com.arcathoria.monster.exception.MonsterLoadingException;
 import com.arcathoria.monster.vo.MonsterId;
@@ -48,11 +50,12 @@ class FileMonsterQueryRepositoryAdapter implements MonsterQueryRepository {
                 .map(this::toDomain);
     }
 
-    private Monster toDomain(FileMonsterDTO dto) {
+    private Monster toDomain(final FileMonsterDTO dto) {
         return Monster.restore(new MonsterSnapshot(
                 new MonsterId(dto.monsterId()),
                 new MonsterName(dto.monsterName()),
-                new Health(dto.currentHealth(), dto.maxHealth())
+                new Health(dto.currentHealth(), dto.maxHealth()),
+                new Attributes(new Intelligence(dto.intelligence()))
         ));
     }
 }

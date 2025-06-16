@@ -3,8 +3,9 @@
     "monsterId": "wolf",
     "monsterName": "Wilk",
     "health": {
-      "current": 100,
-      "max": 100
-    }
+      "current": 100.0,
+      "max": 100.0
+    },
+    "intelligence": 1
   }
 ]
