@@ -1,0 +1,16 @@
+plugins {
+    id 'java'
+}
+
+dependencies {
+    implementation project(':domain')
+    implementation 'jakarta.validation:jakarta.validation-api:3.1.1'
+    implementation 'org.apache.logging.log4j:log4j-api:2.24.3'
+    testImplementation project(':shared-test-helpers')
+    testImplementation 'org.mockito:mockito-inline:5.2.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.15.2'
+}
+
+test {
+    jvmArgs "-javaagent:${configurations.testRuntimeClasspath.find { it.name.contains('mockito-core') }}", '-Xshare:off'
+}

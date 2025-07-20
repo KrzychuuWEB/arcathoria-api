@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: arcathoria-game
+  liquibase:
+    change-log: classpath:db/changelog-master.xml
+    enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  data:
+    redis:
+      host: redis
+      port: 6379
+      password: secret
+      timeout: 60000
+
+jwt:
+  secret: "Z2VrSHNAbEYmJkEqekVuTSo3SHB1NCVqUlZLME9BeU0="
+  validity: 3600
+
+logging:
+  config: classpath:log4j2.yml

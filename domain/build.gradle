@@ -1,0 +1,7 @@
+plugins {
+    id 'java'
+}
+
+dependencies {
+    testImplementation project(':shared-test-helpers')
+}
