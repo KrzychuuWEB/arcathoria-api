@@ -81,4 +81,19 @@ class HealthTest {
 
         assertThat(health.getCurrent()).isEqualTo(0.0);
     }
+
+    @Test
+    void should_return_false_if_health_is_less_than_0() {
+        Health health = new Health(10.0, 10.0);
+        health.subtract(10.0);
+
+        assertThat(health.isAlive()).isFalse();
+    }
+
+    @Test
+    void should_return_true_if_health_is_greater_than_0() {
+        Health health = new Health(10.0, 10.0);
+
+        assertThat(health.isAlive()).isTrue();
+    }
 }

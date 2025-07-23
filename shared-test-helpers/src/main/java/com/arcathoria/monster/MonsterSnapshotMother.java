@@ -1,6 +1,8 @@
 package com.arcathoria.monster;
 
 import com.arcathoria.character.vo.Health;
+import com.arcathoria.character.vo.Intelligence;
+import com.arcathoria.combat.vo.Attributes;
 import com.arcathoria.monster.vo.MonsterId;
 import com.arcathoria.monster.vo.MonsterName;
 
@@ -12,6 +14,9 @@ public final class MonsterSnapshotMother {
     private MonsterId monsterId = DEFAULT_MONSTER_ID;
     private MonsterName monsterName = DEFAULT_MONSTER_NAME;
     private Health health = DEFAULT_HEALTH;
+    private Attributes attributes = new Attributes(
+            new Intelligence(1)
+    );
 
     private MonsterSnapshotMother() {
     }
@@ -36,6 +41,6 @@ public final class MonsterSnapshotMother {
     }
 
     MonsterSnapshot build() {
-        return new MonsterSnapshot(monsterId, monsterName, health);
+        return new MonsterSnapshot(monsterId, monsterName, health, attributes);
     }
 }
