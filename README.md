@@ -10,11 +10,9 @@
 
 ## Features
 
-- **Player Management (CRUD):** Create, read, update, and delete player accounts.
-- **Character Management:** Create and level up characters associated with players.
+- **Account Managment:** Login and register with JWT Token.
+- **Character Management:** Create player.
 - **Battle System:** Initiate and resolve battles between characters and monsters using `BattleService`.
-- **Item Management:** Handle inventories, item creation, purchasing, and selling.
-- **Leaderboard:** Retrieve player rankings, with caching support via Redis.
 
 ## Project Structure
 
@@ -65,16 +63,7 @@ arcathoria-api/
    ```bash
    ./gradlew clean bootRun --projects bootstrap
    ```
-
-## API Usage
-
-- **Swagger UI / OpenAPI** is available at: `http://localhost:8080/swagger-ui.html`
-- **Sample Endpoints:**
-  - `POST /api/players` – Create a new player
-  - `GET /api/players/{id}` – Retrieve player details by ID
-  - `POST /api/characters` – Create a new character
-  - `POST /api/battles` – Start a battle session
-
+   
 ## Testing
 
 Run unit and integration tests:
