@@ -1,6 +1,7 @@
 package com.arcathoria.combat;
 
-enum CombatResult {
+enum CombatOutcome {
     VICTORY,
     DEFEAT,
+    DRAW
 }
