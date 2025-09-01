@@ -11,7 +11,7 @@ public class MonsterQueryFacade {
         this.getMonsterByIdUseCase = getMonsterByIdUseCase;
     }
 
-    MonsterDTO getMonsterById(final String id) {
+    public MonsterDTO getMonsterById(final String id) {
         return MonsterMapper.toMonsterDTO(getMonsterByIdUseCase.execute(new MonsterId(id)));
     }
 }
