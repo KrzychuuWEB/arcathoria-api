@@ -7,6 +7,6 @@ record CombatState(
         CombatId combatId,
         Participant attacker,
         Participant defender,
-        CombatState combatState
+        CombatSide combatSide
 ) {
 }

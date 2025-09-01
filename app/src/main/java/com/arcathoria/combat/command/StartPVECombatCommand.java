@@ -1,9 +1,10 @@
 package com.arcathoria.combat.command;
 
-import com.arcathoria.combat.vo.Participant;
+import com.arcathoria.character.dto.CharacterDTO;
+import com.arcathoria.monster.dto.MonsterDTO;
 
 public record StartPVECombatCommand(
-        Participant attacker,
-        Participant defender
+        CharacterDTO attacker,
+        MonsterDTO defender
 ) {
 }
