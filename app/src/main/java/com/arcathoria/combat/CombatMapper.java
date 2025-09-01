@@ -10,6 +10,9 @@ import com.arcathoria.monster.dto.MonsterDTO;
 
 final class CombatMapper {
 
+    CombatMapper() {
+    }
+
     static CombatResultDTO toCombatResultDTO(final Combat combat) {
         return new CombatResultDTO(
                 combat.getSnapshot().combatId().value()
