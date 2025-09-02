@@ -1,4 +1,6 @@
 package com.arcathoria.monster.vo;
 
-public record MonsterId(String value) {
+import java.util.UUID;
+
+public record MonsterId(UUID value) {
 }
