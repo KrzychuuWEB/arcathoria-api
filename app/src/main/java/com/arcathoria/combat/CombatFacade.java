@@ -3,7 +3,7 @@ package com.arcathoria.combat;
 import com.arcathoria.combat.command.StartPVECombatCommand;
 import com.arcathoria.combat.dto.CombatResultDTO;
 
-import static com.arcathoria.combat.CombatMapper.toCombatResultDTO;
+import static com.arcathoria.combat.CombatMapper.fromCombatStateToCombatResultDTO;
 
 public class CombatFacade {
 
@@ -14,6 +14,6 @@ public class CombatFacade {
     }
 
     CombatResultDTO startPVE(final StartPVECombatCommand command) {
-        return toCombatResultDTO(startPVECombatUseCase.execute(command));
+        return fromCombatStateToCombatResultDTO(startPVECombatUseCase.execute(command));
     }
 }
