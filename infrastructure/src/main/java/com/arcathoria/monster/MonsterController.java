@@ -4,6 +4,8 @@ import com.arcathoria.monster.dto.MonsterDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/monsters")
 class MonsterController {
@@ -16,7 +18,8 @@ class MonsterController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    MonsterDTO getMonsterById(final @PathVariable String id) {
+    MonsterDTO getMonsterById(final @PathVariable UUID id) {
         return monsterQueryFacade.getMonsterById(id);
     }
 }
+
