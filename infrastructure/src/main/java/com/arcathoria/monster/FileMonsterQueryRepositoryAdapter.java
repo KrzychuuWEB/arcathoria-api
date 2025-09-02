@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -26,7 +27,7 @@ import java.util.stream.Collectors;
 class FileMonsterQueryRepositoryAdapter implements MonsterQueryRepository {
 
     private static final Logger log = LogManager.getLogger(FileMonsterQueryRepositoryAdapter.class);
-    private final Map<String, FileMonsterDTO> monsterMap;
+    private final Map<UUID, FileMonsterDTO> monsterMap;
 
     FileMonsterQueryRepositoryAdapter(final ObjectMapper objectMapper) {
         try {
