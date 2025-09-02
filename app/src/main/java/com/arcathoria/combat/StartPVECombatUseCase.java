@@ -29,7 +29,7 @@ class StartPVECombatUseCase {
 
     CombatState execute(final StartPVECombatCommand command) {
         Participant attacker = getCharacterByAccountId(command.attacker().id());
-        Participant defender = getMonsterByMonsterId(null);
+        Participant defender = getMonsterByMonsterId(command.defender().id());
 
         Combat combat = combatEngine.startCombat(attacker, defender, CombatType.PVE);
 
