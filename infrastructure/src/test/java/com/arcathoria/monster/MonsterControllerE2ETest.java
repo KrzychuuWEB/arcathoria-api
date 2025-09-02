@@ -33,7 +33,7 @@ class MonsterControllerE2ETest extends IntegrationTestContainersConfig {
         HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
 
         ResponseEntity<MonsterDTO> response = restTemplate.exchange(
-                baseUrl + "/wolf",
+                baseUrl + "/bf4397d8-b4dc-361e-9b6d-191a352e9134",
                 HttpMethod.GET,
                 requestEntity,
                 MonsterDTO.class
@@ -41,7 +41,7 @@ class MonsterControllerE2ETest extends IntegrationTestContainersConfig {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().id()).isEqualTo("wolf");
+        assertThat(response.getBody().name()).isEqualTo("Wilk");
     }
 
     @Test
@@ -51,7 +51,7 @@ class MonsterControllerE2ETest extends IntegrationTestContainersConfig {
         HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
 
         ResponseEntity<ApiErrorResponse> response = restTemplate.exchange(
-                baseUrl + "/badmonsterid",
+                baseUrl + "/00000000-0000-0000-0000-000000000000",
                 HttpMethod.GET,
                 requestEntity,
                 ApiErrorResponse.class

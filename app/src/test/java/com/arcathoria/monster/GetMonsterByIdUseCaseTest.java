@@ -41,7 +41,7 @@ class GetMonsterByIdUseCaseTest {
     void should_return_MonsterNotFoundException_when_id_is_not_correct() {
         when(monsterQueryRepository.getById(any(MonsterId.class))).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> getMonsterByIdUseCase.execute(new MonsterId("example_bad_id_test")))
+        assertThatThrownBy(() -> getMonsterByIdUseCase.execute(new MonsterId(null)))
                 .isInstanceOf(MonsterNotFoundException.class)
                 .message().contains("Monster with id");
     }

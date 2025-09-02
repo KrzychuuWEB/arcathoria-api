@@ -1,4 +1,6 @@
 package com.arcathoria.monster.dto;
 
-public record MonsterDTO(String id, String name, Double currentHealth, Double maxHealth, Integer intelligence) {
+import java.util.UUID;
+
+public record MonsterDTO(UUID id, String name, Double currentHealth, Double maxHealth) {
 }
