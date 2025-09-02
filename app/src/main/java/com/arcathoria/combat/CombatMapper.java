@@ -35,7 +35,7 @@ final class CombatMapper {
 
     static Participant fromMonsterDTOToParticipant(final MonsterDTO dto) {
         return new Participant(
-                null,
+                dto.id(),
                 new Health(dto.maxHealth(), dto.maxHealth()),
                 new Attributes(new Intelligence(dto.intelligence()))
         );

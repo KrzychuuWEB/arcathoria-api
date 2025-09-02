@@ -13,20 +13,17 @@ class StartPVECombatUseCase {
     private final CombatEngine combatEngine;
     private final CharacterClient characterClient;
     private final MonsterClient monsterClient;
-    private final CombatRepository combatRepository;
     private final CombatStateRepository combatStateRepository;
 
     StartPVECombatUseCase(
             final CombatEngine combatEngine,
             final CharacterClient characterClient,
             final MonsterClient monsterClient,
-            final CombatRepository combatRepository,
             final CombatStateRepository combatStateRepository
     ) {
         this.combatEngine = combatEngine;
         this.characterClient = characterClient;
         this.monsterClient = monsterClient;
-        this.combatRepository = combatRepository;
         this.combatStateRepository = combatStateRepository;
     }
 
@@ -49,6 +46,6 @@ class StartPVECombatUseCase {
     }
 
     private Participant getMonsterByMonsterId(final UUID monsterId) {
-        return fromMonsterDTOToParticipant(monsterClient.getMonsterById(null));
+        return fromMonsterDTOToParticipant(monsterClient.getMonsterById(monsterId));
     }
 }
