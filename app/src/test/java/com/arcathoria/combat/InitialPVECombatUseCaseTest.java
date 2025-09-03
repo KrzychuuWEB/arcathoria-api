@@ -19,7 +19,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class StartPVECombatUseCaseTest {
+class InitialPVECombatUseCaseTest {
 
     @Mock
     private CombatEngine combatEngine;
@@ -34,7 +34,7 @@ class StartPVECombatUseCaseTest {
     private CombatStateRepository combatStateRepository;
 
     @InjectMocks
-    private StartPVECombatUseCase startPVECombatUseCase;
+    private InitialPVECombatUseCase initialPVECombatUseCase;
 
     @Test
     void should_start_combat_and_persist_state_when_valid_command_given() {
@@ -54,7 +54,7 @@ class StartPVECombatUseCaseTest {
         when(monsterClient.getMonsterById(monster.id())).thenReturn(monster);
         when(combatEngine.startCombat(attacker, defender, CombatType.PVE)).thenReturn(combat);
 
-        startPVECombatUseCase.execute(command);
+        initialPVECombatUseCase.execute(command);
 
         verify(characterClient).getSelectedCharacterByAccountId(player.id());
         verify(monsterClient).getMonsterById(monster.id());
@@ -72,7 +72,7 @@ class StartPVECombatUseCaseTest {
 
         when(characterClient.getSelectedCharacterByAccountId(player.id())).thenThrow(CharacterNotFoundException.class);
 
-        assertThatThrownBy(() -> startPVECombatUseCase.execute(new StartPVECombatCommand(player, monster)))
+        assertThatThrownBy(() -> initialPVECombatUseCase.execute(new StartPVECombatCommand(player, monster)))
                 .isInstanceOf(CombatParticipantUnavailableException.class)
                 .hasMessage("Could not retrieve attacker participant for combat.");
     }
@@ -88,7 +88,7 @@ class StartPVECombatUseCaseTest {
         when(characterClient.getSelectedCharacterByAccountId(player.id())).thenReturn(player);
         when(monsterClient.getMonsterById(monster.id())).thenThrow(MonsterNotFoundException.class);
 
-        assertThatThrownBy(() -> startPVECombatUseCase.execute(new StartPVECombatCommand(player, monster)))
+        assertThatThrownBy(() -> initialPVECombatUseCase.execute(new StartPVECombatCommand(player, monster)))
                 .isInstanceOf(CombatParticipantUnavailableException.class)
                 .hasMessage("Could not retrieve defender participant for combat.");
     }

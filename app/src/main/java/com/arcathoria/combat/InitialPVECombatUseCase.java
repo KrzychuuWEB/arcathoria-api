@@ -13,15 +13,15 @@ import java.util.UUID;
 import static com.arcathoria.combat.CombatMapper.fromCharacterDTOToParticipant;
 import static com.arcathoria.combat.CombatMapper.fromMonsterDTOToParticipant;
 
-class StartPVECombatUseCase {
+class InitialPVECombatUseCase {
 
-    private static final Logger log = LogManager.getLogger(StartPVECombatUseCase.class);
+    private static final Logger log = LogManager.getLogger(InitialPVECombatUseCase.class);
     private final CombatEngine combatEngine;
     private final CharacterClient characterClient;
     private final MonsterClient monsterClient;
     private final CombatStateRepository combatStateRepository;
 
-    StartPVECombatUseCase(
+    InitialPVECombatUseCase(
             final CombatEngine combatEngine,
             final CharacterClient characterClient,
             final MonsterClient monsterClient,
