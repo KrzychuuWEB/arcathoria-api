@@ -1,7 +1,12 @@
 package com.arcathoria.combat;
 
+import com.arcathoria.character.exception.CharacterNotFoundException;
 import com.arcathoria.combat.command.StartPVECombatCommand;
+import com.arcathoria.combat.exception.CombatParticipantUnavailableException;
 import com.arcathoria.combat.vo.Participant;
+import com.arcathoria.monster.exception.MonsterNotFoundException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.UUID;
 
@@ -10,6 +15,7 @@ import static com.arcathoria.combat.CombatMapper.fromMonsterDTOToParticipant;
 
 class StartPVECombatUseCase {
 
+    private static final Logger log = LogManager.getLogger(StartPVECombatUseCase.class);
     private final CombatEngine combatEngine;
     private final CharacterClient characterClient;
     private final MonsterClient monsterClient;
@@ -42,10 +48,20 @@ class StartPVECombatUseCase {
     }
 
     private Participant getCharacterByAccountId(final UUID accountId) {
-        return fromCharacterDTOToParticipant(characterClient.getSelectedCharacterByAccountId(accountId));
+        try {
+            return fromCharacterDTOToParticipant(characterClient.getSelectedCharacterByAccountId(accountId));
+        } catch (CharacterNotFoundException e) {
+            log.warn("Character not found for id: {}", e.getValue());
+            throw new CombatParticipantUnavailableException(CombatSide.ATTACKER);
+        }
     }
 
     private Participant getMonsterByMonsterId(final UUID monsterId) {
-        return fromMonsterDTOToParticipant(monsterClient.getMonsterById(monsterId));
+        try {
+            return fromMonsterDTOToParticipant(monsterClient.getMonsterById(monsterId));
+        } catch (MonsterNotFoundException e) {
+            log.warn("Monster not found for id: {}", e.getMonsterId());
+            throw new CombatParticipantUnavailableException(CombatSide.DEFENDER);
+        }
     }
 }
