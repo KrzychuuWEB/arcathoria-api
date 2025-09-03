@@ -7,13 +7,13 @@ import static com.arcathoria.combat.CombatMapper.fromCombatStateToCombatResultDT
 
 public class CombatFacade {
 
-    private final StartPVECombatUseCase startPVECombatUseCase;
+    private final InitialPVECombatUseCase initialPVECombatUseCase;
 
-    CombatFacade(final StartPVECombatUseCase startPVECombatUseCase) {
-        this.startPVECombatUseCase = startPVECombatUseCase;
+    CombatFacade(final InitialPVECombatUseCase initialPVECombatUseCase) {
+        this.initialPVECombatUseCase = initialPVECombatUseCase;
     }
 
     CombatResultDTO startPVE(final StartPVECombatCommand command) {
-        return fromCombatStateToCombatResultDTO(startPVECombatUseCase.execute(command));
+        return fromCombatStateToCombatResultDTO(initialPVECombatUseCase.execute(command));
     }
 }
