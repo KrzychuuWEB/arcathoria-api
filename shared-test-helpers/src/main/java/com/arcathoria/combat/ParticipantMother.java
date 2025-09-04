@@ -1,8 +1,8 @@
-package com.arcathoria.combat.vo;
+package com.arcathoria.combat;
 
 import com.arcathoria.character.vo.Health;
 import com.arcathoria.character.vo.Intelligence;
-import com.arcathoria.combat.Participant;
+import com.arcathoria.combat.vo.Attributes;
 
 import java.util.UUID;
 
