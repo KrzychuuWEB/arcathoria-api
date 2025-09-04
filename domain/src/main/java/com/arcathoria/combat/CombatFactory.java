@@ -1,7 +1,6 @@
 package com.arcathoria.combat;
 
 import com.arcathoria.combat.vo.CombatTurn;
-import com.arcathoria.combat.vo.Participant;
 
 class CombatFactory {
 

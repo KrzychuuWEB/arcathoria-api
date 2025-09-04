@@ -3,7 +3,6 @@ package com.arcathoria.combat;
 import com.arcathoria.character.exception.CharacterNotFoundException;
 import com.arcathoria.combat.command.StartPVECombatCommand;
 import com.arcathoria.combat.exception.CombatParticipantUnavailableException;
-import com.arcathoria.combat.vo.Participant;
 import com.arcathoria.monster.exception.MonsterNotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

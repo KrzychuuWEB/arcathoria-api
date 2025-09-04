@@ -4,7 +4,6 @@ import com.arcathoria.character.dto.CharacterDTO;
 import com.arcathoria.character.exception.CharacterNotFoundException;
 import com.arcathoria.combat.command.StartPVECombatCommand;
 import com.arcathoria.combat.exception.CombatParticipantUnavailableException;
-import com.arcathoria.combat.vo.Participant;
 import com.arcathoria.combat.vo.ParticipantMother;
 import com.arcathoria.monster.dto.MonsterDTO;
 import com.arcathoria.monster.exception.MonsterNotFoundException;

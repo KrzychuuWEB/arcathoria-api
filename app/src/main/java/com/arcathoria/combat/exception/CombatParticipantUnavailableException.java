@@ -5,7 +5,7 @@ import com.arcathoria.combat.CombatSide;
 
 public class CombatParticipantUnavailableException extends ApiException {
 
-    private CombatSide combatSide;
+    private final CombatSide combatSide;
 
     public CombatParticipantUnavailableException(final CombatSide side) {
         super(buildMessage(side), "ERR_COMBAT_PARTICIPANT_UNAVAILABLE-400");

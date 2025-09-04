@@ -5,7 +5,6 @@ import com.arcathoria.character.vo.Health;
 import com.arcathoria.character.vo.Intelligence;
 import com.arcathoria.combat.dto.CombatResultDTO;
 import com.arcathoria.combat.vo.Attributes;
-import com.arcathoria.combat.vo.Participant;
 import com.arcathoria.monster.dto.MonsterDTO;
 
 final class CombatMapper {
