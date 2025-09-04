@@ -1,13 +1,11 @@
 package com.arcathoria.combat;
 
 import com.arcathoria.combat.vo.CombatId;
-import com.arcathoria.combat.vo.CombatTurn;
 
-record CombatSnapshot(
+record CombatState(
         CombatId combatId,
         Participant attacker,
         Participant defender,
-        CombatTurn combatTurn,
-        CombatType combatType
+        CombatSide combatSide
 ) {
 }

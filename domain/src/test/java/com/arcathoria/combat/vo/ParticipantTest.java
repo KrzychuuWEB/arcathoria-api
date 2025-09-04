@@ -1,5 +1,6 @@
 package com.arcathoria.combat.vo;
 
+import com.arcathoria.combat.Participant;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

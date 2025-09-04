@@ -1,7 +1,5 @@
 package com.arcathoria.combat;
 
-import com.arcathoria.combat.vo.Participant;
-
 class MeleeMagicDamageStrategy implements DamageCalculator {
 
     @Override

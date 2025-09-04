@@ -2,6 +2,7 @@ package com.arcathoria.combat.vo;
 
 import com.arcathoria.character.vo.Health;
 import com.arcathoria.character.vo.Intelligence;
+import com.arcathoria.combat.Participant;
 
 import java.util.UUID;
 

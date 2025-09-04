@@ -1,39 +1,40 @@
-package com.arcathoria.combat.vo;
+package com.arcathoria.combat;
 
 import com.arcathoria.character.vo.Health;
+import com.arcathoria.combat.vo.Attributes;
 
 import java.util.Objects;
 import java.util.UUID;
 
-public class Participant {
+class Participant {
 
     private final UUID id;
     private final Health health;
     private final Attributes attributes;
 
-    public Participant(final UUID id, final Health health, final Attributes attributes) {
+    Participant(final UUID id, final Health health, final Attributes attributes) {
         this.id = id;
         this.health = health;
         this.attributes = attributes;
     }
 
-    public UUID getId() {
+    UUID getId() {
         return id;
     }
 
-    public Health getHealth() {
+    Health getHealth() {
         return health;
     }
 
-    public int getIntelligenceLevel() {
+    int getIntelligenceLevel() {
         return attributes.intelligence().getLevel();
     }
 
-    public void applyDamage(final double damage) {
+    void applyDamage(final double damage) {
         health.subtract(damage);
     }
 
-    public boolean isAlive() {
+    boolean isAlive() {
         return health.isAlive();
     }
 
