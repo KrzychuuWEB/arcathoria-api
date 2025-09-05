@@ -1,5 +1,6 @@
 package com.arcathoria.combat;
 
+import com.arcathoria.combat.vo.ParticipantId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +25,7 @@ class CombatEngineTest {
 
     @Test
     void should_return_new_combat_pve_with_attacker_and_defender_with_health_combat_side_strategy() {
-        UUID uuid = UUID.randomUUID();
+        ParticipantId uuid = new ParticipantId(UUID.randomUUID());
         Participant attacker = ParticipantMother.aParticipantBuilder().withHealth(100.0, 100.0).build();
         Participant defender = ParticipantMother.aParticipantBuilder().withHealth(80.0, 80.0).withId(uuid).build();
         Combat combat = combatEngine.startCombat(attacker, defender, CombatType.PVE);

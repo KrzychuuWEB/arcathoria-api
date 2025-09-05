@@ -3,15 +3,16 @@ package com.arcathoria.combat;
 import com.arcathoria.character.vo.Health;
 import com.arcathoria.character.vo.Intelligence;
 import com.arcathoria.combat.vo.Attributes;
+import com.arcathoria.combat.vo.ParticipantId;
 
 import java.util.UUID;
 
 public final class ParticipantMother {
-    public static final UUID DEFAULT_ID = UUID.randomUUID();
+    public static final ParticipantId DEFAULT_ID = new ParticipantId(UUID.randomUUID());
     public static final Health DEFAULT_HEALTH = new Health(100.0, 100.0);
     public static final Intelligence DEFAULT_INTELLIGENCE = new Intelligence(1);
 
-    private UUID uuid = DEFAULT_ID;
+    private ParticipantId uuid = DEFAULT_ID;
     private Health health = DEFAULT_HEALTH;
     private Attributes attributes = new Attributes(DEFAULT_INTELLIGENCE);
 
@@ -22,7 +23,7 @@ public final class ParticipantMother {
         return new ParticipantMother();
     }
 
-    public ParticipantMother withId(final UUID id) {
+    public ParticipantMother withId(final ParticipantId id) {
         this.uuid = id;
         return this;
     }
@@ -37,7 +38,7 @@ public final class ParticipantMother {
         return this;
     }
 
-    public Participant build() {
+    Participant build() {
         return new Participant(uuid, health, attributes);
     }
 }

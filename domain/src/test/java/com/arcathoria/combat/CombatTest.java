@@ -2,6 +2,7 @@ package com.arcathoria.combat;
 
 import com.arcathoria.combat.vo.CombatId;
 import com.arcathoria.combat.vo.CombatTurn;
+import com.arcathoria.combat.vo.ParticipantId;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
@@ -120,7 +121,7 @@ class CombatTest {
 
     @Test
     void should_return_attacker_for_attacker_turn() {
-        UUID uuid = UUID.randomUUID();
+        ParticipantId uuid = new ParticipantId(UUID.randomUUID());
         Participant participant = ParticipantMother.aParticipantBuilder().withId(uuid).build();
         Combat combat = Combat.restore(
                 CombatSnapshotMother.aCombat()
@@ -137,7 +138,7 @@ class CombatTest {
 
     @Test
     void should_return_defender_for_defender_turn() {
-        UUID uuid = UUID.randomUUID();
+        ParticipantId uuid = new ParticipantId(UUID.randomUUID());
         Participant participant = ParticipantMother.aParticipantBuilder().withId(uuid).build();
         Combat combat = Combat.restore(
                 CombatSnapshotMother.aCombat()

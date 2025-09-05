@@ -40,8 +40,8 @@ class InitialPVECombatUseCaseTest {
         Participant defender = ParticipantMother.aParticipantBuilder().build();
         Combat combat = Combat.restore(CombatSnapshotMother.aCombat().build());
 
-        CharacterDTO player = new CharacterDTO(attacker.getId(), "example-player", attacker.getHealth().getMax(), attacker.getIntelligenceLevel());
-        MonsterDTO monster = new MonsterDTO(defender.getId(), "example-monster", defender.getHealth().getMax(), defender.getHealth().getMax(), defender.getIntelligenceLevel());
+        CharacterDTO player = new CharacterDTO(attacker.getId().value(), "example-player", attacker.getHealth().getMax(), attacker.getIntelligenceLevel());
+        MonsterDTO monster = new MonsterDTO(defender.getId().value(), "example-monster", defender.getHealth().getMax(), defender.getHealth().getMax(), defender.getIntelligenceLevel());
 
         StartPVECombatCommand command = new StartPVECombatCommand(
                 player,
@@ -65,8 +65,8 @@ class InitialPVECombatUseCaseTest {
         Participant attacker = ParticipantMother.aParticipantBuilder().build();
         Participant defender = ParticipantMother.aParticipantBuilder().build();
 
-        CharacterDTO player = new CharacterDTO(attacker.getId(), "example-player", attacker.getHealth().getMax(), attacker.getIntelligenceLevel());
-        MonsterDTO monster = new MonsterDTO(defender.getId(), "example-monster", defender.getHealth().getMax(), defender.getHealth().getMax(), defender.getIntelligenceLevel());
+        CharacterDTO player = new CharacterDTO(attacker.getId().value(), "example-player", attacker.getHealth().getMax(), attacker.getIntelligenceLevel());
+        MonsterDTO monster = new MonsterDTO(defender.getId().value(), "example-monster", defender.getHealth().getMax(), defender.getHealth().getMax(), defender.getIntelligenceLevel());
 
         when(characterClient.getSelectedCharacterByAccountId(player.id())).thenThrow(CharacterNotFoundException.class);
 
@@ -80,8 +80,8 @@ class InitialPVECombatUseCaseTest {
         Participant attacker = ParticipantMother.aParticipantBuilder().build();
         Participant defender = ParticipantMother.aParticipantBuilder().build();
 
-        CharacterDTO player = new CharacterDTO(attacker.getId(), "example-player", attacker.getHealth().getMax(), attacker.getIntelligenceLevel());
-        MonsterDTO monster = new MonsterDTO(defender.getId(), "example-monster", defender.getHealth().getMax(), defender.getHealth().getMax(), defender.getIntelligenceLevel());
+        CharacterDTO player = new CharacterDTO(attacker.getId().value(), "example-player", attacker.getHealth().getMax(), attacker.getIntelligenceLevel());
+        MonsterDTO monster = new MonsterDTO(defender.getId().value(), "example-monster", defender.getHealth().getMax(), defender.getHealth().getMax(), defender.getIntelligenceLevel());
 
         when(characterClient.getSelectedCharacterByAccountId(player.id())).thenReturn(player);
         when(monsterClient.getMonsterById(monster.id())).thenThrow(MonsterNotFoundException.class);

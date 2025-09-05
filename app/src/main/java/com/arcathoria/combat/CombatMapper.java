@@ -5,6 +5,7 @@ import com.arcathoria.character.vo.Health;
 import com.arcathoria.character.vo.Intelligence;
 import com.arcathoria.combat.dto.CombatResultDTO;
 import com.arcathoria.combat.vo.Attributes;
+import com.arcathoria.combat.vo.ParticipantId;
 import com.arcathoria.monster.dto.MonsterDTO;
 
 final class CombatMapper {
@@ -20,7 +21,7 @@ final class CombatMapper {
 
     static Participant fromCharacterDTOToParticipant(final CharacterDTO dto) {
         return new Participant(
-                dto.id(),
+                new ParticipantId(dto.id()),
                 new Health(dto.health(), dto.health()),
                 new Attributes(new Intelligence(dto.intelligence()))
         );
@@ -28,7 +29,7 @@ final class CombatMapper {
 
     static Participant fromMonsterDTOToParticipant(final MonsterDTO dto) {
         return new Participant(
-                dto.id(),
+                new ParticipantId(dto.id()),
                 new Health(dto.maxHealth(), dto.maxHealth()),
                 new Attributes(new Intelligence(dto.intelligence()))
         );

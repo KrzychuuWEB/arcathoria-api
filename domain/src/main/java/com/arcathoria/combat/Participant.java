@@ -2,23 +2,23 @@ package com.arcathoria.combat;
 
 import com.arcathoria.character.vo.Health;
 import com.arcathoria.combat.vo.Attributes;
+import com.arcathoria.combat.vo.ParticipantId;
 
 import java.util.Objects;
-import java.util.UUID;
 
 class Participant {
 
-    private final UUID id;
+    private final ParticipantId id;
     private final Health health;
     private final Attributes attributes;
 
-    Participant(final UUID id, final Health health, final Attributes attributes) {
+    Participant(final ParticipantId id, final Health health, final Attributes attributes) {
         this.id = id;
         this.health = health;
         this.attributes = attributes;
     }
 
-    UUID getId() {
+    ParticipantId getId() {
         return id;
     }
 
