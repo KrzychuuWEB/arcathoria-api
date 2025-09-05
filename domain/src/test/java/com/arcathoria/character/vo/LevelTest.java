@@ -17,10 +17,10 @@ class LevelTest {
     }
 
     @Test
-    void should_return_new_level_after_increment() {
+    void sohuld_return_new_level_after_increment() {
         Level level = new Level(1);
 
-        Level newLevel = level.incrementBy(1);
+        Level newLevel = level.increaseBy(1);
 
         assertThat(newLevel.level()).isEqualTo(2);
     }
@@ -29,7 +29,7 @@ class LevelTest {
     void should_return_exception_when_level_is_below_zero() {
         Level level = new Level(1);
 
-        assertThatThrownBy(() -> level.incrementBy(-1))
+        assertThatThrownBy(() -> level.increaseBy(-1))
                 .isInstanceOf(IllegalArgumentException.class)
                 .message().isEqualTo("Level delta must be greater than 0");
     }

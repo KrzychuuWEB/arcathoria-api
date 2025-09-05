@@ -8,13 +8,13 @@ public record Level(int level) {
         }
     }
 
-    public Level incrementBy(final int delta) {
+    public Level increaseBy(final int delta) {
         if (delta < 0) throw new IllegalArgumentException("Level delta must be greater than 0");
         int raw = Math.addExact(this.level, delta);
         return new Level(raw);
     }
 
     public Level next() {
-        return incrementBy(1);
+        return increaseBy(1);
     }
 }
