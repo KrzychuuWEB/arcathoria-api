@@ -15,7 +15,7 @@ public final class MonsterSnapshotMother {
     private MonsterId monsterId = DEFAULT_MONSTER_ID;
     private MonsterName monsterName = DEFAULT_MONSTER_NAME;
     private Health health = DEFAULT_HEALTH;
-    private Attributes attributes = new Attributes(
+    private final Attributes attributes = new Attributes(
             new Intelligence(new Level(1))
     );
 

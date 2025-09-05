@@ -18,7 +18,7 @@ class Combat {
     private final CombatId combatId;
     private final Participant attacker;
     private final Participant defender;
-    private final CombatTurn combatTurn;
+    private CombatTurn combatTurn;
     private final CombatType combatType;
 
     Combat(
@@ -54,7 +54,7 @@ class Combat {
     }
 
     void changeTurn() {
-        combatTurn.changeTurn();
+        this.combatTurn = combatTurn.changeTurn();
     }
 
     void applyDamageOpponent(final double damage) {
