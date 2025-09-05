@@ -1,16 +1,16 @@
 package com.arcathoria.character.vo;
 
-public record Level(int level) {
+public record Level(int value) {
 
     public Level {
-        if (level < 1) {
+        if (value < 1) {
             throw new IllegalArgumentException("Level must be greater than 0");
         }
     }
 
     public Level increaseBy(final int delta) {
         if (delta < 0) throw new IllegalArgumentException("Level delta must be greater than 0");
-        int raw = Math.addExact(this.level, delta);
+        int raw = Math.addExact(this.value, delta);
         return new Level(raw);
     }
 

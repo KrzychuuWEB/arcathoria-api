@@ -13,7 +13,7 @@ class LevelTest {
 
         Level level = new Level(exampleLevel);
 
-        assertThat(level.level()).isEqualTo(exampleLevel);
+        assertThat(level.value()).isEqualTo(exampleLevel);
     }
 
     @Test
@@ -22,7 +22,7 @@ class LevelTest {
 
         Level newLevel = level.increaseBy(1);
 
-        assertThat(newLevel.level()).isEqualTo(2);
+        assertThat(newLevel.value()).isEqualTo(2);
     }
 
     @Test
@@ -40,6 +40,6 @@ class LevelTest {
 
         Level nextLevel = level.next();
 
-        assertThat(nextLevel.level()).isEqualTo(2);
+        assertThat(nextLevel.value()).isEqualTo(2);
     }
 }
