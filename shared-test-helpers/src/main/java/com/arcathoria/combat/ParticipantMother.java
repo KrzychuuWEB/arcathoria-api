@@ -2,6 +2,7 @@ package com.arcathoria.combat;
 
 import com.arcathoria.character.vo.Health;
 import com.arcathoria.character.vo.Intelligence;
+import com.arcathoria.character.vo.Level;
 import com.arcathoria.combat.vo.Attributes;
 import com.arcathoria.combat.vo.ParticipantId;
 
@@ -10,7 +11,7 @@ import java.util.UUID;
 public final class ParticipantMother {
     public static final ParticipantId DEFAULT_ID = new ParticipantId(UUID.randomUUID());
     public static final Health DEFAULT_HEALTH = new Health(100.0, 100.0);
-    public static final Intelligence DEFAULT_INTELLIGENCE = new Intelligence(1);
+    public static final Intelligence DEFAULT_INTELLIGENCE = new Intelligence(new Level(1));
 
     private ParticipantId uuid = DEFAULT_ID;
     private Health health = DEFAULT_HEALTH;
@@ -33,7 +34,7 @@ public final class ParticipantMother {
         return this;
     }
 
-    public ParticipantMother withIntelligence(final int level) {
+    public ParticipantMother withIntelligence(final Level level) {
         this.attributes = new Attributes(new Intelligence(level));
         return this;
     }

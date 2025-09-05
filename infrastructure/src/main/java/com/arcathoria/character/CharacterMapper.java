@@ -1,10 +1,8 @@
 package com.arcathoria.character;
 
 import com.arcathoria.account.vo.AccountId;
-import com.arcathoria.character.vo.CharacterId;
+import com.arcathoria.character.vo.*;
 import com.arcathoria.character.vo.CharacterName;
-import com.arcathoria.character.vo.Health;
-import com.arcathoria.character.vo.Intelligence;
 import com.arcathoria.combat.vo.Attributes;
 
 final class CharacterMapper {
@@ -12,7 +10,7 @@ final class CharacterMapper {
     CharacterMapper() {
     }
 
-    static Character toDomain(CharacterEntity entity) {
+    static Character toDomain(final CharacterEntity entity) {
         return Character.restore(
                 new CharacterSnapshot(
                         new CharacterId(entity.getId()),
@@ -20,19 +18,19 @@ final class CharacterMapper {
                         new CharacterName(entity.getName()),
                         new Health(entity.getMaxHealth(), entity.getMaxHealth()),
                         new Attributes(
-                                new Intelligence(entity.getIntelligence())
+                                new Intelligence(new Level(entity.getIntelligence()))
                         )
                 )
         );
     }
 
-    static CharacterEntity toEntity(Character character) {
+    static CharacterEntity toEntity(final Character character) {
         return new CharacterEntity(
                 character.getSnapshot().getCharacterId().value(),
                 character.getSnapshot().getAccountId().value(),
                 character.getSnapshot().getCharacterName().value(),
                 character.getSnapshot().getHealth().getMax(),
-                character.getSnapshot().getAttributes().intelligence().getLevel()
+                character.getSnapshot().getAttributes().intelligence().level().value()
         );
     }
 }

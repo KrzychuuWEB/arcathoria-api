@@ -2,6 +2,7 @@ package com.arcathoria.monster;
 
 import com.arcathoria.character.vo.Health;
 import com.arcathoria.character.vo.Intelligence;
+import com.arcathoria.character.vo.Level;
 import com.arcathoria.combat.vo.Attributes;
 import com.arcathoria.monster.dto.FileMonsterDTO;
 import com.arcathoria.monster.exception.MonsterLoadingException;
@@ -56,7 +57,7 @@ class FileMonsterQueryRepositoryAdapter implements MonsterQueryRepository {
                 new MonsterId(dto.monsterId()),
                 new MonsterName(dto.monsterName()),
                 new Health(dto.currentHealth(), dto.maxHealth()),
-                new Attributes(new Intelligence(dto.intelligence()))
+                new Attributes(new Intelligence(new Level(dto.intelligence())))
         ));
     }
 }

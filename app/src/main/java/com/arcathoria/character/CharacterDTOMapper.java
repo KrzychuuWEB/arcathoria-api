@@ -16,7 +16,7 @@ final class CharacterDTOMapper {
                 snapshot.getCharacterId().value(),
                 snapshot.getCharacterName().value(),
                 snapshot.getHealth().getMax(),
-                snapshot.getAttributes().intelligence().getLevel()
+                snapshot.getAttributes().intelligence().level().value()
         );
     }
 
@@ -26,7 +26,7 @@ final class CharacterDTOMapper {
                         character.getSnapshot().getCharacterId().value(),
                         character.getSnapshot().getCharacterName().value(),
                         character.getSnapshot().getHealth().getMax(),
-                        character.getSnapshot().getAttributes().intelligence().getLevel()
+                        character.getSnapshot().getAttributes().intelligence().level().value()
                 ))
                 .toList();
     }

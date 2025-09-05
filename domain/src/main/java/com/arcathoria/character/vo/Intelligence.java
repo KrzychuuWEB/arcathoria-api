@@ -1,10 +1,9 @@
 package com.arcathoria.character.vo;
 
-public class Intelligence extends Attribute {
+public record Intelligence(Level level) implements Attribute<Intelligence> {
 
-    public Intelligence(final int level) {
-        super(level);
+    @Override
+    public Intelligence withLevel(final Level level) {
+        return new Intelligence(level);
     }
-
-
 }

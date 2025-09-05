@@ -1,5 +1,6 @@
 package com.arcathoria.combat;
 
+import com.arcathoria.character.vo.Level;
 import com.arcathoria.combat.vo.CombatTurn;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,7 @@ class MeleeCombatActionStrategyTest {
     @Test
     void should_calculate_damage_for_melee_attack_and_attack_defender() {
         Participant attacker = ParticipantMother.aParticipantBuilder()
-                .withIntelligence(1)
+                .withIntelligence(new Level(1))
                 .withHealth(150.0, 150.0)
                 .build();
         Participant defender = ParticipantMother.aParticipantBuilder()

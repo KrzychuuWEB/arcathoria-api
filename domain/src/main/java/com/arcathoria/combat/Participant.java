@@ -27,7 +27,7 @@ class Participant {
     }
 
     int getIntelligenceLevel() {
-        return attributes.intelligence().getLevel();
+        return attributes.intelligence().level().value();
     }
 
     void applyDamage(final double damage) {

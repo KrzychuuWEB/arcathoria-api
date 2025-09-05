@@ -1,10 +1,8 @@
 package com.arcathoria.character;
 
 import com.arcathoria.account.vo.AccountId;
-import com.arcathoria.character.vo.CharacterId;
+import com.arcathoria.character.vo.*;
 import com.arcathoria.character.vo.CharacterName;
-import com.arcathoria.character.vo.Health;
-import com.arcathoria.character.vo.Intelligence;
 import com.arcathoria.combat.vo.Attributes;
 
 import java.util.UUID;
@@ -20,7 +18,7 @@ public class CharacterSnapshotMother {
     private AccountId accountId = new AccountId(DEFAULT_ACCOUNT_ID);
     private Health health = new Health(100.0, 100.0);
     private Attributes attributes = new Attributes(
-            new Intelligence(1)
+            new Intelligence(new Level(1))
     );
 
     static CharacterSnapshotMother create() {
