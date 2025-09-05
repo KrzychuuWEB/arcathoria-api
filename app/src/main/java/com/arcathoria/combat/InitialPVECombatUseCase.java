@@ -42,7 +42,7 @@ class InitialPVECombatUseCase {
                 combat.getSnapshot().combatId(),
                 combat.getSnapshot().attacker(),
                 combat.getSnapshot().defender(),
-                combat.getSnapshot().combatTurn().getCurrent()
+                combat.getSnapshot().combatTurn().currentSide()
         ));
     }
 

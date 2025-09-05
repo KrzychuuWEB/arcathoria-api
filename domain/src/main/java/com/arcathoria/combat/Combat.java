@@ -46,7 +46,7 @@ class Combat {
     }
 
     CombatSide getCurrentTurn() {
-        return combatTurn.getCurrent();
+        return combatTurn.currentSide();
     }
 
     Participant getCurrentTurnParticipant() {

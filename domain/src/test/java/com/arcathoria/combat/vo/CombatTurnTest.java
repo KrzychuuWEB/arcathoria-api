@@ -4,22 +4,33 @@ import com.arcathoria.combat.CombatSide;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class CombatTurnTest {
 
     @Test
-    void should_return_attacker_turn() {
-        CombatTurn combatTurn = new CombatTurn(CombatSide.ATTACKER);
+    void should_return_current_side() {
+        CombatSide combatSide = CombatSide.ATTACKER;
 
-        assertThat(combatTurn.getCurrent()).isEqualTo(CombatSide.ATTACKER);
+        CombatTurn combatTurn = new CombatTurn(combatSide);
+
+        assertThat(combatTurn.currentSide()).isEqualTo(combatSide);
     }
 
     @Test
-    void should_return_defender_after_change_turn() {
-        CombatTurn combatTurn = new CombatTurn(CombatSide.ATTACKER);
+    void should_throw_exception_when_side_is_null() {
+        assertThatThrownBy(() -> new CombatTurn(null))
+                .isInstanceOf(NullPointerException.class)
+                .message().isEqualTo("CombatTurn side cannot be null");
+    }
 
-        combatTurn.changeTurn();
+    @Test
+    void should_change_side_when_change_turn_is_called() {
+        CombatSide combatSide = CombatSide.ATTACKER;
+        CombatTurn combatTurn = new CombatTurn(combatSide);
 
-        assertThat(combatTurn.getCurrent()).isEqualTo(CombatSide.DEFENDER);
+        combatTurn = combatTurn.changeTurn();
+
+        assertThat(combatTurn.currentSide()).isEqualTo(CombatSide.DEFENDER);
     }
 }

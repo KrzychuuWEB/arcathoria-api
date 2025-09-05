@@ -47,6 +47,6 @@ class CombatEngineTest {
 
         assertThat(combat.getSnapshot().attacker().getHealth().getCurrent()).isEqualTo(92.0);
         assertThat(combat.getSnapshot().defender().getHealth().getCurrent()).isEqualTo(80.0);
-        assertThat(combat.getSnapshot().combatTurn().getCurrent()).isEqualTo(CombatSide.ATTACKER);
+        assertThat(combat.getSnapshot().combatTurn().currentSide()).isEqualTo(CombatSide.ATTACKER);
     }
 }
