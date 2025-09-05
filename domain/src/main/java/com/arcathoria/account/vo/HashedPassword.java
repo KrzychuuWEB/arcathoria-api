@@ -2,6 +2,8 @@ package com.arcathoria.account.vo;
 
 import com.arcathoria.account.PasswordEncoder;
 
+import java.util.Objects;
+
 public class HashedPassword {
 
     private final String value;
@@ -27,5 +29,17 @@ public class HashedPassword {
 
     public String getValue() {
         return value;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        final HashedPassword that = (HashedPassword) o;
+        return Objects.equals(value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(value);
     }
 }
