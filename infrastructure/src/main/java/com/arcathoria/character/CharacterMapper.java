@@ -16,7 +16,7 @@ final class CharacterMapper {
                         new CharacterId(entity.getId()),
                         new AccountId(entity.getAccountId()),
                         new CharacterName(entity.getName()),
-                        new Health(entity.getMaxHealth(), entity.getMaxHealth()),
+                        new Health(new Gauge(entity.getMaxHealth(), entity.getMaxHealth())),
                         new Attributes(
                                 new Intelligence(new Level(entity.getIntelligence()))
                         )

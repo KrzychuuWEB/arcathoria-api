@@ -16,7 +16,7 @@ public class CharacterSnapshotMother {
     private CharacterId characterId = new CharacterId(DEFAULT_CHARACTER_ID);
     private CharacterName characterName = new CharacterName(DEFAULT_CHARACTER_NAME);
     private AccountId accountId = new AccountId(DEFAULT_ACCOUNT_ID);
-    private final Health health = new Health(100.0, 100.0);
+    private final Health health = new Health(new Gauge(100, 100));
     private final Attributes attributes = new Attributes(
             new Intelligence(new Level(1))
     );

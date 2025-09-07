@@ -1,4 +1,4 @@
 package com.arcathoria.combat.vo;
 
-public record Damage(double value) {
+public record Damage(int damage) {
 }

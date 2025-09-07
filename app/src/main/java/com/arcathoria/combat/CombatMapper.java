@@ -1,6 +1,7 @@
 package com.arcathoria.combat;
 
 import com.arcathoria.character.dto.CharacterDTO;
+import com.arcathoria.character.vo.Gauge;
 import com.arcathoria.character.vo.Health;
 import com.arcathoria.character.vo.Intelligence;
 import com.arcathoria.character.vo.Level;
@@ -23,7 +24,7 @@ final class CombatMapper {
     static Participant fromCharacterDTOToParticipant(final CharacterDTO dto) {
         return new Participant(
                 new ParticipantId(dto.id()),
-                new Health(dto.health(), dto.health()),
+                new Health(new Gauge(dto.health(), dto.health())),
                 new Attributes(new Intelligence(new Level(dto.intelligence())))
         );
     }
@@ -31,7 +32,7 @@ final class CombatMapper {
     static Participant fromMonsterDTOToParticipant(final MonsterDTO dto) {
         return new Participant(
                 new ParticipantId(dto.id()),
-                new Health(dto.maxHealth(), dto.maxHealth()),
+                new Health(new Gauge(dto.maxHealth(), dto.maxHealth())),
                 new Attributes(new Intelligence(new Level(dto.intelligence())))
         );
     }

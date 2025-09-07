@@ -8,6 +8,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class IntelligenceTest {
 
     @Test
+    void should_return_exception_when_level_is_null() {
+        assertThatThrownBy(() -> new Intelligence(null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("Intelligence level cannot be null");
+    }
+
+    @Test
     void should_return_correct_level() {
         Intelligence intelligence = new Intelligence(new Level(1));
 
@@ -18,7 +25,7 @@ class IntelligenceTest {
     void should_return_exception_when_level_is_below_zero() {
         assertThatThrownBy(() -> new Intelligence(new Level(-1)))
                 .isInstanceOf(IllegalArgumentException.class)
-                .message().isEqualTo("Level must be greater than 0");
+                .hasMessage("Level must be greater than 0");
     }
 
     @Test

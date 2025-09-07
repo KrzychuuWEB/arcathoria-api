@@ -2,5 +2,5 @@ package com.arcathoria.combat;
 
 interface DamageCalculator {
 
-    double calculate(final Participant participant);
+    int calculate(final Participant participant);
 }

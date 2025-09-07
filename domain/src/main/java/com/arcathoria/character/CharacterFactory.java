@@ -13,7 +13,7 @@ class CharacterFactory {
                         new CharacterId(null),
                         accountId,
                         name,
-                        new Health(100.0, 100.0),
+                        new Health(new Gauge(100, 100)),
                         new Attributes(
                                 new Intelligence(new Level(1))
                         )

@@ -7,8 +7,8 @@ import java.util.UUID;
 
 public final class CombatSnapshotMother {
     static final UUID DEFAULT_COMBAT_ID = null;
-    static final Participant DEFAULT_ATTACKER = ParticipantMother.aParticipantBuilder().withHealth(100.0, 100.0).build();
-    static final Participant DEFAULT_DEFENDER = ParticipantMother.aParticipantBuilder().withHealth(80.0, 80.0).build();
+    static final Participant DEFAULT_ATTACKER = ParticipantMother.aParticipantBuilder().withHealth(100, 100).build();
+    static final Participant DEFAULT_DEFENDER = ParticipantMother.aParticipantBuilder().withHealth(80, 80).build();
     static final CombatTurn DEFAULT_COMBAT_TURN = new CombatTurn(CombatSide.ATTACKER);
     static final CombatType DEFAULT_COMBAT_TYPE = CombatType.PVE;
 

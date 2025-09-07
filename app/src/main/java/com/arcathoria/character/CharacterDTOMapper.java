@@ -10,7 +10,7 @@ final class CharacterDTOMapper {
     CharacterDTOMapper() {
     }
 
-    static CharacterDTO toCharacterDTO(Character character) {
+    static CharacterDTO toCharacterDTO(final Character character) {
         CharacterSnapshot snapshot = character.getSnapshot();
         return new CharacterDTO(
                 snapshot.getCharacterId().value(),
@@ -20,7 +20,7 @@ final class CharacterDTOMapper {
         );
     }
 
-    static List<CharacterDTO> toCharacterDTOList(List<Character> characters) {
+    static List<CharacterDTO> toCharacterDTOList(final List<Character> characters) {
         return characters.stream()
                 .map(character -> new CharacterDTO(
                         character.getSnapshot().getCharacterId().value(),

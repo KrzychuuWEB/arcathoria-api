@@ -9,7 +9,7 @@ import java.util.Objects;
 class Participant {
 
     private final ParticipantId id;
-    private final Health health;
+    private Health health;
     private final Attributes attributes;
 
     Participant(final ParticipantId id, final Health health, final Attributes attributes) {
@@ -30,8 +30,8 @@ class Participant {
         return attributes.intelligence().level().value();
     }
 
-    void applyDamage(final double damage) {
-        health.subtract(damage);
+    void applyDamage(final int damage) {
+        this.health = health.subtract(damage);
     }
 
     boolean isAlive() {

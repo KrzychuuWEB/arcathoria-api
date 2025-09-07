@@ -2,5 +2,5 @@
 
 --changeset krzysztof:3
 ALTER TABLE characters
-ADD COLUMN max_health DOUBLE PRECISION;
+ADD COLUMN max_health INT;
 

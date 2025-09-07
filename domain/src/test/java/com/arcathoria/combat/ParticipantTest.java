@@ -17,21 +17,21 @@ class ParticipantTest {
     @Test
     void should_reduce_attacker_hp_when_defender_deals_damage() {
         Participant participant = ParticipantMother.aParticipantBuilder()
-                .withHealth(100.0, 100.0)
+                .withHealth(100, 100)
                 .build();
 
-        participant.applyDamage(50.0);
+        participant.applyDamage(50);
 
-        assertThat(participant.getHealth().getCurrent()).isEqualTo(50.0);
+        assertThat(participant.getHealth().getCurrent()).isEqualTo(50);
     }
 
     @Test
     void should_return_false_if_participant_is_not_alive() {
         Participant participant = ParticipantMother.aParticipantBuilder()
-                .withHealth(100.0, 100.0)
+                .withHealth(100, 100)
                 .build();
 
-        participant.applyDamage(100.0);
+        participant.applyDamage(100);
 
         assertThat(participant.isAlive()).isFalse();
     }
@@ -39,7 +39,7 @@ class ParticipantTest {
     @Test
     void should_return_true_if_participant_is_alive() {
         Participant participant = ParticipantMother.aParticipantBuilder()
-                .withHealth(100.0, 100.0)
+                .withHealth(100, 100)
                 .build();
 
         assertThat(participant.isAlive()).isTrue();

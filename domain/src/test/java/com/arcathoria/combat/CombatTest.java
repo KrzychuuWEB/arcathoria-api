@@ -25,15 +25,15 @@ class CombatTest {
         Combat combat = Combat.restore(
                 CombatSnapshotMother.aCombat()
                         .withCombatTurn(new CombatTurn(CombatSide.DEFENDER))
-                        .withAttacker(ParticipantMother.aParticipantBuilder().withHealth(100.0, 100.0).build())
+                        .withAttacker(ParticipantMother.aParticipantBuilder().withHealth(100, 100).build())
                         .build()
         );
 
-        assertThat(combat.getSnapshot().attacker().getHealth().getCurrent()).isEqualTo(100.0);
+        assertThat(combat.getSnapshot().attacker().getHealth().getCurrent()).isEqualTo(100);
 
-        combat.applyDamageOpponent(50.0);
+        combat.applyDamageOpponent(50);
 
-        assertThat(combat.getSnapshot().attacker().getHealth().getCurrent()).isEqualTo(50.0);
+        assertThat(combat.getSnapshot().attacker().getHealth().getCurrent()).isEqualTo(50);
     }
 
     @Test
@@ -41,15 +41,15 @@ class CombatTest {
         Combat combat = Combat.restore(
                 CombatSnapshotMother.aCombat()
                         .withCombatTurn(new CombatTurn(CombatSide.ATTACKER))
-                        .withDefender(ParticipantMother.aParticipantBuilder().withHealth(100.0, 100.0).build())
+                        .withDefender(ParticipantMother.aParticipantBuilder().withHealth(100, 100).build())
                         .build()
         );
 
-        assertThat(combat.getSnapshot().defender().getHealth().getCurrent()).isEqualTo(100.0);
+        assertThat(combat.getSnapshot().defender().getHealth().getCurrent()).isEqualTo(100);
 
-        combat.applyDamageOpponent(50.0);
+        combat.applyDamageOpponent(50);
 
-        assertThat(combat.getSnapshot().defender().getHealth().getCurrent()).isEqualTo(50.0);
+        assertThat(combat.getSnapshot().defender().getHealth().getCurrent()).isEqualTo(50);
     }
 
     @Test
@@ -57,11 +57,11 @@ class CombatTest {
         Combat combat = Combat.restore(
                 CombatSnapshotMother.aCombat()
                         .withCombatTurn(new CombatTurn(CombatSide.ATTACKER))
-                        .withDefender(ParticipantMother.aParticipantBuilder().withHealth(100.0, 100.0).build())
+                        .withDefender(ParticipantMother.aParticipantBuilder().withHealth(100, 100).build())
                         .build()
         );
 
-        combat.applyDamageOpponent(100.0);
+        combat.applyDamageOpponent(100);
 
         assertThat(combat.isDefenderAlive()).isFalse();
     }
@@ -71,7 +71,7 @@ class CombatTest {
         Combat combat = Combat.restore(
                 CombatSnapshotMother.aCombat()
                         .withCombatTurn(new CombatTurn(CombatSide.ATTACKER))
-                        .withDefender(ParticipantMother.aParticipantBuilder().withHealth(100.0, 100.0).build())
+                        .withDefender(ParticipantMother.aParticipantBuilder().withHealth(100, 100).build())
                         .build()
         );
 
@@ -83,11 +83,11 @@ class CombatTest {
         Combat combat = Combat.restore(
                 CombatSnapshotMother.aCombat()
                         .withCombatTurn(new CombatTurn(CombatSide.DEFENDER))
-                        .withAttacker(ParticipantMother.aParticipantBuilder().withHealth(100.0, 100.0).build())
+                        .withAttacker(ParticipantMother.aParticipantBuilder().withHealth(100, 100).build())
                         .build()
         );
 
-        combat.applyDamageOpponent(100.0);
+        combat.applyDamageOpponent(100);
 
         assertThat(combat.isAttackerAlive()).isFalse();
     }
@@ -97,7 +97,7 @@ class CombatTest {
         Combat combat = Combat.restore(
                 CombatSnapshotMother.aCombat()
                         .withCombatTurn(new CombatTurn(CombatSide.DEFENDER))
-                        .withAttacker(ParticipantMother.aParticipantBuilder().withHealth(100.0, 100.0).build())
+                        .withAttacker(ParticipantMother.aParticipantBuilder().withHealth(100, 100).build())
                         .build()
         );
 
