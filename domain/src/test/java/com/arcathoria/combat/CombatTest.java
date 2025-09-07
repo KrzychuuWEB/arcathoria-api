@@ -152,4 +152,64 @@ class CombatTest {
         assertThat(combat.getCurrentTurnParticipant()).isEqualTo(participant);
         assertThat(combat.getCurrentTurnParticipant().getId()).isEqualTo(uuid);
     }
+
+    @Test
+    void should_defender_is_not_alive() {
+        ParticipantId uuid = new ParticipantId(UUID.randomUUID());
+        Participant participant = ParticipantMother.aParticipantBuilder().withId(uuid).withHealth(0, 100).build();
+        Combat combat = Combat.restore(
+                CombatSnapshotMother.aCombat()
+                        .withDefender(participant)
+                        .withAttacker(ParticipantMother.aParticipantBuilder().build())
+                        .withCombatTurn(new CombatTurn(CombatSide.DEFENDER))
+                        .build()
+        );
+
+        assertThat(combat.isDefenderAlive()).isFalse();
+    }
+
+    @Test
+    void should_defender_is_alive() {
+        ParticipantId uuid = new ParticipantId(UUID.randomUUID());
+        Participant participant = ParticipantMother.aParticipantBuilder().withId(uuid).withHealth(10, 100).build();
+        Combat combat = Combat.restore(
+                CombatSnapshotMother.aCombat()
+                        .withDefender(participant)
+                        .withAttacker(ParticipantMother.aParticipantBuilder().build())
+                        .withCombatTurn(new CombatTurn(CombatSide.DEFENDER))
+                        .build()
+        );
+
+        assertThat(combat.isDefenderAlive()).isTrue();
+    }
+
+    @Test
+    void should_attacker_is_not_alive() {
+        ParticipantId uuid = new ParticipantId(UUID.randomUUID());
+        Participant participant = ParticipantMother.aParticipantBuilder().withId(uuid).withHealth(0, 100).build();
+        Combat combat = Combat.restore(
+                CombatSnapshotMother.aCombat()
+                        .withDefender(ParticipantMother.aParticipantBuilder().build())
+                        .withAttacker(participant)
+                        .withCombatTurn(new CombatTurn(CombatSide.DEFENDER))
+                        .build()
+        );
+
+        assertThat(combat.isAttackerAlive()).isFalse();
+    }
+
+    @Test
+    void should_attacker_is_alive() {
+        ParticipantId uuid = new ParticipantId(UUID.randomUUID());
+        Participant participant = ParticipantMother.aParticipantBuilder().withId(uuid).withHealth(10, 100).build();
+        Combat combat = Combat.restore(
+                CombatSnapshotMother.aCombat()
+                        .withDefender(ParticipantMother.aParticipantBuilder().build())
+                        .withAttacker(participant)
+                        .withCombatTurn(new CombatTurn(CombatSide.DEFENDER))
+                        .build()
+        );
+
+        assertThat(combat.isAttackerAlive()).isTrue();
+    }
 }
