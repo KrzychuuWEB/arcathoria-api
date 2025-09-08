@@ -10,7 +10,7 @@ class CombatEngine {
         this.combatSideStrategy = combatSideStrategy;
     }
 
-    Combat startCombat(final Participant attacker, final Participant defender, final CombatType combatType) {
+    Combat initialCombat(final Participant attacker, final Participant defender, final CombatType combatType) {
         CombatSide combatSide = combatSideStrategy.choose(attacker, defender);
         return combatFactory.createCombat(attacker, defender, combatSide, combatType);
     }

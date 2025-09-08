@@ -36,7 +36,7 @@ class InitialPVECombatUseCase {
         Participant attacker = getCharacterByAccountId(command.attacker().id());
         Participant defender = getMonsterByMonsterId(command.defender().id());
 
-        Combat combat = combatEngine.startCombat(attacker, defender, CombatType.PVE);
+        Combat combat = combatEngine.initialCombat(attacker, defender, CombatType.PVE);
 
         return combatStateRepository.save(new CombatState(
                 combat.getSnapshot().combatId(),

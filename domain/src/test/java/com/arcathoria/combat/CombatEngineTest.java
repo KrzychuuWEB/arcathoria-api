@@ -28,7 +28,7 @@ class CombatEngineTest {
         ParticipantId uuid = new ParticipantId(UUID.randomUUID());
         Participant attacker = ParticipantMother.aParticipantBuilder().withHealth(100, 100).build();
         Participant defender = ParticipantMother.aParticipantBuilder().withHealth(80, 80).withId(uuid).build();
-        Combat combat = combatEngine.startCombat(attacker, defender, CombatType.PVE);
+        Combat combat = combatEngine.initialCombat(attacker, defender, CombatType.PVE);
 
         assertThat(combat.getSnapshot().attacker().getId()).isEqualTo(ParticipantMother.DEFAULT_ID);
         assertThat(combat.getSnapshot().defender().getId()).isEqualTo(uuid);
@@ -42,7 +42,7 @@ class CombatEngineTest {
         Participant attacker = ParticipantMother.aParticipantBuilder().withHealth(100, 100).build();
         Participant defender = ParticipantMother.aParticipantBuilder().withHealth(80, 80).build();
 
-        Combat combat = combatEngine.startCombat(attacker, defender, CombatType.PVE);
+        Combat combat = combatEngine.initialCombat(attacker, defender, CombatType.PVE);
         combatEngine.handleAction(combat, meleeCombatActionStrategy);
 
         assertThat(combat.getSnapshot().attacker().getHealth().getCurrent()).isEqualTo(92);

@@ -50,13 +50,13 @@ class InitialPVECombatUseCaseTest {
 
         when(characterClient.getSelectedCharacterByAccountId(player.id())).thenReturn(player);
         when(monsterClient.getMonsterById(monster.id())).thenReturn(monster);
-        when(combatEngine.startCombat(attacker, defender, CombatType.PVE)).thenReturn(combat);
+        when(combatEngine.initialCombat(attacker, defender, CombatType.PVE)).thenReturn(combat);
 
         initialPVECombatUseCase.execute(command);
 
         verify(characterClient).getSelectedCharacterByAccountId(player.id());
         verify(monsterClient).getMonsterById(monster.id());
-        verify(combatEngine).startCombat(attacker, defender, CombatType.PVE);
+        verify(combatEngine).initialCombat(attacker, defender, CombatType.PVE);
         verify(combatStateRepository).save(new CombatState(combat.getSnapshot().combatId(), attacker, defender, combat.getCurrentTurn()));
     }
 
