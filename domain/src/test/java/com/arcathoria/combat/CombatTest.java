@@ -2,6 +2,7 @@ package com.arcathoria.combat;
 
 import com.arcathoria.combat.vo.CombatId;
 import com.arcathoria.combat.vo.CombatTurn;
+import com.arcathoria.combat.vo.Damage;
 import com.arcathoria.combat.vo.ParticipantId;
 import org.junit.jupiter.api.Test;
 
@@ -31,7 +32,7 @@ class CombatTest {
 
         assertThat(combat.getSnapshot().attacker().getHealth().getCurrent()).isEqualTo(100);
 
-        combat.applyDamageOpponent(50);
+        combat.applyDamageOpponent(new Damage(50));
 
         assertThat(combat.getSnapshot().attacker().getHealth().getCurrent()).isEqualTo(50);
     }
@@ -47,7 +48,7 @@ class CombatTest {
 
         assertThat(combat.getSnapshot().defender().getHealth().getCurrent()).isEqualTo(100);
 
-        combat.applyDamageOpponent(50);
+        combat.applyDamageOpponent(new Damage(50));
 
         assertThat(combat.getSnapshot().defender().getHealth().getCurrent()).isEqualTo(50);
     }
@@ -61,7 +62,7 @@ class CombatTest {
                         .build()
         );
 
-        combat.applyDamageOpponent(100);
+        combat.applyDamageOpponent(new Damage(100));
 
         assertThat(combat.isDefenderAlive()).isFalse();
     }
@@ -87,7 +88,7 @@ class CombatTest {
                         .build()
         );
 
-        combat.applyDamageOpponent(100);
+        combat.applyDamageOpponent(new Damage(100));
 
         assertThat(combat.isAttackerAlive()).isFalse();
     }

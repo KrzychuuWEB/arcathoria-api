@@ -2,6 +2,7 @@ package com.arcathoria.combat;
 
 import com.arcathoria.combat.vo.CombatId;
 import com.arcathoria.combat.vo.CombatTurn;
+import com.arcathoria.combat.vo.Damage;
 
 class Combat {
 
@@ -57,7 +58,7 @@ class Combat {
         this.combatTurn = combatTurn.changeTurn();
     }
 
-    void applyDamageOpponent(final int damage) {
+    void applyDamageOpponent(final Damage damage) {
         if (getCurrentTurn() == CombatSide.ATTACKER) {
             defender.applyDamage(damage);
         } else {

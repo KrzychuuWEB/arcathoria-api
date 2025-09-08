@@ -1,6 +1,7 @@
 package com.arcathoria.combat;
 
 import com.arcathoria.character.vo.Level;
+import com.arcathoria.combat.vo.Damage;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -12,8 +13,8 @@ class MeleeMagicDamageStrategyTest {
         Participant participant = ParticipantMother.aParticipantBuilder().withIntelligence(new Level(1)).build();
         MeleeMagicDamageStrategy meleeMagicDamageStrategy = new MeleeMagicDamageStrategy();
 
-        double damage = meleeMagicDamageStrategy.calculate(participant);
+        Damage damage = meleeMagicDamageStrategy.calculate(participant);
 
-        assertThat(damage).isEqualTo(8);
+        assertThat(damage.value()).isEqualTo(8);
     }
 }

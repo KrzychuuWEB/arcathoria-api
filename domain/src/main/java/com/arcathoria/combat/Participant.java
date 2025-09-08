@@ -2,6 +2,7 @@ package com.arcathoria.combat;
 
 import com.arcathoria.character.vo.Health;
 import com.arcathoria.combat.vo.Attributes;
+import com.arcathoria.combat.vo.Damage;
 import com.arcathoria.combat.vo.ParticipantId;
 
 import java.util.Objects;
@@ -30,8 +31,8 @@ class Participant {
         return attributes.intelligence().level().value();
     }
 
-    void applyDamage(final int damage) {
-        this.health = health.subtract(damage);
+    void applyDamage(final Damage damage) {
+        this.health = health.subtract(damage.value());
     }
 
     boolean isAlive() {

@@ -1,5 +1,6 @@
 package com.arcathoria.combat;
 
+import com.arcathoria.combat.vo.Damage;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -20,7 +21,7 @@ class ParticipantTest {
                 .withHealth(100, 100)
                 .build();
 
-        participant.applyDamage(50);
+        participant.applyDamage(new Damage(50));
 
         assertThat(participant.getHealth().getCurrent()).isEqualTo(50);
     }
@@ -31,7 +32,7 @@ class ParticipantTest {
                 .withHealth(100, 100)
                 .build();
 
-        participant.applyDamage(100);
+        participant.applyDamage(new Damage(100));
 
         assertThat(participant.isAlive()).isFalse();
     }
