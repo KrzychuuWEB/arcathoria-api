@@ -8,6 +8,7 @@ record CombatSnapshot(
         Participant attacker,
         Participant defender,
         CombatTurn combatTurn,
-        CombatType combatType
+        CombatType combatType,
+        CombatStatus combatStatus
 ) {
 }

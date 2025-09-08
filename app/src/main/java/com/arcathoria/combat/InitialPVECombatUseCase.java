@@ -32,17 +32,19 @@ class InitialPVECombatUseCase {
         this.combatStateRepository = combatStateRepository;
     }
 
-    CombatState execute(final StartPVECombatCommand command) {
+    CombatSnapshot execute(final StartPVECombatCommand command) {
         Participant attacker = getCharacterByAccountId(command.attacker().id());
         Participant defender = getMonsterByMonsterId(command.defender().id());
 
         Combat combat = combatEngine.initialCombat(attacker, defender, CombatType.PVE);
 
-        return combatStateRepository.save(new CombatState(
+        return combatStateRepository.save(new CombatSnapshot(
                 combat.getSnapshot().combatId(),
                 combat.getSnapshot().attacker(),
                 combat.getSnapshot().defender(),
-                combat.getSnapshot().combatTurn().currentSide()
+                combat.getSnapshot().combatTurn(),
+                combat.getSnapshot().combatType(),
+                combat.getSnapshot().combatStatus()
         ));
     }
 

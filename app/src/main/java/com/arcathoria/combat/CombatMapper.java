@@ -15,9 +15,9 @@ final class CombatMapper {
     CombatMapper() {
     }
 
-    static CombatResultDTO fromCombatStateToCombatResultDTO(final CombatState state) {
+    static CombatResultDTO fromCombatStateToCombatResultDTO(final CombatSnapshot snapshot) {
         return new CombatResultDTO(
-                state.combatId().value()
+                snapshot.combatId().value()
         );
     }
 

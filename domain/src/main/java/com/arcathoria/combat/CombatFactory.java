@@ -16,7 +16,8 @@ class CombatFactory {
                         attacker,
                         defender,
                         new CombatTurn(combatSide),
-                        combatType
+                        combatType,
+                        CombatStatus.IN_PROGRESS
                 )
         );
     }

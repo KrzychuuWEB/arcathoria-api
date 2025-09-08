@@ -13,7 +13,7 @@ public class CombatFacade {
         this.initialPVECombatUseCase = initialPVECombatUseCase;
     }
 
-    CombatResultDTO startPVE(final StartPVECombatCommand command) {
+    CombatResultDTO initPVECombat(final StartPVECombatCommand command) {
         return fromCombatStateToCombatResultDTO(initialPVECombatUseCase.execute(command));
     }
 }

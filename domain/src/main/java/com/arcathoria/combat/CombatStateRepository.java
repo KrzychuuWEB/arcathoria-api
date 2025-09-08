@@ -1,5 +1,5 @@
 package com.arcathoria.combat;
 
 interface CombatStateRepository {
-    CombatState save(final CombatState state);
+    CombatSnapshot save(final CombatSnapshot snapshot);
 }

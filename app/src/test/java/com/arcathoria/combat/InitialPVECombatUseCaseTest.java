@@ -57,7 +57,7 @@ class InitialPVECombatUseCaseTest {
         verify(characterClient).getSelectedCharacterByAccountId(player.id());
         verify(monsterClient).getMonsterById(monster.id());
         verify(combatEngine).initialCombat(attacker, defender, CombatType.PVE);
-        verify(combatStateRepository).save(new CombatState(combat.getSnapshot().combatId(), attacker, defender, combat.getCurrentTurn()));
+        verify(combatStateRepository).save(CombatSnapshotMother.aCombat().withAttacker(attacker).withDefender(defender).build());
     }
 
     @Test
