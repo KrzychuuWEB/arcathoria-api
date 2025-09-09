@@ -1,5 +1,6 @@
 package com.arcathoria.combat;
 
+import com.arcathoria.combat.exception.CombatAlreadyFinishedException;
 import com.arcathoria.combat.vo.CombatId;
 import com.arcathoria.combat.vo.CombatTurn;
 import com.arcathoria.combat.vo.Damage;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class CombatTest {
 
@@ -177,5 +179,20 @@ class CombatTest {
         Combat combat = Combat.restore(CombatSnapshotMother.aCombat().build());
 
         assertThat(combat.getSnapshot().combatStatus()).isEqualTo(CombatStatus.IN_PROGRESS);
+    }
+
+    @Test
+    void should_throw_exception_when_try_to_apply_damage_to_finished_combat() {
+        Combat combat = Combat.restore(
+                CombatSnapshotMother.aCombat()
+                        .withCombatTurn(new CombatTurn(CombatSide.DEFENDER))
+                        .withAttacker(ParticipantMother.aParticipantBuilder().withHealth(100, 100).build())
+                        .withCombatStatus(CombatStatus.FINISHED)
+                        .build()
+        );
+
+        assertThatThrownBy(() -> combat.applyDamageOpponent(new Damage(combat.getSnapshot().attacker().getHealth().getCurrent())))
+                .isInstanceOf(CombatAlreadyFinishedException.class)
+                .hasMessageContaining("is already finished, this action cannot be performed");
     }
 }

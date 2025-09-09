@@ -1,6 +1,7 @@
 package com.arcathoria.combat;
 
 import com.arcathoria.ApiErrorResponse;
+import com.arcathoria.combat.exception.CombatAlreadyFinishedException;
 import com.arcathoria.combat.exception.CombatParticipantUnavailableException;
 import com.arcathoria.combat.exception.WrongTurnException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -49,6 +50,20 @@ class CombatExceptionHandler {
                 HttpStatus.CONFLICT.value(),
                 HttpStatus.CONFLICT.getReasonPhrase(),
                 messageSource.getMessage("combat.combat.turn.conflict", new Object[]{ex.getCombatSide()}, ex.getMessage(), locale),
+                ex.getErrorCode(),
+                request.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(CombatAlreadyFinishedException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    ApiErrorResponse handleCombatAlreadyFinishedException(final CombatAlreadyFinishedException ex, final HttpServletRequest request, final Locale locale) {
+        logger.warn("CombatStatus for Combat {} is FINISHED", ex.getCombatId());
+
+        return new ApiErrorResponse(
+                HttpStatus.CONFLICT.value(),
+                HttpStatus.CONFLICT.getReasonPhrase(),
+                messageSource.getMessage("combat.already.finished.conflict", new Object[]{ex.getCombatId()}, ex.getMessage(), locale),
                 ex.getErrorCode(),
                 request.getRequestURI()
         );

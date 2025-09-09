@@ -18,7 +18,7 @@ public final class CombatSnapshotMother {
     private Participant defender = DEFAULT_DEFENDER;
     private CombatTurn combatTurn = DEFAULT_COMBAT_TURN;
     private CombatType combatType = DEFAULT_COMBAT_TYPE;
-    private final CombatStatus combatStatus = DEFAULT_COMBAT_STATUS;
+    private CombatStatus combatStatus = DEFAULT_COMBAT_STATUS;
 
     static CombatSnapshotMother aCombat() {
         return new CombatSnapshotMother();
@@ -46,6 +46,11 @@ public final class CombatSnapshotMother {
 
     CombatSnapshotMother withCombatType(final CombatType combatType) {
         this.combatType = combatType;
+        return this;
+    }
+
+    CombatSnapshotMother withCombatStatus(final CombatStatus combatStatus) {
+        this.combatStatus = combatStatus;
         return this;
     }
 

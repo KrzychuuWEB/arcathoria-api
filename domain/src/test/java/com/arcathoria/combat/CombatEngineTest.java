@@ -64,7 +64,7 @@ class CombatEngineTest {
 
     @Test
     void should_return_finish_combat_status_after_execute_action() {
-        Participant attacker = ParticipantMother.aParticipantBuilder().withHealth(8, 100).build();
+        Participant attacker = ParticipantMother.aParticipantBuilder().withHealth(1, 100).build();
         Participant defender = ParticipantMother.aParticipantBuilder().withHealth(80, 80).build();
 
         Combat combat = combatEngine.initialCombat(attacker, defender, CombatType.PVE);

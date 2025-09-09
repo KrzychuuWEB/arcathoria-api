@@ -1,5 +1,6 @@
 package com.arcathoria.combat;
 
+import com.arcathoria.combat.exception.CombatAlreadyFinishedException;
 import com.arcathoria.combat.vo.CombatId;
 import com.arcathoria.combat.vo.CombatTurn;
 import com.arcathoria.combat.vo.Damage;
@@ -67,7 +68,14 @@ class Combat {
         return combatStatus;
     }
 
+    void requireInProgress() {
+        if (this.combatStatus.equals(CombatStatus.FINISHED) || this.combatStatus.equals(CombatStatus.CANCELLED))
+            throw new CombatAlreadyFinishedException(combatId);
+    }
+
     void applyDamageOpponent(final Damage damage) {
+        requireInProgress();
+
         if (getCurrentTurn() == CombatSide.ATTACKER) {
             defender.applyDamage(damage);
         } else {
