@@ -213,4 +213,21 @@ class CombatTest {
 
         assertThat(combat.isAttackerAlive()).isTrue();
     }
+
+    @Test
+    void should_finish_combat_when_participant_health_is_zero() {
+        Combat combat = Combat.restore(
+                CombatSnapshotMother.aCombat()
+                        .withCombatTurn(new CombatTurn(CombatSide.DEFENDER))
+                        .withAttacker(ParticipantMother.aParticipantBuilder().withHealth(100, 100).build())
+                        .build()
+        );
+        CombatStatus beforeAttackCombatStatus = combat.getSnapshot().combatStatus();
+
+        combat.applyDamageOpponent(new Damage(combat.getSnapshot().attacker().getHealth().getCurrent()));
+
+        assertThat(combat.getSnapshot().attacker().getHealth().getCurrent()).isZero();
+        assertThat(combat.getSnapshot().combatStatus()).isEqualTo(CombatStatus.FINISHED);
+        assertThat(beforeAttackCombatStatus).isEqualTo(CombatStatus.IN_PROGRESS);
+    }
 }

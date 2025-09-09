@@ -22,7 +22,7 @@ class Combat {
     private final Participant defender;
     private CombatTurn combatTurn;
     private final CombatType combatType;
-    private final CombatStatus combatStatus;
+    private CombatStatus combatStatus;
 
     Combat(
             final CombatId combatId,
@@ -68,6 +68,10 @@ class Combat {
             defender.applyDamage(damage);
         } else {
             attacker.applyDamage(damage);
+        }
+
+        if (!isDefenderAlive() || !isAttackerAlive()) {
+            this.combatStatus = CombatStatus.FINISHED;
         }
     }
 
