@@ -5,8 +5,8 @@ import com.arcathoria.combat.vo.CombatTurn;
 
 record CombatSnapshot(
         CombatId combatId,
-        Participant attacker,
-        Participant defender,
+        ParticipantSnapshot attacker,
+        ParticipantSnapshot defender,
         CombatTurn combatTurn,
         CombatType combatType,
         CombatStatus combatStatus

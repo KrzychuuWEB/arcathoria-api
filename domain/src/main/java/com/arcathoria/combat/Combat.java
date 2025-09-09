@@ -10,8 +10,8 @@ class Combat {
     static Combat restore(final CombatSnapshot snapshot) {
         return new Combat(
                 snapshot.combatId(),
-                snapshot.attacker(),
-                snapshot.defender(),
+                Participant.restore(snapshot.attacker()),
+                Participant.restore(snapshot.defender()),
                 snapshot.combatTurn(),
                 snapshot.combatType(),
                 snapshot.combatStatus()
@@ -25,7 +25,7 @@ class Combat {
     private final CombatType combatType;
     private CombatStatus combatStatus;
 
-    Combat(
+    private Combat(
             final CombatId combatId,
             final Participant attacker,
             final Participant defender,
@@ -44,8 +44,8 @@ class Combat {
     CombatSnapshot getSnapshot() {
         return new CombatSnapshot(
                 combatId,
-                attacker,
-                defender,
+                attacker.getSnapshot(),
+                defender.getSnapshot(),
                 combatTurn,
                 combatType,
                 combatStatus
@@ -68,11 +68,6 @@ class Combat {
         return combatStatus;
     }
 
-    void requireInProgress() {
-        if (this.combatStatus.equals(CombatStatus.FINISHED) || this.combatStatus.equals(CombatStatus.CANCELLED))
-            throw new CombatAlreadyFinishedException(combatId);
-    }
-
     void applyDamageOpponent(final Damage damage) {
         requireInProgress();
 
@@ -93,5 +88,10 @@ class Combat {
 
     boolean isAttackerAlive() {
         return attacker.isAlive();
+    }
+
+    private void requireInProgress() {
+        if (this.combatStatus.equals(CombatStatus.FINISHED) || this.combatStatus.equals(CombatStatus.CANCELLED))
+            throw new CombatAlreadyFinishedException(combatId);
     }
 }

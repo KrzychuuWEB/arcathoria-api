@@ -18,11 +18,11 @@ class MeleeCombatActionStrategyTest {
 
     @Test
     void should_calculate_damage_for_melee_attack_and_attack_defender() {
-        Participant attacker = ParticipantMother.aParticipantBuilder()
+        ParticipantSnapshot attacker = ParticipantSnapshotMother.aParticipantBuilder()
                 .withIntelligence(new Level(1))
                 .withHealth(150, 150)
                 .build();
-        Participant defender = ParticipantMother.aParticipantBuilder()
+        ParticipantSnapshot defender = ParticipantSnapshotMother.aParticipantBuilder()
                 .withHealth(100, 100)
                 .build();
         Combat combat = Combat.restore(CombatSnapshotMother.aCombat()
@@ -33,6 +33,6 @@ class MeleeCombatActionStrategyTest {
 
         meleeCombatActionStrategy.execute(combat);
 
-        assertThat(combat.getSnapshot().defender().getHealth().getCurrent()).isEqualTo(92);
+        assertThat(combat.getSnapshot().defender().health().getCurrent()).isEqualTo(92);
     }
 }

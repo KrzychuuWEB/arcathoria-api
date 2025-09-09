@@ -9,7 +9,7 @@ import com.arcathoria.combat.vo.ParticipantId;
 
 import java.util.UUID;
 
-public final class ParticipantMother {
+public final class ParticipantSnapshotMother {
     public static final ParticipantId DEFAULT_ID = new ParticipantId(UUID.randomUUID());
     public static final Health DEFAULT_HEALTH = new Health(new Gauge(100, 100));
     public static final Intelligence DEFAULT_INTELLIGENCE = new Intelligence(new Level(1));
@@ -18,29 +18,29 @@ public final class ParticipantMother {
     private Health health = DEFAULT_HEALTH;
     private Attributes attributes = new Attributes(DEFAULT_INTELLIGENCE);
 
-    private ParticipantMother() {
+    private ParticipantSnapshotMother() {
     }
 
-    public static ParticipantMother aParticipantBuilder() {
-        return new ParticipantMother();
+    public static ParticipantSnapshotMother aParticipantBuilder() {
+        return new ParticipantSnapshotMother();
     }
 
-    public ParticipantMother withId(final ParticipantId id) {
+    public ParticipantSnapshotMother withId(final ParticipantId id) {
         this.uuid = id;
         return this;
     }
 
-    public ParticipantMother withHealth(final int current, final int max) {
+    public ParticipantSnapshotMother withHealth(final int current, final int max) {
         this.health = new Health(new Gauge(current, max));
         return this;
     }
 
-    public ParticipantMother withIntelligence(final Level level) {
+    public ParticipantSnapshotMother withIntelligence(final Level level) {
         this.attributes = new Attributes(new Intelligence(level));
         return this;
     }
 
-    Participant build() {
-        return new Participant(uuid, health, attributes);
+    ParticipantSnapshot build() {
+        return new ParticipantSnapshot(uuid, health, attributes);
     }
 }

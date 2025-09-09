@@ -22,18 +22,18 @@ final class CombatMapper {
     }
 
     static Participant fromCharacterDTOToParticipant(final CharacterDTO dto) {
-        return new Participant(
+        return Participant.restore(new ParticipantSnapshot(
                 new ParticipantId(dto.id()),
                 new Health(new Gauge(dto.health(), dto.health())),
                 new Attributes(new Intelligence(new Level(dto.intelligence())))
-        );
+        ));
     }
 
     static Participant fromMonsterDTOToParticipant(final MonsterDTO dto) {
-        return new Participant(
+        return Participant.restore(new ParticipantSnapshot(
                 new ParticipantId(dto.id()),
                 new Health(new Gauge(dto.maxHealth(), dto.maxHealth())),
                 new Attributes(new Intelligence(new Level(dto.intelligence())))
-        );
+        ));
     }
 }

@@ -36,9 +36,9 @@ class InitialPVECombatUseCaseTest {
 
     @Test
     void should_start_combat_and_persist_state_when_valid_command_given() {
-        Participant attacker = ParticipantMother.aParticipantBuilder().build();
-        Participant defender = ParticipantMother.aParticipantBuilder().build();
-        Combat combat = Combat.restore(CombatSnapshotMother.aCombat().build());
+        Participant attacker = Participant.restore(ParticipantSnapshotMother.aParticipantBuilder().build());
+        Participant defender = Participant.restore(ParticipantSnapshotMother.aParticipantBuilder().build());
+        Combat combat = Combat.restore(CombatSnapshotMother.aCombat().withAttacker(attacker.getSnapshot()).withDefender(defender.getSnapshot()).build());
 
         CharacterDTO player = new CharacterDTO(attacker.getId().value(), "example-player", attacker.getHealth().getMax(), attacker.getIntelligenceLevel());
         MonsterDTO monster = new MonsterDTO(defender.getId().value(), "example-monster", defender.getHealth().getMax(), defender.getHealth().getMax(), defender.getIntelligenceLevel());
@@ -57,13 +57,13 @@ class InitialPVECombatUseCaseTest {
         verify(characterClient).getSelectedCharacterByAccountId(player.id());
         verify(monsterClient).getMonsterById(monster.id());
         verify(combatEngine).initialCombat(attacker, defender, CombatType.PVE);
-        verify(combatStateRepository).save(CombatSnapshotMother.aCombat().withAttacker(attacker).withDefender(defender).build());
+        verify(combatStateRepository).save(CombatSnapshotMother.aCombat().withAttacker(attacker.getSnapshot()).withDefender(defender.getSnapshot()).build());
     }
 
     @Test
     void should_throw_when_character_not_found() {
-        Participant attacker = ParticipantMother.aParticipantBuilder().build();
-        Participant defender = ParticipantMother.aParticipantBuilder().build();
+        Participant attacker = Participant.restore(ParticipantSnapshotMother.aParticipantBuilder().build());
+        Participant defender = Participant.restore(ParticipantSnapshotMother.aParticipantBuilder().build());
 
         CharacterDTO player = new CharacterDTO(attacker.getId().value(), "example-player", attacker.getHealth().getMax(), attacker.getIntelligenceLevel());
         MonsterDTO monster = new MonsterDTO(defender.getId().value(), "example-monster", defender.getHealth().getMax(), defender.getHealth().getMax(), defender.getIntelligenceLevel());
@@ -77,8 +77,8 @@ class InitialPVECombatUseCaseTest {
 
     @Test
     void should_throw_when_monster_not_found() {
-        Participant attacker = ParticipantMother.aParticipantBuilder().build();
-        Participant defender = ParticipantMother.aParticipantBuilder().build();
+        Participant attacker = Participant.restore(ParticipantSnapshotMother.aParticipantBuilder().build());
+        Participant defender = Participant.restore(ParticipantSnapshotMother.aParticipantBuilder().build());
 
         CharacterDTO player = new CharacterDTO(attacker.getId().value(), "example-player", attacker.getHealth().getMax(), attacker.getIntelligenceLevel());
         MonsterDTO monster = new MonsterDTO(defender.getId().value(), "example-monster", defender.getHealth().getMax(), defender.getHealth().getMax(), defender.getIntelligenceLevel());

@@ -28,16 +28,16 @@ class CombatTest {
         Combat combat = Combat.restore(
                 CombatSnapshotMother.aCombat()
                         .withCombatTurn(new CombatTurn(CombatSide.DEFENDER))
-                        .withAttacker(ParticipantMother.aParticipantBuilder().withHealth(100, 100).build())
+                        .withAttacker(ParticipantSnapshotMother.aParticipantBuilder().withHealth(100, 100).build())
                         .build()
         );
 
-        assertThat(combat.getSnapshot().attacker().getHealth().getCurrent()).isEqualTo(100);
+        assertThat(combat.getSnapshot().attacker().health().getCurrent()).isEqualTo(100);
 
         combat.applyDamageOpponent(new Damage(50));
 
         assertThat(combat.getSnapshot().combatStatus()).isEqualTo(CombatStatus.IN_PROGRESS);
-        assertThat(combat.getSnapshot().attacker().getHealth().getCurrent()).isEqualTo(50);
+        assertThat(combat.getSnapshot().attacker().health().getCurrent()).isEqualTo(50);
     }
 
     @Test
@@ -45,15 +45,15 @@ class CombatTest {
         Combat combat = Combat.restore(
                 CombatSnapshotMother.aCombat()
                         .withCombatTurn(new CombatTurn(CombatSide.ATTACKER))
-                        .withDefender(ParticipantMother.aParticipantBuilder().withHealth(100, 100).build())
+                        .withDefender(ParticipantSnapshotMother.aParticipantBuilder().withHealth(100, 100).build())
                         .build()
         );
 
-        assertThat(combat.getSnapshot().defender().getHealth().getCurrent()).isEqualTo(100);
+        assertThat(combat.getSnapshot().defender().health().getCurrent()).isEqualTo(100);
 
         combat.applyDamageOpponent(new Damage(50));
 
-        assertThat(combat.getSnapshot().defender().getHealth().getCurrent()).isEqualTo(50);
+        assertThat(combat.getSnapshot().defender().health().getCurrent()).isEqualTo(50);
     }
 
     @Test
@@ -61,7 +61,7 @@ class CombatTest {
         Combat combat = Combat.restore(
                 CombatSnapshotMother.aCombat()
                         .withCombatTurn(new CombatTurn(CombatSide.ATTACKER))
-                        .withDefender(ParticipantMother.aParticipantBuilder().withHealth(100, 100).build())
+                        .withDefender(ParticipantSnapshotMother.aParticipantBuilder().withHealth(100, 100).build())
                         .build()
         );
 
@@ -75,7 +75,7 @@ class CombatTest {
         Combat combat = Combat.restore(
                 CombatSnapshotMother.aCombat()
                         .withCombatTurn(new CombatTurn(CombatSide.ATTACKER))
-                        .withDefender(ParticipantMother.aParticipantBuilder().withHealth(100, 100).build())
+                        .withDefender(ParticipantSnapshotMother.aParticipantBuilder().withHealth(100, 100).build())
                         .build()
         );
 
@@ -87,7 +87,7 @@ class CombatTest {
         Combat combat = Combat.restore(
                 CombatSnapshotMother.aCombat()
                         .withCombatTurn(new CombatTurn(CombatSide.DEFENDER))
-                        .withAttacker(ParticipantMother.aParticipantBuilder().withHealth(100, 100).build())
+                        .withAttacker(ParticipantSnapshotMother.aParticipantBuilder().withHealth(100, 100).build())
                         .build()
         );
 
@@ -101,7 +101,7 @@ class CombatTest {
         Combat combat = Combat.restore(
                 CombatSnapshotMother.aCombat()
                         .withCombatTurn(new CombatTurn(CombatSide.DEFENDER))
-                        .withAttacker(ParticipantMother.aParticipantBuilder().withHealth(100, 100).build())
+                        .withAttacker(ParticipantSnapshotMother.aParticipantBuilder().withHealth(100, 100).build())
                         .build()
         );
 
@@ -126,34 +126,34 @@ class CombatTest {
     @Test
     void should_return_attacker_for_attacker_turn() {
         ParticipantId uuid = new ParticipantId(UUID.randomUUID());
-        Participant participant = ParticipantMother.aParticipantBuilder().withId(uuid).build();
+        ParticipantSnapshot participant = ParticipantSnapshotMother.aParticipantBuilder().withId(uuid).build();
         Combat combat = Combat.restore(
                 CombatSnapshotMother.aCombat()
                         .withAttacker(participant)
-                        .withDefender(ParticipantMother.aParticipantBuilder().build())
+                        .withDefender(ParticipantSnapshotMother.aParticipantBuilder().build())
                         .withCombatTurn(new CombatTurn(CombatSide.ATTACKER))
                         .build()
         );
 
         assertThat(combat.getCurrentTurn()).isEqualTo(CombatSide.ATTACKER);
-        assertThat(combat.getCurrentTurnParticipant()).isEqualTo(participant);
+        assertThat(combat.getCurrentTurnParticipant()).isEqualTo(Participant.restore(participant));
         assertThat(combat.getCurrentTurnParticipant().getId()).isEqualTo(uuid);
     }
 
     @Test
     void should_return_defender_for_defender_turn() {
         ParticipantId uuid = new ParticipantId(UUID.randomUUID());
-        Participant participant = ParticipantMother.aParticipantBuilder().withId(uuid).build();
+        ParticipantSnapshot participant = ParticipantSnapshotMother.aParticipantBuilder().withId(uuid).build();
         Combat combat = Combat.restore(
                 CombatSnapshotMother.aCombat()
                         .withDefender(participant)
-                        .withAttacker(ParticipantMother.aParticipantBuilder().build())
+                        .withAttacker(ParticipantSnapshotMother.aParticipantBuilder().build())
                         .withCombatTurn(new CombatTurn(CombatSide.DEFENDER))
                         .build()
         );
 
         assertThat(combat.getCurrentTurn()).isEqualTo(CombatSide.DEFENDER);
-        assertThat(combat.getCurrentTurnParticipant()).isEqualTo(participant);
+        assertThat(combat.getCurrentTurnParticipant()).isEqualTo(Participant.restore(participant));
         assertThat(combat.getCurrentTurnParticipant().getId()).isEqualTo(uuid);
     }
 
@@ -162,14 +162,14 @@ class CombatTest {
         Combat combat = Combat.restore(
                 CombatSnapshotMother.aCombat()
                         .withCombatTurn(new CombatTurn(CombatSide.DEFENDER))
-                        .withAttacker(ParticipantMother.aParticipantBuilder().withHealth(100, 100).build())
+                        .withAttacker(ParticipantSnapshotMother.aParticipantBuilder().withHealth(100, 100).build())
                         .build()
         );
         CombatStatus beforeAttackCombatStatus = combat.getSnapshot().combatStatus();
 
-        combat.applyDamageOpponent(new Damage(combat.getSnapshot().attacker().getHealth().getCurrent()));
+        combat.applyDamageOpponent(new Damage(combat.getSnapshot().attacker().health().getCurrent()));
 
-        assertThat(combat.getSnapshot().attacker().getHealth().getCurrent()).isZero();
+        assertThat(combat.getSnapshot().attacker().health().getCurrent()).isZero();
         assertThat(combat.getSnapshot().combatStatus()).isEqualTo(CombatStatus.FINISHED);
         assertThat(beforeAttackCombatStatus).isEqualTo(CombatStatus.IN_PROGRESS);
     }
@@ -186,12 +186,12 @@ class CombatTest {
         Combat combat = Combat.restore(
                 CombatSnapshotMother.aCombat()
                         .withCombatTurn(new CombatTurn(CombatSide.DEFENDER))
-                        .withAttacker(ParticipantMother.aParticipantBuilder().withHealth(100, 100).build())
+                        .withAttacker(ParticipantSnapshotMother.aParticipantBuilder().withHealth(100, 100).build())
                         .withCombatStatus(CombatStatus.FINISHED)
                         .build()
         );
 
-        assertThatThrownBy(() -> combat.applyDamageOpponent(new Damage(combat.getSnapshot().attacker().getHealth().getCurrent())))
+        assertThatThrownBy(() -> combat.applyDamageOpponent(new Damage(combat.getSnapshot().attacker().health().getCurrent())))
                 .isInstanceOf(CombatAlreadyFinishedException.class)
                 .hasMessageContaining("is already finished, this action cannot be performed");
     }

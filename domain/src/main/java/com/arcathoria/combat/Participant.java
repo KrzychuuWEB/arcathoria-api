@@ -9,16 +9,32 @@ import java.util.Objects;
 
 class Participant {
 
+    static Participant restore(final ParticipantSnapshot snapshot) {
+        return new Participant(
+                snapshot.participantId(),
+                snapshot.health(),
+                snapshot.attributes()
+        );
+    }
+
     private final ParticipantId id;
     private Health health;
     private final Attributes attributes;
 
-    Participant(final ParticipantId id, final Health health, final Attributes attributes) {
+    private Participant(final ParticipantId id, final Health health, final Attributes attributes) {
         this.id = id;
         this.health = health;
         this.attributes = attributes;
     }
 
+    ParticipantSnapshot getSnapshot() {
+        return new ParticipantSnapshot(
+                id,
+                health,
+                attributes
+        );
+    }
+    
     ParticipantId getId() {
         return id;
     }

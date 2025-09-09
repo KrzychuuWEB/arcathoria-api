@@ -13,8 +13,8 @@ class CombatFactory {
         return Combat.restore(
                 new CombatSnapshot(
                         null,
-                        attacker,
-                        defender,
+                        attacker.getSnapshot(),
+                        defender.getSnapshot(),
                         new CombatTurn(combatSide),
                         combatType,
                         CombatStatus.IN_PROGRESS

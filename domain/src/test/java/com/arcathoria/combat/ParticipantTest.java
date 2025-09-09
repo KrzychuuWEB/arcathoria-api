@@ -9,17 +9,17 @@ class ParticipantTest {
 
     @Test
     void should_return_correct_participant() {
-        Participant participant = ParticipantMother.aParticipantBuilder().build();
+        Participant participant = Participant.restore(ParticipantSnapshotMother.aParticipantBuilder().build());
 
-        assertThat(participant.getId()).isEqualTo(ParticipantMother.DEFAULT_ID);
-        assertThat(participant.getHealth()).isEqualTo(ParticipantMother.DEFAULT_HEALTH);
+        assertThat(participant.getId()).isEqualTo(ParticipantSnapshotMother.DEFAULT_ID);
+        assertThat(participant.getHealth()).isEqualTo(ParticipantSnapshotMother.DEFAULT_HEALTH);
     }
 
     @Test
     void should_reduce_attacker_hp_when_defender_deals_damage() {
-        Participant participant = ParticipantMother.aParticipantBuilder()
+        Participant participant = Participant.restore(ParticipantSnapshotMother.aParticipantBuilder()
                 .withHealth(100, 100)
-                .build();
+                .build());
 
         participant.applyDamage(new Damage(50));
 
@@ -28,9 +28,9 @@ class ParticipantTest {
 
     @Test
     void should_return_false_if_participant_is_not_alive() {
-        Participant participant = ParticipantMother.aParticipantBuilder()
+        Participant participant = Participant.restore(ParticipantSnapshotMother.aParticipantBuilder()
                 .withHealth(100, 100)
-                .build();
+                .build());
 
         participant.applyDamage(new Damage(100));
 
@@ -39,9 +39,9 @@ class ParticipantTest {
 
     @Test
     void should_return_true_if_participant_is_alive() {
-        Participant participant = ParticipantMother.aParticipantBuilder()
+        Participant participant = Participant.restore(ParticipantSnapshotMother.aParticipantBuilder()
                 .withHealth(100, 100)
-                .build();
+                .build());
 
         assertThat(participant.isAlive()).isTrue();
     }

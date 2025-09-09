@@ -7,15 +7,15 @@ import java.util.UUID;
 
 public final class CombatSnapshotMother {
     static final UUID DEFAULT_COMBAT_ID = null;
-    static final Participant DEFAULT_ATTACKER = ParticipantMother.aParticipantBuilder().withHealth(100, 100).build();
-    static final Participant DEFAULT_DEFENDER = ParticipantMother.aParticipantBuilder().withHealth(80, 80).build();
+    static final ParticipantSnapshot DEFAULT_ATTACKER = ParticipantSnapshotMother.aParticipantBuilder().withHealth(100, 100).build();
+    static final ParticipantSnapshot DEFAULT_DEFENDER = ParticipantSnapshotMother.aParticipantBuilder().withHealth(80, 80).build();
     static final CombatTurn DEFAULT_COMBAT_TURN = new CombatTurn(CombatSide.ATTACKER);
     static final CombatType DEFAULT_COMBAT_TYPE = CombatType.PVE;
     static final CombatStatus DEFAULT_COMBAT_STATUS = CombatStatus.IN_PROGRESS;
 
     private CombatId combatId = new CombatId(DEFAULT_COMBAT_ID);
-    private Participant attacker = DEFAULT_ATTACKER;
-    private Participant defender = DEFAULT_DEFENDER;
+    private ParticipantSnapshot attacker = DEFAULT_ATTACKER;
+    private ParticipantSnapshot defender = DEFAULT_DEFENDER;
     private CombatTurn combatTurn = DEFAULT_COMBAT_TURN;
     private CombatType combatType = DEFAULT_COMBAT_TYPE;
     private CombatStatus combatStatus = DEFAULT_COMBAT_STATUS;
@@ -29,12 +29,12 @@ public final class CombatSnapshotMother {
         return this;
     }
 
-    CombatSnapshotMother withAttacker(final Participant attacker) {
+    CombatSnapshotMother withAttacker(final ParticipantSnapshot attacker) {
         this.attacker = attacker;
         return this;
     }
 
-    CombatSnapshotMother withDefender(final Participant defender) {
+    CombatSnapshotMother withDefender(final ParticipantSnapshot defender) {
         this.defender = defender;
         return this;
     }
