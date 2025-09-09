@@ -63,6 +63,10 @@ class Combat {
         this.combatTurn = combatTurn.changeTurn();
     }
 
+    CombatStatus getCombatStatus() {
+        return combatStatus;
+    }
+
     void applyDamageOpponent(final Damage damage) {
         if (getCurrentTurn() == CombatSide.ATTACKER) {
             defender.applyDamage(damage);

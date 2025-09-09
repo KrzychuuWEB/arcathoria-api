@@ -171,4 +171,11 @@ class CombatTest {
         assertThat(combat.getSnapshot().combatStatus()).isEqualTo(CombatStatus.FINISHED);
         assertThat(beforeAttackCombatStatus).isEqualTo(CombatStatus.IN_PROGRESS);
     }
+
+    @Test
+    void should_get_combat_status() {
+        Combat combat = Combat.restore(CombatSnapshotMother.aCombat().build());
+
+        assertThat(combat.getSnapshot().combatStatus()).isEqualTo(CombatStatus.IN_PROGRESS);
+    }
 }

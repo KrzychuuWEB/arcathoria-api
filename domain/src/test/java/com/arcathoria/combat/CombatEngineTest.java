@@ -49,4 +49,29 @@ class CombatEngineTest {
         assertThat(combat.getSnapshot().defender().getHealth().getCurrent()).isEqualTo(80);
         assertThat(combat.getSnapshot().combatTurn().currentSide()).isEqualTo(CombatSide.ATTACKER);
     }
+
+    @Test
+    void should_return_in_progress_combat_status_after_execute_action() {
+        Participant attacker = ParticipantMother.aParticipantBuilder().withHealth(100, 100).build();
+        Participant defender = ParticipantMother.aParticipantBuilder().withHealth(80, 80).build();
+
+        Combat combat = combatEngine.initialCombat(attacker, defender, CombatType.PVE);
+
+        combatEngine.handleAction(combat, meleeCombatActionStrategy);
+
+        assertThat(combat.getCombatStatus()).isEqualTo(CombatStatus.IN_PROGRESS);
+    }
+
+    @Test
+    void should_return_finish_combat_status_after_execute_action() {
+        Participant attacker = ParticipantMother.aParticipantBuilder().withHealth(8, 100).build();
+        Participant defender = ParticipantMother.aParticipantBuilder().withHealth(80, 80).build();
+
+        Combat combat = combatEngine.initialCombat(attacker, defender, CombatType.PVE);
+
+        combatEngine.handleAction(combat, meleeCombatActionStrategy);
+
+        assertThat(combat.getCombatStatus()).isEqualTo(CombatStatus.FINISHED);
+        assertThat(combat.getSnapshot().attacker().getHealth().getCurrent()).isZero();
+    }
 }

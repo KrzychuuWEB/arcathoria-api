@@ -17,6 +17,8 @@ class CombatEngine {
 
     void handleAction(final Combat combat, final CombatAction combatAction) {
         combatAction.execute(combat);
-        combat.changeTurn();
+        if (combat.getCombatStatus() != CombatStatus.FINISHED) {
+            combat.changeTurn();
+        }
     }
 }
