@@ -12,7 +12,7 @@ class MeleeCombatActionStrategy implements CombatAction {
     public void execute(final Combat combat, final Participant participant) {
         combat.performAttack(
                 participant.getId(),
-                damageCalculator.calculate(combat.getCurrentTurnParticipant())
+                damageCalculator.calculate(participant)
         );
     }
 }
