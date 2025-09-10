@@ -16,7 +16,7 @@ class CombatEngineTest {
     @BeforeEach
     void setup() {
         final CombatFactory combatFactory = new CombatFactory();
-        final CombatSideStrategy combatSideStrategy = new HealthCombatSideStrategy();
+        final CombatSideStrategy combatSideStrategy = new HigherHealthStartsStrategy();
         final DamageCalculator meleeMagicDamageStrategy = new MeleeMagicDamageStrategy();
 
         meleeCombatActionStrategy = new MeleeCombatActionStrategy(meleeMagicDamageStrategy);

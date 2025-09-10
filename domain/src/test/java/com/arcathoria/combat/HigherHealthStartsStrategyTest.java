@@ -5,13 +5,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class HealthCombatSideStrategyTest {
+class HigherHealthStartsStrategyTest {
 
     private CombatSideStrategy healthCombatSideStrategy;
 
     @BeforeEach
     void setup() {
-        healthCombatSideStrategy = new HealthCombatSideStrategy();
+        healthCombatSideStrategy = new HigherHealthStartsStrategy();
     }
 
     @Test
