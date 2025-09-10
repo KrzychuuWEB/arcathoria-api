@@ -74,11 +74,7 @@ class Combat {
         requireInProgress();
         requireTurnOf(participantId);
 
-        if (getCurrentTurn() == CombatSide.ATTACKER) {
-            defender.applyDamage(damage);
-        } else {
-            attacker.applyDamage(damage);
-        }
+        applyDamageToOpponent(damage);
 
         finishIfParticipantDead();
     }
@@ -89,6 +85,14 @@ class Combat {
 
     boolean isAttackerAlive() {
         return attacker.isAlive();
+    }
+
+    private void applyDamageToOpponent(final Damage damage) {
+        if (getCurrentTurn() == CombatSide.ATTACKER) {
+            defender.applyDamage(damage);
+        } else {
+            attacker.applyDamage(damage);
+        }
     }
 
     private void finish() {
