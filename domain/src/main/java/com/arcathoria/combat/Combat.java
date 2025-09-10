@@ -1,9 +1,11 @@
 package com.arcathoria.combat;
 
 import com.arcathoria.combat.exception.CombatAlreadyFinishedException;
+import com.arcathoria.combat.exception.WrongTurnException;
 import com.arcathoria.combat.vo.CombatId;
 import com.arcathoria.combat.vo.CombatTurn;
 import com.arcathoria.combat.vo.Damage;
+import com.arcathoria.combat.vo.ParticipantId;
 
 class Combat {
 
@@ -68,8 +70,9 @@ class Combat {
         return combatStatus;
     }
 
-    void applyDamageOpponent(final Damage damage) {
+    void performAttack(final ParticipantId participantId, final Damage damage) {
         requireInProgress();
+        requireTurnOf(participantId);
 
         if (getCurrentTurn() == CombatSide.ATTACKER) {
             defender.applyDamage(damage);
@@ -77,9 +80,7 @@ class Combat {
             attacker.applyDamage(damage);
         }
 
-        if (!isDefenderAlive() || !isAttackerAlive()) {
-            this.combatStatus = CombatStatus.FINISHED;
-        }
+        finishIfParticipantDead();
     }
 
     boolean isDefenderAlive() {
@@ -90,8 +91,24 @@ class Combat {
         return attacker.isAlive();
     }
 
+    private void finish() {
+        if (this.combatStatus != CombatStatus.FINISHED) {
+            this.combatStatus = CombatStatus.FINISHED;
+        }
+    }
+
+    private void finishIfParticipantDead() {
+        if (!isDefenderAlive() || !isAttackerAlive()) {
+            finish();
+        }
+    }
+
     private void requireInProgress() {
-        if (this.combatStatus.equals(CombatStatus.FINISHED) || this.combatStatus.equals(CombatStatus.CANCELLED))
+        if (this.combatStatus == CombatStatus.FINISHED || this.combatStatus == CombatStatus.CANCELLED)
             throw new CombatAlreadyFinishedException(combatId);
+    }
+
+    private void requireTurnOf(final ParticipantId participantId) {
+        if (!getCurrentTurnParticipant().getId().equals(participantId)) throw new WrongTurnException(getCurrentTurn());
     }
 }

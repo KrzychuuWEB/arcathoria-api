@@ -31,7 +31,7 @@ class MeleeCombatActionStrategyTest {
                 .withCombatTurn(new CombatTurn(CombatSide.ATTACKER))
                 .build());
 
-        meleeCombatActionStrategy.execute(combat);
+        meleeCombatActionStrategy.execute(combat, Participant.restore(attacker));
 
         assertThat(combat.getSnapshot().defender().health().getCurrent()).isEqualTo(92);
     }

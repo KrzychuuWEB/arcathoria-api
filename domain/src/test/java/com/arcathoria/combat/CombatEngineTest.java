@@ -43,7 +43,7 @@ class CombatEngineTest {
         Participant defender = Participant.restore(ParticipantSnapshotMother.aParticipantBuilder().withHealth(80, 80).build());
 
         Combat combat = combatEngine.initialCombat(attacker, defender, CombatType.PVE);
-        combatEngine.handleAction(combat, meleeCombatActionStrategy);
+        combatEngine.handleAction(combat, meleeCombatActionStrategy, defender);
 
         assertThat(combat.getSnapshot().attacker().health().getCurrent()).isEqualTo(92);
         assertThat(combat.getSnapshot().defender().health().getCurrent()).isEqualTo(80);
@@ -57,7 +57,7 @@ class CombatEngineTest {
 
         Combat combat = combatEngine.initialCombat(attacker, defender, CombatType.PVE);
 
-        combatEngine.handleAction(combat, meleeCombatActionStrategy);
+        combatEngine.handleAction(combat, meleeCombatActionStrategy, defender);
 
         assertThat(combat.getCombatStatus()).isEqualTo(CombatStatus.IN_PROGRESS);
     }
@@ -69,7 +69,7 @@ class CombatEngineTest {
 
         Combat combat = combatEngine.initialCombat(attacker, defender, CombatType.PVE);
 
-        combatEngine.handleAction(combat, meleeCombatActionStrategy);
+        combatEngine.handleAction(combat, meleeCombatActionStrategy, attacker);
 
         assertThat(combat.getCombatStatus()).isEqualTo(CombatStatus.FINISHED);
         assertThat(combat.getSnapshot().attacker().health().getCurrent()).isZero();

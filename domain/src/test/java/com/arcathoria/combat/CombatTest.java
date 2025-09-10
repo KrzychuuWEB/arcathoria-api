@@ -1,6 +1,7 @@
 package com.arcathoria.combat;
 
 import com.arcathoria.combat.exception.CombatAlreadyFinishedException;
+import com.arcathoria.combat.exception.WrongTurnException;
 import com.arcathoria.combat.vo.CombatId;
 import com.arcathoria.combat.vo.CombatTurn;
 import com.arcathoria.combat.vo.Damage;
@@ -34,7 +35,7 @@ class CombatTest {
 
         assertThat(combat.getSnapshot().attacker().health().getCurrent()).isEqualTo(100);
 
-        combat.applyDamageOpponent(new Damage(50));
+        combat.performAttack(combat.getCurrentTurnParticipant().getId(), new Damage(50));
 
         assertThat(combat.getSnapshot().combatStatus()).isEqualTo(CombatStatus.IN_PROGRESS);
         assertThat(combat.getSnapshot().attacker().health().getCurrent()).isEqualTo(50);
@@ -51,7 +52,7 @@ class CombatTest {
 
         assertThat(combat.getSnapshot().defender().health().getCurrent()).isEqualTo(100);
 
-        combat.applyDamageOpponent(new Damage(50));
+        combat.performAttack(combat.getCurrentTurnParticipant().getId(), new Damage(50));
 
         assertThat(combat.getSnapshot().defender().health().getCurrent()).isEqualTo(50);
     }
@@ -65,7 +66,7 @@ class CombatTest {
                         .build()
         );
 
-        combat.applyDamageOpponent(new Damage(100));
+        combat.performAttack(combat.getCurrentTurnParticipant().getId(), new Damage(100));
 
         assertThat(combat.isDefenderAlive()).isFalse();
     }
@@ -91,7 +92,7 @@ class CombatTest {
                         .build()
         );
 
-        combat.applyDamageOpponent(new Damage(100));
+        combat.performAttack(combat.getCurrentTurnParticipant().getId(), new Damage(100));
 
         assertThat(combat.isAttackerAlive()).isFalse();
     }
@@ -167,7 +168,7 @@ class CombatTest {
         );
         CombatStatus beforeAttackCombatStatus = combat.getSnapshot().combatStatus();
 
-        combat.applyDamageOpponent(new Damage(combat.getSnapshot().attacker().health().getCurrent()));
+        combat.performAttack(combat.getCurrentTurnParticipant().getId(), new Damage(combat.getSnapshot().attacker().health().getCurrent()));
 
         assertThat(combat.getSnapshot().attacker().health().getCurrent()).isZero();
         assertThat(combat.getSnapshot().combatStatus()).isEqualTo(CombatStatus.FINISHED);
@@ -186,13 +187,30 @@ class CombatTest {
         Combat combat = Combat.restore(
                 CombatSnapshotMother.aCombat()
                         .withCombatTurn(new CombatTurn(CombatSide.DEFENDER))
-                        .withAttacker(ParticipantSnapshotMother.aParticipantBuilder().withHealth(100, 100).build())
+                        .withAttacker(ParticipantSnapshotMother.aParticipantBuilder().build())
                         .withCombatStatus(CombatStatus.FINISHED)
                         .build()
         );
 
-        assertThatThrownBy(() -> combat.applyDamageOpponent(new Damage(combat.getSnapshot().attacker().health().getCurrent())))
+        assertThatThrownBy(() -> combat.performAttack(combat.getCurrentTurnParticipant().getId(), new Damage(combat.getSnapshot().attacker().health().getCurrent())))
                 .isInstanceOf(CombatAlreadyFinishedException.class)
                 .hasMessageContaining("is already finished, this action cannot be performed");
+    }
+
+    @Test
+    void should_return_WrongTurnException_when_turn_does_not_belong_to_attacker() {
+        ParticipantSnapshot attacker = ParticipantSnapshotMother.aParticipantBuilder().withId(new ParticipantId(UUID.randomUUID())).build();
+        ParticipantSnapshot defender = ParticipantSnapshotMother.aParticipantBuilder().withId(new ParticipantId(UUID.randomUUID())).build();
+        Combat combat = Combat.restore(
+                CombatSnapshotMother.aCombat()
+                        .withCombatTurn(new CombatTurn(CombatSide.DEFENDER))
+                        .withAttacker(attacker)
+                        .withDefender(defender)
+                        .build()
+        );
+
+        assertThatThrownBy(() -> combat.performAttack(attacker.participantId(), new Damage(50)))
+                .isInstanceOf(WrongTurnException.class)
+                .hasMessageContaining("Turn belongs to");
     }
 }
