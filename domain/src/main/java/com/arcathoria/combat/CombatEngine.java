@@ -3,15 +3,15 @@ package com.arcathoria.combat;
 class CombatEngine {
 
     private final CombatFactory combatFactory;
-    private final CombatSideStrategy combatSideStrategy;
+    private final CombatSideStrategyFactory combatSideStrategyFactory;
 
-    CombatEngine(final CombatFactory combatFactory, final CombatSideStrategy combatSideStrategy) {
+    CombatEngine(final CombatFactory combatFactory, final CombatSideStrategyFactory combatSideStrategyFactory) {
         this.combatFactory = combatFactory;
-        this.combatSideStrategy = combatSideStrategy;
+        this.combatSideStrategyFactory = combatSideStrategyFactory;
     }
 
     Combat initialCombat(final Participant attacker, final Participant defender, final CombatType combatType) {
-        CombatSide combatSide = combatSideStrategy.choose(attacker, defender);
+        CombatSide combatSide = combatSideStrategyFactory.getStrategy(combatType).choose(attacker, defender);
         return combatFactory.createCombat(attacker, defender, combatSide, combatType);
     }
 
