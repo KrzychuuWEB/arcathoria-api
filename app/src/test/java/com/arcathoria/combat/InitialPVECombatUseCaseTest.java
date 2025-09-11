@@ -29,7 +29,7 @@ class InitialPVECombatUseCaseTest {
     private MonsterClient monsterClient;
 
     @Mock
-    private CombatStateRepository combatStateRepository;
+    private CombatSessionStore combatSessionStore;
 
     @InjectMocks
     private InitialPVECombatUseCase initialPVECombatUseCase;
@@ -57,7 +57,7 @@ class InitialPVECombatUseCaseTest {
         verify(characterClient).getSelectedCharacterByAccountId(player.id());
         verify(monsterClient).getMonsterById(monster.id());
         verify(combatEngine).initialCombat(attacker, defender, CombatType.PVE);
-        verify(combatStateRepository).save(CombatSnapshotMother.aCombat().withAttacker(attacker.getSnapshot()).withDefender(defender.getSnapshot()).build());
+        verify(combatSessionStore).save(CombatSnapshotMother.aCombat().withAttacker(attacker.getSnapshot()).withDefender(defender.getSnapshot()).build());
     }
 
     @Test

@@ -18,18 +18,18 @@ class InitialPVECombatUseCase {
     private final CombatEngine combatEngine;
     private final CharacterClient characterClient;
     private final MonsterClient monsterClient;
-    private final CombatStateRepository combatStateRepository;
+    private final CombatSessionStore combatSessionStore;
 
     InitialPVECombatUseCase(
             final CombatEngine combatEngine,
             final CharacterClient characterClient,
             final MonsterClient monsterClient,
-            final CombatStateRepository combatStateRepository
+            final CombatSessionStore combatSessionStore
     ) {
         this.combatEngine = combatEngine;
         this.characterClient = characterClient;
         this.monsterClient = monsterClient;
-        this.combatStateRepository = combatStateRepository;
+        this.combatSessionStore = combatSessionStore;
     }
 
     CombatSnapshot execute(final StartPVECombatCommand command) {
@@ -38,7 +38,7 @@ class InitialPVECombatUseCase {
 
         Combat combat = combatEngine.initialCombat(attacker, defender, CombatType.PVE);
 
-        return combatStateRepository.save(new CombatSnapshot(
+        return combatSessionStore.save(new CombatSnapshot(
                 combat.getSnapshot().combatId(),
                 combat.getSnapshot().attacker(),
                 combat.getSnapshot().defender(),
