@@ -1,6 +1,6 @@
 package com.arcathoria.combat;
 
-class HigherHealthStartsStrategy implements CombatSideStrategy {
+class LowestHealthStartsStrategy implements CombatSideStrategy {
 
     @Override
     public CombatSide choose(final Participant attacker, final Participant defender) {

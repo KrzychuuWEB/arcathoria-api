@@ -5,17 +5,17 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class HigherHealthStartsStrategyTest {
+class LowestHealthStartsStrategyTest {
 
     private CombatSideStrategy healthCombatSideStrategy;
 
     @BeforeEach
     void setup() {
-        healthCombatSideStrategy = new HigherHealthStartsStrategy();
+        healthCombatSideStrategy = new LowestHealthStartsStrategy();
     }
 
     @Test
-    void should_return_defender_side_for_choose_side_that_has_more_health() {
+    void should_return_defender_side_for_choose_side_that_has_low_health() {
         Participant attacker = Participant.restore(ParticipantSnapshotMother.aParticipantBuilder()
                 .withHealth(100, 100)
                 .build());
@@ -29,7 +29,7 @@ class HigherHealthStartsStrategyTest {
     }
 
     @Test
-    void should_return_attacker_side_for_choose_side_that_has_more_health() {
+    void should_return_attacker_side_for_choose_side_that_has_low_health() {
         Participant attacker = Participant.restore(ParticipantSnapshotMother.aParticipantBuilder()
                 .withHealth(50, 50)
                 .build());
