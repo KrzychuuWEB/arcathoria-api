@@ -2,6 +2,7 @@ package com.arcathoria.combat;
 
 import com.arcathoria.ApiErrorResponse;
 import com.arcathoria.combat.exception.CombatAlreadyFinishedException;
+import com.arcathoria.combat.exception.CombatNotFoundException;
 import com.arcathoria.combat.exception.CombatParticipantUnavailableException;
 import com.arcathoria.combat.exception.WrongTurnException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -49,7 +50,7 @@ class CombatExceptionHandler {
         return new ApiErrorResponse(
                 HttpStatus.CONFLICT.value(),
                 HttpStatus.CONFLICT.getReasonPhrase(),
-                messageSource.getMessage("combat.combat.turn.conflict", new Object[]{ex.getCombatSide()}, ex.getMessage(), locale),
+                messageSource.getMessage("combat.turn.conflict", new Object[]{ex.getCombatSide()}, ex.getMessage(), locale),
                 ex.getErrorCode(),
                 request.getRequestURI()
         );
@@ -64,6 +65,20 @@ class CombatExceptionHandler {
                 HttpStatus.CONFLICT.value(),
                 HttpStatus.CONFLICT.getReasonPhrase(),
                 messageSource.getMessage("combat.already.finished.conflict", new Object[]{ex.getCombatId()}, ex.getMessage(), locale),
+                ex.getErrorCode(),
+                request.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(CombatNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    ApiErrorResponse handleCombatNotFoundException(final CombatNotFoundException ex, final HttpServletRequest request, final Locale locale) {
+        logger.warn("Combat not found with id: {}", ex.getCombatId());
+
+        return new ApiErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                messageSource.getMessage("combat.not.found", new Object[]{ex.getCombatId()}, ex.getMessage(), locale),
                 ex.getErrorCode(),
                 request.getRequestURI()
         );

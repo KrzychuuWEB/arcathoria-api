@@ -1,6 +1,5 @@
 package com.arcathoria.combat;
 
-import com.arcathoria.character.exception.CharacterNotFoundException;
 import com.arcathoria.combat.command.StartPVECombatCommand;
 import com.arcathoria.combat.exception.CombatParticipantUnavailableException;
 import com.arcathoria.monster.exception.MonsterNotFoundException;
@@ -9,52 +8,35 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.UUID;
 
-import static com.arcathoria.combat.CombatMapper.fromCharacterDTOToParticipant;
 import static com.arcathoria.combat.CombatMapper.fromMonsterDTOToParticipant;
 
 class InitialPVECombatUseCase {
 
     private static final Logger log = LogManager.getLogger(InitialPVECombatUseCase.class);
     private final CombatEngine combatEngine;
-    private final CharacterClient characterClient;
+    private final CombatParticipantService combatParticipantService;
     private final MonsterClient monsterClient;
     private final CombatSessionStore combatSessionStore;
 
     InitialPVECombatUseCase(
             final CombatEngine combatEngine,
-            final CharacterClient characterClient,
+            final CombatParticipantService combatParticipantService,
             final MonsterClient monsterClient,
             final CombatSessionStore combatSessionStore
     ) {
         this.combatEngine = combatEngine;
-        this.characterClient = characterClient;
+        this.combatParticipantService = combatParticipantService;
         this.monsterClient = monsterClient;
         this.combatSessionStore = combatSessionStore;
     }
 
     CombatSnapshot execute(final StartPVECombatCommand command) {
-        Participant attacker = getCharacterByAccountId(command.attacker().id());
+        Participant attacker = combatParticipantService.getCharacterByAccountId(command.attacker().id(), CombatSide.ATTACKER);
         Participant defender = getMonsterByMonsterId(command.defender().id());
 
         Combat combat = combatEngine.initialCombat(attacker, defender, CombatType.PVE);
 
-        return combatSessionStore.save(new CombatSnapshot(
-                combat.getSnapshot().combatId(),
-                combat.getSnapshot().attacker(),
-                combat.getSnapshot().defender(),
-                combat.getSnapshot().combatTurn(),
-                combat.getSnapshot().combatType(),
-                combat.getSnapshot().combatStatus()
-        ));
-    }
-
-    private Participant getCharacterByAccountId(final UUID accountId) {
-        try {
-            return fromCharacterDTOToParticipant(characterClient.getSelectedCharacterByAccountId(accountId));
-        } catch (CharacterNotFoundException e) {
-            log.warn("Character not found for id: {}", e.getValue());
-            throw new CombatParticipantUnavailableException(CombatSide.ATTACKER);
-        }
+        return combatSessionStore.save(combat.getSnapshot());
     }
 
     private Participant getMonsterByMonsterId(final UUID monsterId) {
