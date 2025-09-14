@@ -15,11 +15,13 @@ class CombatEngine {
         return combatFactory.createCombat(attacker, defender, combatSide, combatType);
     }
 
-    void handleAction(final Combat combat, final CombatAction combatAction, final Participant participant) {
+    Combat handleAction(final Combat combat, final CombatAction combatAction, final Participant participant) {
         combatAction.execute(combat, participant);
 
         if (combat.getCombatStatus() != CombatStatus.FINISHED) {
             combat.changeTurn();
         }
+
+        return combat;
     }
 }

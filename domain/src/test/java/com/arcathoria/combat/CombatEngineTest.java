@@ -43,11 +43,11 @@ class CombatEngineTest {
         Participant defender = Participant.restore(ParticipantSnapshotMother.aParticipantBuilder().withHealth(80, 80).build());
 
         Combat combat = combatEngine.initialCombat(attacker, defender, CombatType.PVE);
-        combatEngine.handleAction(combat, meleeCombatActionStrategy, defender);
+        Combat result = combatEngine.handleAction(combat, meleeCombatActionStrategy, defender);
 
-        assertThat(combat.getSnapshot().attacker().health().getCurrent()).isEqualTo(92);
-        assertThat(combat.getSnapshot().defender().health().getCurrent()).isEqualTo(80);
-        assertThat(combat.getSnapshot().combatTurn().currentSide()).isEqualTo(CombatSide.ATTACKER);
+        assertThat(result.getSnapshot().attacker().health().getCurrent()).isEqualTo(92);
+        assertThat(result.getSnapshot().defender().health().getCurrent()).isEqualTo(80);
+        assertThat(result.getSnapshot().combatTurn().currentSide()).isEqualTo(CombatSide.ATTACKER);
     }
 
     @Test
