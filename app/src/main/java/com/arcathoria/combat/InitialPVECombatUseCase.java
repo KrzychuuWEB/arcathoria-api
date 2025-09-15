@@ -31,7 +31,7 @@ class InitialPVECombatUseCase {
     }
 
     CombatSnapshot execute(final StartPVECombatCommand command) {
-        Participant attacker = combatParticipantService.getCharacterByAccountId(command.attacker().id(), CombatSide.ATTACKER);
+        Participant attacker = combatParticipantService.getCharacterByAccountId(command.attacker().id());
         Participant defender = getMonsterByMonsterId(command.defender().id());
 
         Combat combat = combatEngine.initialCombat(attacker, defender, CombatType.PVE);
@@ -44,7 +44,7 @@ class InitialPVECombatUseCase {
             return fromMonsterDTOToParticipant(monsterClient.getMonsterById(monsterId));
         } catch (MonsterNotFoundException e) {
             log.warn("Monster not found for id: {}", e.getMonsterId());
-            throw new CombatParticipantUnavailableException(CombatSide.DEFENDER);
+            throw new CombatParticipantUnavailableException(monsterId);
         }
     }
 }

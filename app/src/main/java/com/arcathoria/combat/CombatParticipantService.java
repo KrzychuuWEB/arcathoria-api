@@ -18,12 +18,12 @@ class CombatParticipantService {
         this.characterClient = characterClient;
     }
 
-    Participant getCharacterByAccountId(final UUID accountId, final CombatSide combatSide) {
+    Participant getCharacterByAccountId(final UUID accountId) {
         try {
             return fromCharacterDTOToParticipant(characterClient.getSelectedCharacterByAccountId(accountId));
         } catch (CharacterNotFoundException e) {
             log.warn("Character not found for id: {}", e.getValue());
-            throw new CombatParticipantUnavailableException(combatSide);
+            throw new CombatParticipantUnavailableException(accountId);
         }
     }
 }

@@ -9,17 +9,19 @@ class ExecuteCombatActionUseCase {
     private final GetCombatSnapshotFromStore getCombatSnapshotFromStore;
     private final CombatParticipantService combatParticipantService;
     private final CombatSessionStore combatSessionStore;
+    private final CombatRepository combatRepository;
 
     ExecuteCombatActionUseCase(
             final CombatEngine combatEngine,
             final GetCombatSnapshotFromStore getCombatSnapshotFromStore,
             final CombatParticipantService combatParticipantService,
-            final CombatSessionStore combatSessionStore
+            final CombatSessionStore combatSessionStore, final CombatRepository combatRepository
     ) {
         this.combatEngine = combatEngine;
         this.getCombatSnapshotFromStore = getCombatSnapshotFromStore;
         this.combatParticipantService = combatParticipantService;
         this.combatSessionStore = combatSessionStore;
+        this.combatRepository = combatRepository;
     }
 
     CombatSnapshot performAction(final CombatId combatId, final CombatAction combatAction, final AccountId accountId) {
@@ -29,8 +31,12 @@ class ExecuteCombatActionUseCase {
 
         Participant participant = combatParticipantService.getCharacterByAccountId(accountId.value());
 
-        combatEngine.handleAction(combat, combatAction, participant);
+        Combat result = combatEngine.handleAction(combat, combatAction, participant);
 
-        return combatSessionStore.save(combat.getSnapshot());
+        if (result.getCombatStatus() == CombatStatus.FINISHED) {
+            return combatRepository.save(result).getSnapshot();
+        }
+
+        return combatSessionStore.save(result.getSnapshot());
     }
 }

@@ -31,12 +31,12 @@ class CombatExceptionHandler {
     @ExceptionHandler(CombatParticipantUnavailableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     ApiErrorResponse handleCombatParticipantUnavailableException(final CombatParticipantUnavailableException ex, final HttpServletRequest request, final Locale locale) {
-        logger.warn("Could not retrieve {} participant for combat.", ex.getCombatSide());
+        logger.warn("Could not retrieve {} participant for combat.", ex.getId());
 
         return new ApiErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                messageSource.getMessage("combat.initial.participant.not.found", new Object[]{ex.getCombatSide()}, ex.getMessage(), locale),
+                messageSource.getMessage("combat.initial.participant.not.found", new Object[]{ex.getId()}, ex.getMessage(), locale),
                 ex.getErrorCode(),
                 request.getRequestURI()
         );

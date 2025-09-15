@@ -47,13 +47,13 @@ class InitialPVECombatUseCaseTest {
                 monster
         );
 
-        when(combatParticipantService.getCharacterByAccountId(player.id(), CombatSide.ATTACKER)).thenReturn(attacker);
+        when(combatParticipantService.getCharacterByAccountId(player.id())).thenReturn(attacker);
         when(monsterClient.getMonsterById(monster.id())).thenReturn(monster);
         when(combatEngine.initialCombat(attacker, defender, CombatType.PVE)).thenReturn(combat);
 
         initialPVECombatUseCase.execute(command);
 
-        verify(combatParticipantService).getCharacterByAccountId(player.id(), CombatSide.ATTACKER);
+        verify(combatParticipantService).getCharacterByAccountId(player.id());
         verify(monsterClient).getMonsterById(monster.id());
         verify(combatEngine).initialCombat(attacker, defender, CombatType.PVE);
         verify(combatSessionStore).save(CombatSnapshotMother.aCombat().withAttacker(attacker.getSnapshot()).withDefender(defender.getSnapshot()).build());
@@ -67,7 +67,7 @@ class InitialPVECombatUseCaseTest {
         CharacterDTO player = new CharacterDTO(attacker.getId().value(), "example-player", attacker.getHealth().getMax(), attacker.getIntelligenceLevel());
         MonsterDTO monster = new MonsterDTO(defender.getId().value(), "example-monster", defender.getHealth().getMax(), defender.getHealth().getMax(), defender.getIntelligenceLevel());
 
-        when(combatParticipantService.getCharacterByAccountId(player.id(), CombatSide.ATTACKER)).thenThrow(CombatParticipantUnavailableException.class);
+        when(combatParticipantService.getCharacterByAccountId(player.id())).thenThrow(CombatParticipantUnavailableException.class);
 
         assertThatThrownBy(() -> initialPVECombatUseCase.execute(new StartPVECombatCommand(player, monster)))
                 .isInstanceOf(CombatParticipantUnavailableException.class);
@@ -81,11 +81,11 @@ class InitialPVECombatUseCaseTest {
         CharacterDTO player = new CharacterDTO(attacker.getId().value(), "example-player", attacker.getHealth().getMax(), attacker.getIntelligenceLevel());
         MonsterDTO monster = new MonsterDTO(defender.getId().value(), "example-monster", defender.getHealth().getMax(), defender.getHealth().getMax(), defender.getIntelligenceLevel());
 
-        when(combatParticipantService.getCharacterByAccountId(player.id(), CombatSide.ATTACKER)).thenReturn(attacker);
+        when(combatParticipantService.getCharacterByAccountId(player.id())).thenReturn(attacker);
         when(monsterClient.getMonsterById(monster.id())).thenThrow(MonsterNotFoundException.class);
 
         assertThatThrownBy(() -> initialPVECombatUseCase.execute(new StartPVECombatCommand(player, monster)))
                 .isInstanceOf(CombatParticipantUnavailableException.class)
-                .hasMessage("Could not retrieve defender participant for combat.");
+                .hasMessage("Could not retrieve participant for combat.");
     }
 }
