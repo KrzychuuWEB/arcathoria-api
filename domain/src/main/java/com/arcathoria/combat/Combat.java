@@ -70,6 +70,11 @@ class Combat {
         return combatStatus;
     }
 
+    boolean hasParticipant(final ParticipantId participantId) {
+        return attacker.getId().equals(participantId)
+                || defender.getId().equals(participantId);
+    }
+
     void performAttack(final ParticipantId participantId, final Damage damage) {
         requireInProgress();
         requireTurnOf(participantId);

@@ -213,4 +213,26 @@ class CombatTest {
                 .isInstanceOf(WrongTurnException.class)
                 .hasMessageContaining("Turn belongs to");
     }
+
+    @Test
+    void should_return_true_when_combat_has_participant() {
+        ParticipantId participantId = new ParticipantId(UUID.randomUUID());
+        ParticipantSnapshot attacker = ParticipantSnapshotMother.aParticipantBuilder().withId(participantId).build();
+        Combat combat = Combat.restore(CombatSnapshotMother.aCombat().withAttacker(attacker).build());
+
+        boolean result = combat.hasParticipant(participantId);
+
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    void should_return_false_when_combat_does_not_have_participant() {
+        ParticipantId participantId = new ParticipantId(UUID.randomUUID());
+        ParticipantSnapshot attacker = ParticipantSnapshotMother.aParticipantBuilder().build();
+        Combat combat = Combat.restore(CombatSnapshotMother.aCombat().withAttacker(attacker).build());
+
+        boolean result = combat.hasParticipant(participantId);
+
+        assertThat(result).isFalse();
+    }
 }
