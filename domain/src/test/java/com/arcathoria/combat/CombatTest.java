@@ -1,6 +1,7 @@
 package com.arcathoria.combat;
 
 import com.arcathoria.combat.exception.CombatAlreadyFinishedException;
+import com.arcathoria.combat.exception.ParticipantNotFoundInCombatException;
 import com.arcathoria.combat.exception.WrongTurnException;
 import com.arcathoria.combat.vo.CombatId;
 import com.arcathoria.combat.vo.CombatTurn;
@@ -215,24 +216,39 @@ class CombatTest {
     }
 
     @Test
-    void should_return_true_when_combat_has_participant() {
+    void should_return_attacker_when_attacker_is_in_combat() {
         ParticipantId participantId = new ParticipantId(UUID.randomUUID());
         ParticipantSnapshot attacker = ParticipantSnapshotMother.aParticipantBuilder().withId(participantId).build();
+        Participant participant = Participant.restore(attacker);
         Combat combat = Combat.restore(CombatSnapshotMother.aCombat().withAttacker(attacker).build());
 
-        boolean result = combat.hasParticipant(participantId);
+        Participant result = combat.getParticipant(participantId);
 
-        assertThat(result).isTrue();
+        assertThat(result).isEqualTo(participant);
+        assertThat(result.getId()).isEqualTo(participant.getId());
     }
 
     @Test
-    void should_return_false_when_combat_does_not_have_participant() {
+    void should_return_defender_when_defender_is_in_combat() {
+        ParticipantId participantId = new ParticipantId(UUID.randomUUID());
+        ParticipantSnapshot defender = ParticipantSnapshotMother.aParticipantBuilder().withId(participantId).build();
+        Participant participant = Participant.restore(defender);
+        Combat combat = Combat.restore(CombatSnapshotMother.aCombat().withDefender(defender).build());
+
+        Participant result = combat.getParticipant(participantId);
+
+        assertThat(result).isEqualTo(participant);
+        assertThat(result.getId()).isEqualTo(participant.getId());
+    }
+
+    @Test
+    void should_throw_ParticipantNotFoundInCombatException_when_participant_id_is_not_in_combat() {
         ParticipantId participantId = new ParticipantId(UUID.randomUUID());
         ParticipantSnapshot attacker = ParticipantSnapshotMother.aParticipantBuilder().build();
         Combat combat = Combat.restore(CombatSnapshotMother.aCombat().withAttacker(attacker).build());
 
-        boolean result = combat.hasParticipant(participantId);
-
-        assertThat(result).isFalse();
+        assertThatThrownBy(() -> combat.getParticipant(participantId))
+                .isInstanceOf(ParticipantNotFoundInCombatException.class)
+                .hasMessageContaining("Participant with id");
     }
 }

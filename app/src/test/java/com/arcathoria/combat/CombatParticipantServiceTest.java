@@ -1,5 +1,6 @@
 package com.arcathoria.combat;
 
+import com.arcathoria.account.vo.AccountId;
 import com.arcathoria.character.dto.CharacterDTO;
 import com.arcathoria.character.exception.CharacterNotFoundException;
 import com.arcathoria.combat.exception.CombatParticipantUnavailableException;
@@ -31,7 +32,7 @@ class CombatParticipantServiceTest {
 
         when(characterClient.getSelectedCharacterByAccountId(any(UUID.class))).thenReturn(characterDTO);
 
-        Participant result = combatParticipantService.getCharacterByAccountId(characterDTO.id());
+        Participant result = combatParticipantService.getCharacterByAccountId(new AccountId(characterDTO.id()));
 
         assertThat(result.getId().value()).isEqualTo(characterDTO.id());
         assertThat(result.getHealth().getCurrent()).isEqualTo(characterDTO.health());
@@ -42,7 +43,7 @@ class CombatParticipantServiceTest {
     void should_return_CombatParticipantUnavailableException_when_character_not_found() {
         when(characterClient.getSelectedCharacterByAccountId(any(UUID.class))).thenThrow(CharacterNotFoundException.class);
 
-        assertThatThrownBy(() -> combatParticipantService.getCharacterByAccountId(UUID.randomUUID()))
+        assertThatThrownBy(() -> combatParticipantService.getCharacterByAccountId(new AccountId(UUID.randomUUID())))
                 .isInstanceOf(CombatParticipantUnavailableException.class)
                 .message().isEqualTo("Could not retrieve participant for combat.");
     }

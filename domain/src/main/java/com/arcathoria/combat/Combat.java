@@ -1,6 +1,7 @@
 package com.arcathoria.combat;
 
 import com.arcathoria.combat.exception.CombatAlreadyFinishedException;
+import com.arcathoria.combat.exception.ParticipantNotFoundInCombatException;
 import com.arcathoria.combat.exception.WrongTurnException;
 import com.arcathoria.combat.vo.CombatId;
 import com.arcathoria.combat.vo.CombatTurn;
@@ -70,9 +71,11 @@ class Combat {
         return combatStatus;
     }
 
-    boolean hasParticipant(final ParticipantId participantId) {
-        return attacker.getId().equals(participantId)
-                || defender.getId().equals(participantId);
+    Participant getParticipant(final ParticipantId participantId) {
+        if (attacker.getId().equals(participantId)) return attacker;
+        if (defender.getId().equals(participantId)) return defender;
+
+        throw new ParticipantNotFoundInCombatException(combatId, participantId);
     }
 
     void performAttack(final ParticipantId participantId, final Damage damage) {

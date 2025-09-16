@@ -29,12 +29,13 @@ class ExecuteCombatActionUseCase {
                 getCombatSnapshotFromStore.getSnapshotById(combatId)
         );
 
-        Participant participant = combatParticipantService.getCharacterByAccountId(accountId.value());
+        Participant participant = combatParticipantService.getCharacterByAccountId(accountId);
+        combat.getParticipant(participant.getId());
 
         Combat result = combatEngine.handleAction(combat, combatAction, participant);
 
         if (result.getCombatStatus() == CombatStatus.FINISHED) {
-            return combatRepository.save(result).getSnapshot();
+            combatRepository.save(result).getSnapshot();
         }
 
         return combatSessionStore.save(result.getSnapshot());
