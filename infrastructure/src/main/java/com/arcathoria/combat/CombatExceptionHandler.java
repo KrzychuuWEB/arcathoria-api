@@ -1,10 +1,7 @@
 package com.arcathoria.combat;
 
 import com.arcathoria.ApiErrorResponse;
-import com.arcathoria.combat.exception.CombatAlreadyFinishedException;
-import com.arcathoria.combat.exception.CombatNotFoundException;
-import com.arcathoria.combat.exception.CombatParticipantUnavailableException;
-import com.arcathoria.combat.exception.WrongTurnException;
+import com.arcathoria.combat.exception.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -79,6 +76,20 @@ class CombatExceptionHandler {
                 HttpStatus.NOT_FOUND.value(),
                 HttpStatus.NOT_FOUND.getReasonPhrase(),
                 messageSource.getMessage("combat.not.found", new Object[]{ex.getCombatId()}, ex.getMessage(), locale),
+                ex.getErrorCode(),
+                request.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(UnsupportedActionTypeException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    ApiErrorResponse handleUnsupportedActionTypeException(final UnsupportedActionTypeException ex, final HttpServletRequest request, final Locale locale) {
+        logger.warn("Action type not supported: {}", ex.getActionType());
+
+        return new ApiErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                messageSource.getMessage("combat.action.type.not.found", new Object[]{ex.getActionType()}, ex.getMessage(), locale),
                 ex.getErrorCode(),
                 request.getRequestURI()
         );
