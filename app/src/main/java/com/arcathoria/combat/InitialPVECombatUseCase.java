@@ -1,7 +1,7 @@
 package com.arcathoria.combat;
 
 import com.arcathoria.account.vo.AccountId;
-import com.arcathoria.combat.command.StartPVECombatCommand;
+import com.arcathoria.combat.command.InitPVECombatCommand;
 import com.arcathoria.combat.exception.CombatParticipantUnavailableException;
 import com.arcathoria.monster.exception.MonsterNotFoundException;
 import org.apache.logging.log4j.LogManager;
@@ -31,7 +31,7 @@ class InitialPVECombatUseCase {
         this.combatSessionStore = combatSessionStore;
     }
 
-    CombatSnapshot execute(final StartPVECombatCommand command) {
+    CombatSnapshot init(final InitPVECombatCommand command) {
         Participant attacker = combatParticipantService.getCharacterByAccountId(new AccountId(command.attacker().id()));
         Participant defender = getMonsterByMonsterId(command.defender().id());
 

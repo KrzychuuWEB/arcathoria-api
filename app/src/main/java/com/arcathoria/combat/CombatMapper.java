@@ -29,11 +29,30 @@ final class CombatMapper {
         ));
     }
 
+    static CharacterDTO fromParticipantToCharacterDTO(final Participant participant) {
+        return new CharacterDTO(
+                participant.getId().value(),
+                participant.getId().value().toString(),
+                participant.getHealth().getMax(),
+                participant.getIntelligenceLevel()
+        );
+    }
+
     static Participant fromMonsterDTOToParticipant(final MonsterDTO dto) {
         return Participant.restore(new ParticipantSnapshot(
                 new ParticipantId(dto.id()),
                 new Health(new Gauge(dto.maxHealth(), dto.maxHealth())),
                 new Attributes(new Intelligence(new Level(dto.intelligence())))
         ));
+    }
+
+    static MonsterDTO fromParticipantToMonsterDTO(final Participant participant) {
+        return new MonsterDTO(
+                participant.getId().value(),
+                participant.getId().toString(),
+                participant.getHealth().getCurrent(),
+                participant.getHealth().getMax(),
+                participant.getIntelligenceLevel()
+        );
     }
 }

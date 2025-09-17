@@ -2,7 +2,7 @@ package com.arcathoria.combat;
 
 import com.arcathoria.account.vo.AccountId;
 import com.arcathoria.character.dto.CharacterDTO;
-import com.arcathoria.combat.command.StartPVECombatCommand;
+import com.arcathoria.combat.command.InitPVECombatCommand;
 import com.arcathoria.combat.exception.CombatParticipantUnavailableException;
 import com.arcathoria.monster.dto.MonsterDTO;
 import com.arcathoria.monster.exception.MonsterNotFoundException;
@@ -43,7 +43,7 @@ class InitialPVECombatUseCaseTest {
         CharacterDTO player = new CharacterDTO(attacker.getId().value(), "example-player", attacker.getHealth().getMax(), attacker.getIntelligenceLevel());
         MonsterDTO monster = new MonsterDTO(defender.getId().value(), "example-monster", defender.getHealth().getMax(), defender.getHealth().getMax(), defender.getIntelligenceLevel());
 
-        StartPVECombatCommand command = new StartPVECombatCommand(
+        InitPVECombatCommand command = new InitPVECombatCommand(
                 player,
                 monster
         );
@@ -52,7 +52,7 @@ class InitialPVECombatUseCaseTest {
         when(monsterClient.getMonsterById(monster.id())).thenReturn(monster);
         when(combatEngine.initialCombat(attacker, defender, CombatType.PVE)).thenReturn(combat);
 
-        initialPVECombatUseCase.execute(command);
+        initialPVECombatUseCase.init(command);
 
         verify(combatParticipantService).getCharacterByAccountId(new AccountId(player.id()));
         verify(monsterClient).getMonsterById(monster.id());
@@ -70,7 +70,7 @@ class InitialPVECombatUseCaseTest {
 
         when(combatParticipantService.getCharacterByAccountId(new AccountId(player.id()))).thenThrow(CombatParticipantUnavailableException.class);
 
-        assertThatThrownBy(() -> initialPVECombatUseCase.execute(new StartPVECombatCommand(player, monster)))
+        assertThatThrownBy(() -> initialPVECombatUseCase.init(new InitPVECombatCommand(player, monster)))
                 .isInstanceOf(CombatParticipantUnavailableException.class);
     }
 
@@ -85,7 +85,7 @@ class InitialPVECombatUseCaseTest {
         when(combatParticipantService.getCharacterByAccountId(new AccountId(player.id()))).thenReturn(attacker);
         when(monsterClient.getMonsterById(monster.id())).thenThrow(MonsterNotFoundException.class);
 
-        assertThatThrownBy(() -> initialPVECombatUseCase.execute(new StartPVECombatCommand(player, monster)))
+        assertThatThrownBy(() -> initialPVECombatUseCase.init(new InitPVECombatCommand(player, monster)))
                 .isInstanceOf(CombatParticipantUnavailableException.class)
                 .hasMessage("Could not retrieve participant for combat.");
     }

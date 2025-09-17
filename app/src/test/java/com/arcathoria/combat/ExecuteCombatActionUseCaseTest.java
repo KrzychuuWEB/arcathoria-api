@@ -1,6 +1,7 @@
 package com.arcathoria.combat;
 
 import com.arcathoria.account.vo.AccountId;
+import com.arcathoria.combat.command.ExecuteActionCommand;
 import com.arcathoria.combat.exception.CombatAlreadyFinishedException;
 import com.arcathoria.combat.exception.ParticipantNotFoundInCombatException;
 import com.arcathoria.combat.exception.WrongTurnException;
@@ -42,6 +43,9 @@ class ExecuteCombatActionUseCaseTest {
     @Mock
     private CombatRepository combatRepository;
 
+    @Mock
+    private CombatActionRegistry combatActionRegistry;
+
     @InjectMocks
     private ExecuteCombatActionUseCase executeCombatActionUseCase;
 
@@ -55,10 +59,12 @@ class ExecuteCombatActionUseCaseTest {
 
         when(getCombatSnapshotFromStore.getSnapshotById(any(CombatId.class))).thenReturn(combat.getSnapshot());
         when(combatParticipantService.getCharacterByAccountId(any(AccountId.class))).thenReturn(attacker);
+        when(combatActionRegistry.get(any(ActionType.class))).thenReturn(meleeCombatActionStrategy);
         when(combatEngine.handleAction(any(Combat.class), any(CombatAction.class), any(Participant.class))).thenReturn(combat);
         when(combatSessionStore.save(any(CombatSnapshot.class))).thenReturn(combat.getSnapshot());
 
-        CombatSnapshot result = executeCombatActionUseCase.performAction(combatId, meleeCombatActionStrategy, new AccountId(UUID.randomUUID()));
+        ExecuteActionCommand command = new ExecuteActionCommand(combatId, new AccountId(UUID.randomUUID()), ActionType.MELEE);
+        CombatSnapshot result = executeCombatActionUseCase.performAction(command);
 
         assertThat(result).isEqualTo(combat.getSnapshot());
         assertThat(result.combatStatus()).isEqualTo(CombatStatus.IN_PROGRESS);
@@ -86,7 +92,8 @@ class ExecuteCombatActionUseCaseTest {
         when(getCombatSnapshotFromStore.getSnapshotById(any(CombatId.class))).thenReturn(combat.getSnapshot());
         when(combatParticipantService.getCharacterByAccountId(any(AccountId.class))).thenReturn(attackerWithBadId);
 
-        assertThatThrownBy(() -> executeCombatActionUseCase.performAction(combatId, meleeCombatActionStrategy, new AccountId(UUID.randomUUID())))
+        ExecuteActionCommand command = new ExecuteActionCommand(combatId, new AccountId(UUID.randomUUID()), ActionType.MELEE);
+        assertThatThrownBy(() -> executeCombatActionUseCase.performAction(command))
                 .isInstanceOf(ParticipantNotFoundInCombatException.class);
 
         verify(getCombatSnapshotFromStore).getSnapshotById(any(CombatId.class));
@@ -107,11 +114,13 @@ class ExecuteCombatActionUseCaseTest {
 
         when(getCombatSnapshotFromStore.getSnapshotById(any(CombatId.class))).thenReturn(combat.getSnapshot());
         when(combatParticipantService.getCharacterByAccountId(any(AccountId.class))).thenReturn(attacker);
+        when(combatActionRegistry.get(any(ActionType.class))).thenReturn(meleeCombatActionStrategy);
         when(combatEngine.handleAction(any(Combat.class), any(CombatAction.class), any(Participant.class))).thenReturn(finishedCombat);
         when(combatRepository.save(any(Combat.class))).thenReturn(finishedCombat);
         when(combatSessionStore.save(any(CombatSnapshot.class))).thenReturn(finishedCombat.getSnapshot());
 
-        CombatSnapshot result = executeCombatActionUseCase.performAction(combatId, meleeCombatActionStrategy, new AccountId(UUID.randomUUID()));
+        ExecuteActionCommand command = new ExecuteActionCommand(combatId, new AccountId(UUID.randomUUID()), ActionType.MELEE);
+        CombatSnapshot result = executeCombatActionUseCase.performAction(command);
 
         assertThat(result).isEqualTo(finishedCombat.getSnapshot());
         assertThat(result.combatStatus()).isEqualTo(CombatStatus.FINISHED);
@@ -146,9 +155,11 @@ class ExecuteCombatActionUseCaseTest {
 
         when(getCombatSnapshotFromStore.getSnapshotById(any(CombatId.class))).thenReturn(combat.getSnapshot());
         when(combatParticipantService.getCharacterByAccountId(any(AccountId.class))).thenReturn(attacker);
+        when(combatActionRegistry.get(any(ActionType.class))).thenReturn(meleeCombatActionStrategy);
         when(combatEngine.handleAction(any(Combat.class), any(CombatAction.class), any(Participant.class))).thenThrow(WrongTurnException.class);
 
-        assertThatThrownBy(() -> executeCombatActionUseCase.performAction(combatId, meleeCombatActionStrategy, new AccountId(UUID.randomUUID())))
+        ExecuteActionCommand command = new ExecuteActionCommand(combatId, new AccountId(UUID.randomUUID()), ActionType.MELEE);
+        assertThatThrownBy(() -> executeCombatActionUseCase.performAction(command))
                 .isInstanceOf(WrongTurnException.class);
 
         verify(getCombatSnapshotFromStore).getSnapshotById(any(CombatId.class));
@@ -168,9 +179,11 @@ class ExecuteCombatActionUseCaseTest {
 
         when(getCombatSnapshotFromStore.getSnapshotById(any(CombatId.class))).thenReturn(combat.getSnapshot());
         when(combatParticipantService.getCharacterByAccountId(any(AccountId.class))).thenReturn(attacker);
+        when(combatActionRegistry.get(any(ActionType.class))).thenReturn(meleeCombatActionStrategy);
         when(combatEngine.handleAction(any(Combat.class), any(CombatAction.class), any(Participant.class))).thenThrow(CombatAlreadyFinishedException.class);
 
-        assertThatThrownBy(() -> executeCombatActionUseCase.performAction(combatId, meleeCombatActionStrategy, new AccountId(UUID.randomUUID())))
+        ExecuteActionCommand command = new ExecuteActionCommand(combatId, new AccountId(UUID.randomUUID()), ActionType.MELEE);
+        assertThatThrownBy(() -> executeCombatActionUseCase.performAction(command))
                 .isInstanceOf(CombatAlreadyFinishedException.class);
 
         verify(getCombatSnapshotFromStore).getSnapshotById(any(CombatId.class));
