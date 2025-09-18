@@ -6,6 +6,7 @@ import com.arcathoria.character.vo.Health;
 import com.arcathoria.character.vo.Intelligence;
 import com.arcathoria.character.vo.Level;
 import com.arcathoria.combat.dto.CombatResultDTO;
+import com.arcathoria.combat.dto.ParticipantDTO;
 import com.arcathoria.combat.vo.Attributes;
 import com.arcathoria.combat.vo.ParticipantId;
 import com.arcathoria.monster.dto.MonsterDTO;
@@ -17,7 +18,11 @@ final class CombatMapper {
 
     static CombatResultDTO fromCombatStateToCombatResultDTO(final CombatSnapshot snapshot) {
         return new CombatResultDTO(
-                snapshot.combatId().value()
+                snapshot.combatId().value(),
+                fromParticipantSnapshotToParticipantDTO(snapshot.attacker()),
+                fromParticipantSnapshotToParticipantDTO(snapshot.defender()),
+                snapshot.combatStatus(),
+                snapshot.combatTurn().currentSide()
         );
     }
 
@@ -29,14 +34,6 @@ final class CombatMapper {
         ));
     }
 
-    static CharacterDTO fromParticipantToCharacterDTO(final Participant participant) {
-        return new CharacterDTO(
-                participant.getId().value(),
-                participant.getId().value().toString(),
-                participant.getHealth().getMax(),
-                participant.getIntelligenceLevel()
-        );
-    }
 
     static Participant fromMonsterDTOToParticipant(final MonsterDTO dto) {
         return Participant.restore(new ParticipantSnapshot(
@@ -46,13 +43,10 @@ final class CombatMapper {
         ));
     }
 
-    static MonsterDTO fromParticipantToMonsterDTO(final Participant participant) {
-        return new MonsterDTO(
-                participant.getId().value(),
-                participant.getId().toString(),
-                participant.getHealth().getCurrent(),
-                participant.getHealth().getMax(),
-                participant.getIntelligenceLevel()
+    static ParticipantDTO fromParticipantSnapshotToParticipantDTO(final ParticipantSnapshot snapshot) {
+        return new ParticipantDTO(
+                snapshot.participantId().value(),
+                snapshot.health().getCurrent()
         );
     }
 }

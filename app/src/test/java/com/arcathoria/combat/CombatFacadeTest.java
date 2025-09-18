@@ -15,8 +15,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.UUID;
 
-import static com.arcathoria.combat.CombatMapper.fromParticipantToCharacterDTO;
-import static com.arcathoria.combat.CombatMapper.fromParticipantToMonsterDTO;
+import static com.arcathoria.combat.ParticipantMapperHelper.fromParticipantToCharacterDTO;
+import static com.arcathoria.combat.ParticipantMapperHelper.fromParticipantToMonsterDTO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;

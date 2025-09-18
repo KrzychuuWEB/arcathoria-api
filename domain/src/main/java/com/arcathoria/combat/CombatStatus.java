@@ -1,6 +1,6 @@
 package com.arcathoria.combat;
 
-enum CombatStatus {
+public enum CombatStatus {
     IN_PROGRESS,
     FINISHED,
     CANCELLED
