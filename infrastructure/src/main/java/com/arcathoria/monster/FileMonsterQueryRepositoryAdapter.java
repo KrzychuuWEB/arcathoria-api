@@ -1,7 +1,9 @@
 package com.arcathoria.monster;
 
+import com.arcathoria.character.vo.Gauge;
 import com.arcathoria.character.vo.Health;
 import com.arcathoria.character.vo.Intelligence;
+import com.arcathoria.character.vo.Level;
 import com.arcathoria.combat.vo.Attributes;
 import com.arcathoria.monster.dto.FileMonsterDTO;
 import com.arcathoria.monster.exception.MonsterLoadingException;
@@ -19,6 +21,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -26,7 +29,7 @@ import java.util.stream.Collectors;
 class FileMonsterQueryRepositoryAdapter implements MonsterQueryRepository {
 
     private static final Logger log = LogManager.getLogger(FileMonsterQueryRepositoryAdapter.class);
-    private final Map<String, FileMonsterDTO> monsterMap;
+    private final Map<UUID, FileMonsterDTO> monsterMap;
 
     FileMonsterQueryRepositoryAdapter(final ObjectMapper objectMapper) {
         try {
@@ -54,8 +57,8 @@ class FileMonsterQueryRepositoryAdapter implements MonsterQueryRepository {
         return Monster.restore(new MonsterSnapshot(
                 new MonsterId(dto.monsterId()),
                 new MonsterName(dto.monsterName()),
-                new Health(dto.currentHealth(), dto.maxHealth()),
-                new Attributes(new Intelligence(dto.intelligence()))
+                new Health(new Gauge(dto.currentHealth(), dto.maxHealth())),
+                new Attributes(new Intelligence(new Level(dto.intelligence())))
         ));
     }
 }

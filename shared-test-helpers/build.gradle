@@ -8,4 +8,6 @@ dependencies {
     implementation 'jakarta.validation:jakarta.validation-api:3.1.1'
     implementation 'org.hibernate.validator:hibernate-validator:8.0.0.Final'
     implementation 'org.glassfish:jakarta.el:5.0.0-M1'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.2'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.16.2'
 }

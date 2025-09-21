@@ -2,5 +2,5 @@ package com.arcathoria.combat;
 
 interface CombatAction {
 
-    void execute(final Combat combat);
+    void execute(final Combat combat, final Participant participant);
 }

@@ -1,9 +1,10 @@
 package com.arcathoria.character;
 
+import com.arcathoria.UUIDGenerator;
 import com.arcathoria.character.dto.CreateCharacterDTO;
 
 public final class CreateCharacterDTOMother {
-    private String characterName;
+    private String characterName = "char_" + UUIDGenerator.generate(10);
 
     private CreateCharacterDTOMother() {
     }
@@ -16,7 +17,7 @@ public final class CreateCharacterDTOMother {
         this.characterName = characterName;
         return this;
     }
-    
+
     public CreateCharacterDTO build() {
         return new CreateCharacterDTO(characterName);
     }

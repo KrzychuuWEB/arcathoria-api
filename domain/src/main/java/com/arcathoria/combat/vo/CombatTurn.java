@@ -2,19 +2,15 @@ package com.arcathoria.combat.vo;
 
 import com.arcathoria.combat.CombatSide;
 
-public class CombatTurn {
+import java.util.Objects;
 
-    private CombatSide current;
+public record CombatTurn(CombatSide currentSide) {
 
-    public CombatTurn(final CombatSide current) {
-        this.current = current;
+    public CombatTurn {
+        Objects.requireNonNull(currentSide, "CombatTurn side cannot be null");
     }
 
-    public void changeTurn() {
-        this.current = current == CombatSide.ATTACKER ? CombatSide.DEFENDER : CombatSide.ATTACKER;
-    }
-
-    public CombatSide getCurrent() {
-        return current;
+    public CombatTurn changeTurn() {
+        return new CombatTurn(currentSide == CombatSide.ATTACKER ? CombatSide.DEFENDER : CombatSide.ATTACKER);
     }
 }

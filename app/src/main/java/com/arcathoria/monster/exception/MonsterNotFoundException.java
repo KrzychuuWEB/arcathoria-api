@@ -2,16 +2,18 @@ package com.arcathoria.monster.exception;
 
 import com.arcathoria.ApiException;
 
+import java.util.UUID;
+
 public class MonsterNotFoundException extends ApiException {
 
-    private final String monsterId;
+    private final UUID monsterId;
 
-    public MonsterNotFoundException(final String monsterId) {
+    public MonsterNotFoundException(final UUID monsterId) {
         super("Monster with id " + monsterId + " not found!", "ERR_MONSTER_NOT_FOUND-404");
         this.monsterId = monsterId;
     }
 
-    public String getMonsterId() {
+    public UUID getMonsterId() {
         return monsterId;
     }
 }
