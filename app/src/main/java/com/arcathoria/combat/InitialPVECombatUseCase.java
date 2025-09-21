@@ -1,66 +1,49 @@
 package com.arcathoria.combat;
 
-import com.arcathoria.character.exception.CharacterNotFoundException;
-import com.arcathoria.combat.command.StartPVECombatCommand;
+import com.arcathoria.account.vo.AccountId;
+import com.arcathoria.combat.command.InitPVECombatCommand;
 import com.arcathoria.combat.exception.CombatParticipantUnavailableException;
-import com.arcathoria.monster.exception.MonsterNotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.UUID;
 
-import static com.arcathoria.combat.CombatMapper.fromCharacterDTOToParticipant;
-import static com.arcathoria.combat.CombatMapper.fromMonsterDTOToParticipant;
-
 class InitialPVECombatUseCase {
 
     private static final Logger log = LogManager.getLogger(InitialPVECombatUseCase.class);
     private final CombatEngine combatEngine;
-    private final CharacterClient characterClient;
+    private final CombatParticipantService combatParticipantService;
     private final MonsterClient monsterClient;
-    private final CombatStateRepository combatStateRepository;
+    private final CombatSessionStore combatSessionStore;
 
     InitialPVECombatUseCase(
             final CombatEngine combatEngine,
-            final CharacterClient characterClient,
+            final CombatParticipantService combatParticipantService,
             final MonsterClient monsterClient,
-            final CombatStateRepository combatStateRepository
+            final CombatSessionStore combatSessionStore
     ) {
         this.combatEngine = combatEngine;
-        this.characterClient = characterClient;
+        this.combatParticipantService = combatParticipantService;
         this.monsterClient = monsterClient;
-        this.combatStateRepository = combatStateRepository;
+        this.combatSessionStore = combatSessionStore;
     }
 
-    CombatState execute(final StartPVECombatCommand command) {
-        Participant attacker = getCharacterByAccountId(command.attacker().id());
-        Participant defender = getMonsterByMonsterId(command.defender().id());
+    CombatSnapshot init(final InitPVECombatCommand command) {
+        Participant attacker = combatParticipantService.getCharacterByAccountId(new AccountId(command.playerId().value()));
+        Participant defender = getMonsterByMonsterId(command.monsterId().value());
 
-        Combat combat = combatEngine.startCombat(attacker, defender, CombatType.PVE);
+        Combat combat = combatEngine.initialCombat(attacker, defender, CombatType.PVE);
 
-        return combatStateRepository.save(new CombatState(
-                combat.getSnapshot().combatId(),
-                combat.getSnapshot().attacker(),
-                combat.getSnapshot().defender(),
-                combat.getSnapshot().combatTurn().getCurrent()
-        ));
-    }
-
-    private Participant getCharacterByAccountId(final UUID accountId) {
-        try {
-            return fromCharacterDTOToParticipant(characterClient.getSelectedCharacterByAccountId(accountId));
-        } catch (CharacterNotFoundException e) {
-            log.warn("Character not found for id: {}", e.getValue());
-            throw new CombatParticipantUnavailableException(CombatSide.ATTACKER);
-        }
+        log.info("Combat created: {}", combat.getSnapshot().combatId());
+        return combatSessionStore.save(combat.getSnapshot());
     }
 
     private Participant getMonsterByMonsterId(final UUID monsterId) {
-        try {
-            return fromMonsterDTOToParticipant(monsterClient.getMonsterById(monsterId));
-        } catch (MonsterNotFoundException e) {
-            log.warn("Monster not found for id: {}", e.getMonsterId());
-            throw new CombatParticipantUnavailableException(CombatSide.DEFENDER);
-        }
+        return monsterClient.getMonsterById(monsterId)
+                .map(CombatDTOMapper::fromMonsterDTOToParticipant)
+                .orElseThrow(() -> {
+                    log.warn("Monster not found for id: {}", monsterId);
+                    return new CombatParticipantUnavailableException(monsterId);
+                });
     }
 }

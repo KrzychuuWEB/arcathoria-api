@@ -1,6 +1,8 @@
 package com.arcathoria.combat;
 
+import com.arcathoria.combat.vo.Damage;
+
 interface DamageCalculator {
 
-    double calculate(final Participant participant);
+    Damage calculate(final Participant participant);
 }

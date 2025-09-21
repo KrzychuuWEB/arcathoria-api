@@ -1,6 +1,9 @@
 package com.arcathoria.combat;
 
+import com.arcathoria.combat.vo.CombatId;
 import com.arcathoria.combat.vo.CombatTurn;
+
+import java.util.UUID;
 
 class CombatFactory {
 
@@ -12,11 +15,12 @@ class CombatFactory {
     ) {
         return Combat.restore(
                 new CombatSnapshot(
-                        null,
-                        attacker,
-                        defender,
+                        new CombatId(UUID.randomUUID()),
+                        attacker.getSnapshot(),
+                        defender.getSnapshot(),
                         new CombatTurn(combatSide),
-                        combatType
+                        combatType,
+                        CombatStatus.IN_PROGRESS
                 )
         );
     }

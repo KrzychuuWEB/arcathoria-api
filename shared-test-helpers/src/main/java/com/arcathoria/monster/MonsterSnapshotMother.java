@@ -1,7 +1,9 @@
 package com.arcathoria.monster;
 
+import com.arcathoria.character.vo.Gauge;
 import com.arcathoria.character.vo.Health;
 import com.arcathoria.character.vo.Intelligence;
+import com.arcathoria.character.vo.Level;
 import com.arcathoria.combat.vo.Attributes;
 import com.arcathoria.monster.vo.MonsterId;
 import com.arcathoria.monster.vo.MonsterName;
@@ -9,13 +11,13 @@ import com.arcathoria.monster.vo.MonsterName;
 public final class MonsterSnapshotMother {
     public static final MonsterId DEFAULT_MONSTER_ID = new MonsterId(null);
     public static final MonsterName DEFAULT_MONSTER_NAME = new MonsterName("Wolf");
-    public static final Health DEFAULT_HEALTH = new Health(100.0, 100.0);
+    public static final Health DEFAULT_HEALTH = new Health(new Gauge(100, 100));
 
     private MonsterId monsterId = DEFAULT_MONSTER_ID;
     private MonsterName monsterName = DEFAULT_MONSTER_NAME;
     private Health health = DEFAULT_HEALTH;
-    private Attributes attributes = new Attributes(
-            new Intelligence(1)
+    private final Attributes attributes = new Attributes(
+            new Intelligence(new Level(1))
     );
 
     private MonsterSnapshotMother() {

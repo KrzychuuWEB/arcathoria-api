@@ -1,10 +1,15 @@
 package com.arcathoria.character.vo;
 
-public class Intelligence extends Attribute {
+import java.util.Objects;
 
-    public Intelligence(final int level) {
-        super(level);
+public record Intelligence(Level level) implements Attribute<Intelligence> {
+
+    public Intelligence {
+        Objects.requireNonNull(level, "Intelligence level cannot be null");
     }
 
-
+    @Override
+    public Intelligence withLevel(final Level level) {
+        return new Intelligence(level);
+    }
 }

@@ -2,23 +2,40 @@ package com.arcathoria.combat;
 
 import com.arcathoria.character.vo.Health;
 import com.arcathoria.combat.vo.Attributes;
+import com.arcathoria.combat.vo.Damage;
+import com.arcathoria.combat.vo.ParticipantId;
 
 import java.util.Objects;
-import java.util.UUID;
 
 class Participant {
 
-    private final UUID id;
-    private final Health health;
+    static Participant restore(final ParticipantSnapshot snapshot) {
+        return new Participant(
+                snapshot.participantId(),
+                snapshot.health(),
+                snapshot.attributes()
+        );
+    }
+
+    private final ParticipantId id;
+    private Health health;
     private final Attributes attributes;
 
-    Participant(final UUID id, final Health health, final Attributes attributes) {
+    private Participant(final ParticipantId id, final Health health, final Attributes attributes) {
         this.id = id;
         this.health = health;
         this.attributes = attributes;
     }
 
-    UUID getId() {
+    ParticipantSnapshot getSnapshot() {
+        return new ParticipantSnapshot(
+                id,
+                health,
+                attributes
+        );
+    }
+    
+    ParticipantId getId() {
         return id;
     }
 
@@ -27,11 +44,11 @@ class Participant {
     }
 
     int getIntelligenceLevel() {
-        return attributes.intelligence().getLevel();
+        return attributes.intelligence().level().value();
     }
 
-    void applyDamage(final double damage) {
-        health.subtract(damage);
+    void applyDamage(final Damage damage) {
+        this.health = health.subtract(damage.value());
     }
 
     boolean isAlive() {

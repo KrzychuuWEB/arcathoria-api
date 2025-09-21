@@ -9,9 +9,10 @@ class MeleeCombatActionStrategy implements CombatAction {
     }
 
     @Override
-    public void execute(final Combat combat) {
-        combat.applyDamageOpponent(
-                damageCalculator.calculate(combat.getCurrentTurnParticipant())
+    public void execute(final Combat combat, final Participant participant) {
+        combat.performAttack(
+                participant.getId(),
+                damageCalculator.calculate(participant)
         );
     }
 }

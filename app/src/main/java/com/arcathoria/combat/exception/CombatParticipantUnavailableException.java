@@ -1,25 +1,19 @@
 package com.arcathoria.combat.exception;
 
 import com.arcathoria.ApiException;
-import com.arcathoria.combat.CombatSide;
+
+import java.util.UUID;
 
 public class CombatParticipantUnavailableException extends ApiException {
 
-    private final CombatSide combatSide;
+    private final UUID id;
 
-    public CombatParticipantUnavailableException(final CombatSide side) {
-        super(buildMessage(side), "ERR_COMBAT_PARTICIPANT_UNAVAILABLE-400");
-        this.combatSide = side;
+    public CombatParticipantUnavailableException(final UUID id) {
+        super("Could not retrieve participant for combat.", "ERR_COMBAT_PARTICIPANT_UNAVAILABLE-400");
+        this.id = id;
     }
 
-    public String getCombatSide() {
-        return combatSide.toString();
-    }
-
-    private static String buildMessage(CombatSide side) {
-        return switch (side) {
-            case ATTACKER -> "Could not retrieve attacker participant for combat.";
-            case DEFENDER -> "Could not retrieve defender participant for combat.";
-        };
+    public UUID getId() {
+        return id;
     }
 }

@@ -3,20 +3,25 @@ package com.arcathoria.combat;
 class CombatEngine {
 
     private final CombatFactory combatFactory;
-    private final CombatSideStrategy combatSideStrategy;
+    private final CombatSideStrategyFactory combatSideStrategyFactory;
 
-    CombatEngine(final CombatFactory combatFactory, final CombatSideStrategy combatSideStrategy) {
+    CombatEngine(final CombatFactory combatFactory, final CombatSideStrategyFactory combatSideStrategyFactory) {
         this.combatFactory = combatFactory;
-        this.combatSideStrategy = combatSideStrategy;
+        this.combatSideStrategyFactory = combatSideStrategyFactory;
     }
 
-    Combat startCombat(final Participant attacker, final Participant defender, final CombatType combatType) {
-        CombatSide combatSide = combatSideStrategy.choose(attacker, defender);
+    Combat initialCombat(final Participant attacker, final Participant defender, final CombatType combatType) {
+        CombatSide combatSide = combatSideStrategyFactory.getStrategy(combatType).choose(attacker, defender);
         return combatFactory.createCombat(attacker, defender, combatSide, combatType);
     }
 
-    void handleAction(final Combat combat, final CombatAction combatAction) {
-        combatAction.execute(combat);
-        combat.changeTurn();
+    Combat handleAction(final Combat combat, final CombatAction combatAction, final Participant participant) {
+        combatAction.execute(combat, participant);
+
+        if (combat.getCombatStatus() != CombatStatus.FINISHED) {
+            combat.changeTurn();
+        }
+
+        return combat;
     }
 }

@@ -1,12 +1,30 @@
 package com.arcathoria.character.vo;
 
-public class Health extends Resource {
+import java.util.Objects;
 
-    public Health(final Double current, final Double max) {
-        super(current, max);
+public record Health(Gauge gauge) {
+
+    public Health {
+        Objects.requireNonNull(gauge, "Health gauge cannot be null");
+    }
+
+    public Health add(final int value) {
+        return new Health(gauge.add(value));
+    }
+
+    public Health subtract(final int value) {
+        return new Health(gauge.subtract(value));
     }
 
     public boolean isAlive() {
-        return getCurrent() > 0;
+        return !gauge.isEmpty();
+    }
+
+    public int getCurrent() {
+        return gauge.current();
+    }
+
+    public int getMax() {
+        return gauge.max();
     }
 }

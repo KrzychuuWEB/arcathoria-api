@@ -1,7 +1,7 @@
 package com.arcathoria.combat;
 
 import com.arcathoria.ApiErrorResponse;
-import com.arcathoria.combat.exception.CombatParticipantUnavailableException;
+import com.arcathoria.combat.exception.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,12 +28,68 @@ class CombatExceptionHandler {
     @ExceptionHandler(CombatParticipantUnavailableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     ApiErrorResponse handleCombatParticipantUnavailableException(final CombatParticipantUnavailableException ex, final HttpServletRequest request, final Locale locale) {
-        logger.warn("Could not retrieve {} participant for combat.", ex.getCombatSide());
+        logger.warn("Could not retrieve {} participant for combat.", ex.getId());
 
         return new ApiErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                messageSource.getMessage("combat.initial.participant.not.found", new Object[]{ex.getCombatSide()}, ex.getMessage(), locale),
+                messageSource.getMessage("combat.initial.participant.not.found", new Object[]{ex.getId()}, ex.getMessage(), locale),
+                ex.getErrorCode(),
+                request.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(WrongTurnException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    ApiErrorResponse handleWrongTurnException(final WrongTurnException ex, final HttpServletRequest request, final Locale locale) {
+        logger.warn("Currently the turn belongs to {}", ex.getCombatSide());
+
+        return new ApiErrorResponse(
+                HttpStatus.CONFLICT.value(),
+                HttpStatus.CONFLICT.getReasonPhrase(),
+                messageSource.getMessage("combat.turn.conflict", new Object[]{ex.getCombatSide()}, ex.getMessage(), locale),
+                ex.getErrorCode(),
+                request.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(CombatAlreadyFinishedException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    ApiErrorResponse handleCombatAlreadyFinishedException(final CombatAlreadyFinishedException ex, final HttpServletRequest request, final Locale locale) {
+        logger.warn("CombatStatus for Combat {} is FINISHED", ex.getCombatId());
+
+        return new ApiErrorResponse(
+                HttpStatus.CONFLICT.value(),
+                HttpStatus.CONFLICT.getReasonPhrase(),
+                messageSource.getMessage("combat.already.finished.conflict", new Object[]{ex.getCombatId()}, ex.getMessage(), locale),
+                ex.getErrorCode(),
+                request.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(CombatNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    ApiErrorResponse handleCombatNotFoundException(final CombatNotFoundException ex, final HttpServletRequest request, final Locale locale) {
+        logger.warn("Combat not found with id: {}", ex.getCombatId());
+
+        return new ApiErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                messageSource.getMessage("combat.not.found", new Object[]{ex.getCombatId()}, ex.getMessage(), locale),
+                ex.getErrorCode(),
+                request.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(UnsupportedActionTypeException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    ApiErrorResponse handleUnsupportedActionTypeException(final UnsupportedActionTypeException ex, final HttpServletRequest request, final Locale locale) {
+        logger.warn("Action type not supported: {}", ex.getActionType());
+
+        return new ApiErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                messageSource.getMessage("combat.action.type.not.found", new Object[]{ex.getActionType()}, ex.getMessage(), locale),
                 ex.getErrorCode(),
                 request.getRequestURI()
         );

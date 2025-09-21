@@ -1,10 +1,8 @@
 package com.arcathoria.character;
 
 import com.arcathoria.account.vo.AccountId;
-import com.arcathoria.character.vo.CharacterId;
+import com.arcathoria.character.vo.*;
 import com.arcathoria.character.vo.CharacterName;
-import com.arcathoria.character.vo.Health;
-import com.arcathoria.character.vo.Intelligence;
 import com.arcathoria.combat.vo.Attributes;
 
 class CharacterFactory {
@@ -15,9 +13,9 @@ class CharacterFactory {
                         new CharacterId(null),
                         accountId,
                         name,
-                        new Health(100.0, 100.0),
+                        new Health(new Gauge(100, 100)),
                         new Attributes(
-                                new Intelligence(1)
+                                new Intelligence(new Level(1))
                         )
                 )
         );

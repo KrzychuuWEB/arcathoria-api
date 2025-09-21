@@ -1,52 +1,62 @@
 package com.arcathoria.combat;
 
+import com.arcathoria.combat.exception.CombatAlreadyFinishedException;
+import com.arcathoria.combat.exception.ParticipantNotFoundInCombatException;
+import com.arcathoria.combat.exception.WrongTurnException;
 import com.arcathoria.combat.vo.CombatId;
 import com.arcathoria.combat.vo.CombatTurn;
+import com.arcathoria.combat.vo.Damage;
+import com.arcathoria.combat.vo.ParticipantId;
 
 class Combat {
 
     static Combat restore(final CombatSnapshot snapshot) {
         return new Combat(
                 snapshot.combatId(),
-                snapshot.attacker(),
-                snapshot.defender(),
+                Participant.restore(snapshot.attacker()),
+                Participant.restore(snapshot.defender()),
                 snapshot.combatTurn(),
-                snapshot.combatType()
+                snapshot.combatType(),
+                snapshot.combatStatus()
         );
     }
 
     private final CombatId combatId;
     private final Participant attacker;
     private final Participant defender;
-    private final CombatTurn combatTurn;
+    private CombatTurn combatTurn;
     private final CombatType combatType;
+    private CombatStatus combatStatus;
 
-    Combat(
+    private Combat(
             final CombatId combatId,
             final Participant attacker,
             final Participant defender,
             final CombatTurn combatTurn,
-            final CombatType combatType
+            final CombatType combatType,
+            final CombatStatus combatStatus
     ) {
         this.combatId = combatId;
         this.attacker = attacker;
         this.defender = defender;
         this.combatTurn = combatTurn;
         this.combatType = combatType;
+        this.combatStatus = combatStatus;
     }
 
     CombatSnapshot getSnapshot() {
         return new CombatSnapshot(
                 combatId,
-                attacker,
-                defender,
+                attacker.getSnapshot(),
+                defender.getSnapshot(),
                 combatTurn,
-                combatType
+                combatType,
+                combatStatus
         );
     }
 
     CombatSide getCurrentTurn() {
-        return combatTurn.getCurrent();
+        return combatTurn.currentSide();
     }
 
     Participant getCurrentTurnParticipant() {
@@ -54,15 +64,27 @@ class Combat {
     }
 
     void changeTurn() {
-        combatTurn.changeTurn();
+        this.combatTurn = combatTurn.changeTurn();
     }
 
-    void applyDamageOpponent(final double damage) {
-        if (getCurrentTurn() == CombatSide.ATTACKER) {
-            defender.applyDamage(damage);
-        } else {
-            attacker.applyDamage(damage);
-        }
+    CombatStatus getCombatStatus() {
+        return combatStatus;
+    }
+
+    Participant getParticipant(final ParticipantId participantId) {
+        if (attacker.getId().equals(participantId)) return attacker;
+        if (defender.getId().equals(participantId)) return defender;
+
+        throw new ParticipantNotFoundInCombatException(combatId, participantId);
+    }
+
+    void performAttack(final ParticipantId participantId, final Damage damage) {
+        requireInProgress();
+        requireTurnOf(participantId);
+
+        applyDamageToOpponent(damage);
+
+        finishIfParticipantDead();
     }
 
     boolean isDefenderAlive() {
@@ -71,5 +93,34 @@ class Combat {
 
     boolean isAttackerAlive() {
         return attacker.isAlive();
+    }
+
+    private void applyDamageToOpponent(final Damage damage) {
+        if (getCurrentTurn() == CombatSide.ATTACKER) {
+            defender.applyDamage(damage);
+        } else {
+            attacker.applyDamage(damage);
+        }
+    }
+
+    private void finish() {
+        if (this.combatStatus != CombatStatus.FINISHED) {
+            this.combatStatus = CombatStatus.FINISHED;
+        }
+    }
+
+    private void finishIfParticipantDead() {
+        if (!isDefenderAlive() || !isAttackerAlive()) {
+            finish();
+        }
+    }
+
+    private void requireInProgress() {
+        if (this.combatStatus == CombatStatus.FINISHED || this.combatStatus == CombatStatus.CANCELLED)
+            throw new CombatAlreadyFinishedException(combatId);
+    }
+
+    private void requireTurnOf(final ParticipantId participantId) {
+        if (!getCurrentTurnParticipant().getId().equals(participantId)) throw new WrongTurnException(getCurrentTurn());
     }
 }
