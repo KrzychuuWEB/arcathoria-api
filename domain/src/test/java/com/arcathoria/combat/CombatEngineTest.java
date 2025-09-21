@@ -64,13 +64,14 @@ class CombatEngineTest {
 
     @Test
     void should_return_finish_combat_status_after_execute_action() {
-        Participant attacker = Participant.restore(ParticipantSnapshotMother.aParticipantBuilder().withHealth(1, 100).build());
+        Participant attacker = Participant.restore(ParticipantSnapshotMother.aParticipantBuilder().withHealth(2, 100).build());
         Participant defender = Participant.restore(ParticipantSnapshotMother.aParticipantBuilder().withHealth(80, 80).build());
 
         Combat combat = combatEngine.initialCombat(attacker, defender, CombatType.PVE);
 
-        combatEngine.handleAction(combat, meleeCombatActionStrategy, attacker);
+        combatEngine.handleAction(combat, meleeCombatActionStrategy, defender);
 
+        assertThat(combat.getCurrentTurn()).isEqualTo(CombatSide.DEFENDER);
         assertThat(combat.getCombatStatus()).isEqualTo(CombatStatus.FINISHED);
         assertThat(combat.getSnapshot().attacker().health().getCurrent()).isZero();
     }

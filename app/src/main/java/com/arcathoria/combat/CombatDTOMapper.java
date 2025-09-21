@@ -11,9 +11,9 @@ import com.arcathoria.combat.vo.Attributes;
 import com.arcathoria.combat.vo.ParticipantId;
 import com.arcathoria.monster.dto.MonsterDTO;
 
-final class CombatMapper {
+final class CombatDTOMapper {
 
-    CombatMapper() {
+    CombatDTOMapper() {
     }
 
     static CombatResultDTO fromCombatStateToCombatResultDTO(final CombatSnapshot snapshot) {

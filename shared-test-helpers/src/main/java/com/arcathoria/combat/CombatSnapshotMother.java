@@ -6,7 +6,7 @@ import com.arcathoria.combat.vo.CombatTurn;
 import java.util.UUID;
 
 public final class CombatSnapshotMother {
-    static final UUID DEFAULT_COMBAT_ID = null;
+    static final UUID DEFAULT_COMBAT_ID = UUID.randomUUID();
     static final ParticipantSnapshot DEFAULT_ATTACKER = ParticipantSnapshotMother.aParticipantBuilder().withHealth(100, 100).build();
     static final ParticipantSnapshot DEFAULT_DEFENDER = ParticipantSnapshotMother.aParticipantBuilder().withHealth(80, 80).build();
     static final CombatTurn DEFAULT_COMBAT_TURN = new CombatTurn(CombatSide.ATTACKER);

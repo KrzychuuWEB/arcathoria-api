@@ -5,7 +5,7 @@ class DefaultCombatSideStrategyFactory implements CombatSideStrategyFactory {
     private final LowestHealthStartsStrategy lowestHealthStartsStrategy;
 
     DefaultCombatSideStrategyFactory() {
-        lowestHealthStartsStrategy = new LowestHealthStartsStrategy();
+        this.lowestHealthStartsStrategy = new LowestHealthStartsStrategy();
     }
 
     @Override

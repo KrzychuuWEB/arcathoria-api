@@ -4,14 +4,14 @@ class LowestHealthStartsStrategy implements CombatSideStrategy {
 
     @Override
     public CombatSide choose(final Participant attacker, final Participant defender) {
-        int attackerMax = attacker.getHealth().getMax();
-        int defenderMax = defender.getHealth().getMax();
+        int attackerMaxHp = attacker.getHealth().getMax();
+        int defenderMaxHp = defender.getHealth().getMax();
 
-        if (attackerMax > defenderMax) {
-            return CombatSide.DEFENDER;
-        }
-        if (attackerMax < defenderMax) {
+        if (attackerMaxHp < defenderMaxHp) {
             return CombatSide.ATTACKER;
+        }
+        if (defenderMaxHp < attackerMaxHp) {
+            return CombatSide.DEFENDER;
         }
 
         return CombatSide.ATTACKER;

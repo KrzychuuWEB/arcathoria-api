@@ -1,12 +1,11 @@
 package com.arcathoria.combat;
 
-import com.arcathoria.account.vo.AccountId;
-import com.arcathoria.character.dto.CharacterDTO;
 import com.arcathoria.combat.command.ExecuteActionCommand;
 import com.arcathoria.combat.command.InitPVECombatCommand;
 import com.arcathoria.combat.dto.CombatResultDTO;
+import com.arcathoria.combat.dto.ExecuteActionDTO;
+import com.arcathoria.combat.dto.InitPveDTO;
 import com.arcathoria.combat.vo.CombatId;
-import com.arcathoria.monster.dto.MonsterDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,8 +14,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.UUID;
 
-import static com.arcathoria.combat.ParticipantMapperHelper.fromParticipantToCharacterDTO;
-import static com.arcathoria.combat.ParticipantMapperHelper.fromParticipantToMonsterDTO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -36,14 +33,13 @@ class CombatFacadeTest {
     @Test
     void should_return_combatResultDTO_after_initial_combat() {
         UUID combatId = UUID.randomUUID();
-        CharacterDTO characterDTO = fromParticipantToCharacterDTO(Participant.restore(ParticipantSnapshotMother.aParticipantBuilder().build()));
-        MonsterDTO monsterDTO = fromParticipantToMonsterDTO(Participant.restore(ParticipantSnapshotMother.aParticipantBuilder().build()));
+        UUID accountId = UUID.randomUUID();
         CombatSnapshot snapshot = CombatSnapshotMother.aCombat().withCombatId(new CombatId(combatId)).build();
 
         when(initialPVECombatUseCase.init(any(InitPVECombatCommand.class))).thenReturn(snapshot);
 
-        InitPVECombatCommand command = new InitPVECombatCommand(characterDTO, monsterDTO);
-        CombatResultDTO result = combatFacade.initPVECombat(command);
+        InitPveDTO initPveDTO = new InitPveDTO(UUID.randomUUID());
+        CombatResultDTO result = combatFacade.initPVECombat(accountId, initPveDTO);
 
         assertThat(result.combatId()).isEqualTo(combatId);
     }
@@ -51,12 +47,13 @@ class CombatFacadeTest {
     @Test
     void should_return_combatResultDTO_when_perform_action_in_combat() {
         UUID combatId = UUID.randomUUID();
+        UUID accountId = UUID.randomUUID();
         CombatSnapshot snapshot = CombatSnapshotMother.aCombat().withCombatId(new CombatId(combatId)).build();
 
         when(executeCombatActionUseCase.performAction(any(ExecuteActionCommand.class))).thenReturn(snapshot);
 
-        ExecuteActionCommand command = new ExecuteActionCommand(new CombatId(combatId), new AccountId(UUID.randomUUID()), ActionType.MELEE);
-        CombatResultDTO result = combatFacade.performActionInCombat(command);
+        ExecuteActionDTO command = new ExecuteActionDTO(combatId, "melee");
+        CombatResultDTO result = combatFacade.performActionInCombat(accountId, command);
 
         assertThat(result.combatId()).isEqualTo(combatId);
     }

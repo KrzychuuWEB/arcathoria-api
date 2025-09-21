@@ -13,7 +13,7 @@ public class MonsterQueryFacade {
         this.getMonsterByIdUseCase = getMonsterByIdUseCase;
     }
 
-    MonsterDTO getMonsterById(final UUID id) {
+    public MonsterDTO getMonsterById(final UUID id) {
         return MonsterMapper.toMonsterDTO(getMonsterByIdUseCase.execute(new MonsterId(id)));
     }
 }
