@@ -94,4 +94,18 @@ class CombatExceptionHandler {
                 request.getRequestURI()
         );
     }
+
+    @ExceptionHandler(ParticipantNotFoundInCombatException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    ApiErrorResponse handleParticipantNotFoundException(final ParticipantNotFoundInCombatException ex, final HttpServletRequest request, final Locale locale) {
+        logger.warn("Participant with id: {} not found in combat: {}", ex.getParticipantId(), ex.getCombatId());
+
+        return new ApiErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                messageSource.getMessage("combat.participant.not.found", new Object[]{ex.getParticipantId(), ex.getCombatId()}, ex.getMessage(), locale),
+                ex.getErrorCode(),
+                request.getRequestURI()
+        );
+    }
 }
