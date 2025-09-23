@@ -16,6 +16,21 @@ services:
       - 6379:6379
     volumes:
       - redis_data:/data
+
+  redisinsight:
+    image: redis/redisinsight:latest
+    ports:
+      - "5540:5540"
+    depends_on:
+      - redis
+    environment:
+      RI_REDIS_HOST: redis
+      RI_REDIS_PORT: 6379
+      RI_REDIS_ALIAS: local-redis
+      RI_REDIS_PASSWORD: secret
+      RI_ACCEPT_TERMS_AND_CONDITIONS: "true"
+    volumes:
+      - redisinsight-data:/data
   
   pgadmin:
     image: dpage/pgadmin4
@@ -31,3 +46,4 @@ volumes:
   local_pgdata:
   pgadmin-data:
   redis_data:
+  redisinsight-data:
