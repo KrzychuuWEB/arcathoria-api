@@ -17,4 +17,14 @@ class MeleeMagicDamageStrategyTest {
 
         assertThat(damage.value()).isEqualTo(8);
     }
+
+    @Test
+    void should_calculate_melee_damage_based_on_higher_intelligence_level() {
+        Participant participant = Participant.restore(ParticipantSnapshotMother.aParticipantBuilder().withIntelligence(new Level(10)).build());
+        MeleeMagicDamageStrategy meleeMagicDamageStrategy = new MeleeMagicDamageStrategy();
+
+        Damage damage = meleeMagicDamageStrategy.calculate(participant);
+
+        assertThat(damage.value()).isBetween(20, 30);
+    }
 }
