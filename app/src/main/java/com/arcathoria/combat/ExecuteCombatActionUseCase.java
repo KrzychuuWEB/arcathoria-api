@@ -33,9 +33,9 @@ class ExecuteCombatActionUseCase {
         );
 
         Participant participant = combatParticipantService.getCharacterByAccountId(command.accountId());
-        combat.getParticipant(participant.getId());
+        Participant participantFromStore = combat.getParticipant(participant.getId());
 
-        Combat result = combatEngine.handleAction(combat, combatActionRegistry.get(command.actionType()), participant);
+        Combat result = combatEngine.handleAction(combat, combatActionRegistry.get(command.actionType()), participantFromStore);
 
         if (result.getCombatStatus() == CombatStatus.FINISHED) {
             combatRepository.save(result).getSnapshot();
