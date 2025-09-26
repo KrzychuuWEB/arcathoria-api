@@ -14,6 +14,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,7 +31,7 @@ class GetCombatSnapshotFromStoreTest {
         CombatId combatId = new CombatId(UUID.randomUUID());
         CombatSnapshot combatSnapshot = CombatSnapshotMother.aCombat().withCombatId(combatId).build();
 
-        when(combatSessionStore.getCombatById(any(CombatId.class))).thenReturn(Optional.of(combatSnapshot));
+        when(combatSessionStore.getCombatById(combatId)).thenReturn(Optional.of(combatSnapshot));
 
         CombatSnapshot result = getCombatSnapshotFromStore.getSnapshotById(combatId);
 
@@ -38,6 +39,8 @@ class GetCombatSnapshotFromStoreTest {
         assertThat(result.combatStatus()).isEqualTo(combatSnapshot.combatStatus());
         assertThat(result.attacker()).isEqualTo(combatSnapshot.attacker());
         assertThat(result.defender()).isEqualTo(combatSnapshot.defender());
+
+        verify(combatSessionStore).getCombatById(combatId);
     }
 
     @Test

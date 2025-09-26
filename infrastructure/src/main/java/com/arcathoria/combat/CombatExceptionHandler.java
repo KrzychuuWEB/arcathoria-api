@@ -108,4 +108,18 @@ class CombatExceptionHandler {
                 request.getRequestURI()
         );
     }
+
+    @ExceptionHandler(ParticipantNotHasActiveCombatsException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    ApiErrorResponse handleSelectedCharacterNotFoundException(final ParticipantNotHasActiveCombatsException ex, final HttpServletRequest request, final Locale locale) {
+        logger.warn("Participant with id {} not has active combats", ex.getParticipantId());
+
+        return new ApiErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                messageSource.getMessage("character.get.combat.by.participant.id", null, ex.getMessage(), locale),
+                ex.getErrorCode(),
+                request.getRequestURI()
+        );
+    }
 }

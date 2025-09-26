@@ -17,9 +17,11 @@ import java.util.UUID;
 class CombatController {
 
     private final CombatFacade combatFacade;
+    private final CombatQueryFacade combatQueryFacade;
 
-    CombatController(final CombatFacade combatFacade) {
+    CombatController(final CombatFacade combatFacade, final CombatQueryFacade combatQueryFacade) {
         this.combatFacade = combatFacade;
+        this.combatQueryFacade = combatQueryFacade;
     }
 
     @PostMapping("/init/pve")
@@ -43,5 +45,11 @@ class CombatController {
         }
 
         return combatFacade.performActionInCombat(userDetails.getId(), dto);
+    }
+
+    @GetMapping("/active")
+    @ResponseStatus(HttpStatus.OK)
+    UUID getActiveCombatByParticipantId(@AuthenticationPrincipal MyUserDetails userDetails) {
+        return combatQueryFacade.getActiveCombatForSelectedCharacterByAccountId(userDetails.getId());
     }
 }

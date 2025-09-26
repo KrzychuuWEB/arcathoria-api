@@ -16,10 +16,8 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.*;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 import java.util.Optional;
@@ -153,5 +151,41 @@ class CombatControllerE2ETest extends IntegrationTestContainersConfig {
         assertThat(result.defender().currentHp()).isZero();
     }
 
-    //TODO: Add test for check when combat is saved in database. Add find method in CombatRepository
+    @Test
+    void should_return_active_combat_for_selected_character_by_account_id() {
+        InitPveDTO initPveDTO = new InitPveDTO(exampleMonsterId);
+        CharacterWithAccountContext context = selectCharacterE2EHelper.setupSelectedCharacterWithAccount();
+
+        CombatResultDTO resultInitCombat = createCombatE2EHelper.initPveCombat(initPveDTO, context.accountHeaders()).getBody();
+
+        ResponseEntity<UUID> response = restTemplate.exchange(
+                baseUrl + "/active",
+                HttpMethod.GET,
+                new HttpEntity<>(context.accountHeaders()),
+                new ParameterizedTypeReference<>() {
+                }
+        );
+        UUID result = response.getBody();
+
+        assertThat(result).isNotNull();
+        assertThat(resultInitCombat).isNotNull();
+        assertThat(result).isEqualTo(resultInitCombat.combatId());
+    }
+
+    @Test
+    void should_return_ParticipantNotHasActiveCombatsException_when_selected_character_not_has_active_combat() {
+        CharacterWithAccountContext context = selectCharacterE2EHelper.setupSelectedCharacterWithAccount();
+
+        ResponseEntity<ApiErrorResponse> response = restTemplate.exchange(
+                baseUrl + "/active",
+                HttpMethod.GET,
+                new HttpEntity<>(context.accountHeaders()),
+                new ParameterizedTypeReference<>() {
+                }
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().getErrorCode()).isEqualTo("ERR_PARTICIPANT_NOT_HAS_ACTIVE_COMBAT-404");
+    }
 }

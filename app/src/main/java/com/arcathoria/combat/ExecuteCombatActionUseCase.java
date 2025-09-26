@@ -37,7 +37,7 @@ class ExecuteCombatActionUseCase {
 
         Combat result = combatEngine.handleAction(combat, combatActionRegistry.get(command.actionType()), participantFromStore);
 
-        if (result.getCombatStatus() == CombatStatus.FINISHED) {
+        if (result.getCombatStatus() != CombatStatus.IN_PROGRESS) {
             combatRepository.save(result).getSnapshot();
         }
 

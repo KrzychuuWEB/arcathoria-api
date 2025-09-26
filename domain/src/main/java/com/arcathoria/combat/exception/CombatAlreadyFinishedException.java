@@ -8,7 +8,7 @@ public class CombatAlreadyFinishedException extends DomainException {
     private final CombatId combatId;
 
     public CombatAlreadyFinishedException(final CombatId combatId) {
-        super("The fight for id {} is already finished, this action cannot be performed", "ERR_COMBAT_ALREADY_FINISHED");
+        super("The fight for id " + combatId + " is already finished, this action cannot be performed", "ERR_COMBAT_ALREADY_FINISHED");
         this.combatId = combatId;
     }
 
