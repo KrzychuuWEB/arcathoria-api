@@ -111,7 +111,7 @@ class CombatExceptionHandler {
 
     @ExceptionHandler(ParticipantNotHasActiveCombatsException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    ApiErrorResponse handleSelectedCharacterNotFoundException(final ParticipantNotHasActiveCombatsException ex, final HttpServletRequest request, final Locale locale) {
+    ApiErrorResponse handleParticipantNotHasActiveCombat(final ParticipantNotHasActiveCombatsException ex, final HttpServletRequest request, final Locale locale) {
         logger.warn("Participant with id {} not has active combats", ex.getParticipantId());
 
         return new ApiErrorResponse(

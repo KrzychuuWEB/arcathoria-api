@@ -5,6 +5,7 @@ import com.arcathoria.IntegrationTestContainersConfig;
 import com.arcathoria.account.AccountManagerE2EHelper;
 import com.arcathoria.character.CharacterWithAccountContext;
 import com.arcathoria.character.SetupCharacterE2EHelper;
+import com.arcathoria.combat.dto.CombatIdDTO;
 import com.arcathoria.combat.dto.CombatResultDTO;
 import com.arcathoria.combat.dto.ExecuteActionDTO;
 import com.arcathoria.combat.dto.InitPveDTO;
@@ -158,18 +159,18 @@ class CombatControllerE2ETest extends IntegrationTestContainersConfig {
 
         CombatResultDTO resultInitCombat = createCombatE2EHelper.initPveCombat(initPveDTO, context.accountHeaders()).getBody();
 
-        ResponseEntity<UUID> response = restTemplate.exchange(
+        ResponseEntity<CombatIdDTO> response = restTemplate.exchange(
                 baseUrl + "/active",
                 HttpMethod.GET,
                 new HttpEntity<>(context.accountHeaders()),
                 new ParameterizedTypeReference<>() {
                 }
         );
-        UUID result = response.getBody();
+        CombatIdDTO result = response.getBody();
 
         assertThat(result).isNotNull();
         assertThat(resultInitCombat).isNotNull();
-        assertThat(result).isEqualTo(resultInitCombat.combatId());
+        assertThat(result.combatId()).isEqualTo(resultInitCombat.combatId());
     }
 
     @Test

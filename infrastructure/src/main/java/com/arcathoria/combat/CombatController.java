@@ -1,6 +1,7 @@
 package com.arcathoria.combat;
 
 import com.arcathoria.account.MyUserDetails;
+import com.arcathoria.combat.dto.CombatIdDTO;
 import com.arcathoria.combat.dto.CombatResultDTO;
 import com.arcathoria.combat.dto.ExecuteActionDTO;
 import com.arcathoria.combat.dto.InitPveDTO;
@@ -49,7 +50,7 @@ class CombatController {
 
     @GetMapping("/active")
     @ResponseStatus(HttpStatus.OK)
-    UUID getActiveCombatByParticipantId(@AuthenticationPrincipal MyUserDetails userDetails) {
-        return combatQueryFacade.getActiveCombatForSelectedCharacterByAccountId(userDetails.getId());
+    CombatIdDTO getActiveCombatByParticipantId(@AuthenticationPrincipal MyUserDetails userDetails) {
+        return new CombatIdDTO(combatQueryFacade.getActiveCombatForSelectedCharacterByAccountId(userDetails.getId()));
     }
 }
