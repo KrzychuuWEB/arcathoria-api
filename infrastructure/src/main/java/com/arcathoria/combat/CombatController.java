@@ -53,4 +53,13 @@ class CombatController {
     CombatIdDTO getActiveCombatByParticipantId(@AuthenticationPrincipal MyUserDetails userDetails) {
         return new CombatIdDTO(combatQueryFacade.getActiveCombatForSelectedCharacterByAccountId(userDetails.getId()));
     }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    CombatResultDTO getCombatById(
+            @PathVariable final UUID id,
+            @AuthenticationPrincipal MyUserDetails userDetails
+    ) {
+        return combatQueryFacade.getCombatByIdAndParticipantId(id, userDetails.getId());
+    }
 }

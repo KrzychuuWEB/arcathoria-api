@@ -8,8 +8,10 @@ class CombatConfiguration {
 
     @Bean
     CombatQueryFacade combatQueryFacade(final GetActiveCombatIdByParticipantId getActiveCombatIdByParticipantId,
-                                        final CombatParticipantService combatParticipantService) {
-        return new CombatQueryFacade(getActiveCombatIdByParticipantId, combatParticipantService);
+                                        final CombatParticipantService combatParticipantService,
+                                        final GetCombatFromStoreByIdAndParticipantId getCombatFromStoreByIdAndParticipantId
+    ) {
+        return new CombatQueryFacade(getActiveCombatIdByParticipantId, combatParticipantService, getCombatFromStoreByIdAndParticipantId);
     }
 
     @Bean
@@ -38,6 +40,13 @@ class CombatConfiguration {
                 monsterClient,
                 sessionStore
         );
+    }
+
+    @Bean
+    GetCombatFromStoreByIdAndParticipantId getCombatFromStoreByIdAndParticipantId(
+            final GetCombatSnapshotFromStore getCombatSnapshotFromStore
+    ) {
+        return new GetCombatFromStoreByIdAndParticipantId(getCombatSnapshotFromStore);
     }
 
     @Bean

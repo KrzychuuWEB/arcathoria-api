@@ -203,4 +203,64 @@ class CombatControllerE2ETest extends IntegrationTestContainersConfig {
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getBody().getErrorCode()).isEqualTo("ERR_PARTICIPANT_NOT_HAS_ACTIVE_COMBAT-404");
     }
+
+    @Test
+    void should_get_combat_by_id_when_id_is_correct_for_selected_character() {
+        InitPveDTO initPveDTO = new InitPveDTO(exampleMonsterId);
+        CharacterWithAccountContext context = selectCharacterE2EHelper.setupSelectedCharacterWithAccount();
+
+        CombatResultDTO saveCombat = createCombatE2EHelper.initPveCombat(initPveDTO, context.accountHeaders()).getBody();
+
+        ResponseEntity<CombatResultDTO> response = restTemplate.exchange(
+                baseUrl + "/" + saveCombat.combatId(),
+                HttpMethod.GET,
+                new HttpEntity<>(context.accountHeaders()),
+                new ParameterizedTypeReference<>() {
+                }
+        );
+        CombatResultDTO result = response.getBody();
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(result).isNotNull();
+        assertThat(result).isEqualTo(saveCombat);
+    }
+
+    @Test
+    void should_return_COMBAT_NOT_FOUND_when_combat_not_found_for_get_combat_by_id() {
+        CharacterWithAccountContext context = selectCharacterE2EHelper.setupSelectedCharacterWithAccount();
+
+        ResponseEntity<ApiErrorResponse> response = restTemplate.exchange(
+                baseUrl + "/" + UUID.randomUUID(),
+                HttpMethod.GET,
+                new HttpEntity<>(context.accountHeaders()),
+                new ParameterizedTypeReference<>() {
+                }
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().getErrorCode()).isEqualTo("ERR_COMBAT_NOT_FOUND-404");
+    }
+
+    @Test
+    void should_return_ERR_COMBAT_PARTICIPANT_NOT_FOUND_IN_COMBAT_when_combat_not_found_for_get_combat_by_id() {
+        InitPveDTO initPveDTO = new InitPveDTO(exampleMonsterId);
+        CharacterWithAccountContext context = selectCharacterE2EHelper.setupSelectedCharacterWithAccount();
+
+        CombatResultDTO saveCombat = createCombatE2EHelper.initPveCombat(initPveDTO, context.accountHeaders()).getBody();
+
+        CharacterWithAccountContext newAccountContext = selectCharacterE2EHelper.setupSelectedCharacterWithAccount();
+
+        ResponseEntity<ApiErrorResponse> response = restTemplate.exchange(
+                baseUrl + "/" + saveCombat.combatId(),
+                HttpMethod.GET,
+                new HttpEntity<>(newAccountContext.accountHeaders()),
+                new ParameterizedTypeReference<>() {
+                }
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().getErrorCode()).isEqualTo("ERR_COMBAT_PARTICIPANT_NOT_FOUND_IN_COMBAT");
+    }
 }
