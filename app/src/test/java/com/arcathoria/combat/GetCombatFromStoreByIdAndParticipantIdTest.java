@@ -1,11 +1,14 @@
 package com.arcathoria.combat;
 
 import com.arcathoria.combat.exception.ParticipantNotFoundInCombatException;
+import com.arcathoria.combat.vo.ParticipantId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -38,15 +41,14 @@ class GetCombatFromStoreByIdAndParticipantIdTest {
 
     @Test
     void should_return_ParticipantNotFoundInCombatException_when_participant_has_active_combat() {
-        ParticipantSnapshot participant = ParticipantSnapshotMother.aParticipantBuilder().build();
         CombatSnapshot snapshot = CombatSnapshotMother.aCombat().build();
 
-        when(getCombatSnapshotFromStore.getSnapshotById(snapshot.combatId()))
-                .thenThrow(new ParticipantNotFoundInCombatException(snapshot.combatId(), participant.participantId()));
+        ParticipantId otherParticipant = new ParticipantId(UUID.randomUUID());
+        when(getCombatSnapshotFromStore.getSnapshotById(snapshot.combatId())).thenReturn(snapshot);
 
-        assertThatThrownBy(() -> getCombatFromStoreByIdAndParticipantId.getByCombatIdAndParticipantId(snapshot.combatId(), participant.participantId()))
+        assertThatThrownBy(() -> getCombatFromStoreByIdAndParticipantId.getByCombatIdAndParticipantId(snapshot.combatId(), otherParticipant))
                 .isInstanceOf(ParticipantNotFoundInCombatException.class)
-                .hasMessageContaining(participant.participantId().value().toString());
+                .hasMessageContaining(otherParticipant.value().toString());
 
         verify(getCombatSnapshotFromStore).getSnapshotById(snapshot.combatId());
     }
