@@ -118,12 +118,11 @@ class CombatSessionStoreAdapterTest extends IntegrationTestContainersConfig {
         CombatSnapshot snapshotToSave = CombatSnapshotMother.aCombat().build();
         combatSessionStoreAdapter.save(snapshotToSave);
 
-        Optional<CombatSnapshot> resultGetByParticipantId = combatSessionStoreAdapter.getActiveCombatByParticipantId(snapshotToSave.attacker().participantId());
-        CombatSnapshot snapshot = resultGetByParticipantId.get();
+        Optional<CombatId> resultGetByParticipantId = combatSessionStoreAdapter.getActiveCombatIdByParticipantId(snapshotToSave.attacker().participantId());
+        CombatId combatId = resultGetByParticipantId.get();
 
         assertThat(resultGetByParticipantId).isPresent();
-        assertThat(snapshot).isEqualTo(snapshotToSave);
-        assertThat(snapshot.combatStatus()).isEqualTo(CombatStatus.IN_PROGRESS);
+        assertThat(combatId).isEqualTo(snapshotToSave.combatId());
     }
 
     @Test
@@ -131,7 +130,7 @@ class CombatSessionStoreAdapterTest extends IntegrationTestContainersConfig {
         CombatSnapshot snapshotToSave = CombatSnapshotMother.aCombat().withCombatStatus(CombatStatus.FINISHED).build();
         combatSessionStoreAdapter.save(snapshotToSave);
 
-        Optional<CombatSnapshot> resultGetByParticipantId = combatSessionStoreAdapter.getActiveCombatByParticipantId(snapshotToSave.attacker().participantId());
+        Optional<CombatId> resultGetByParticipantId = combatSessionStoreAdapter.getActiveCombatIdByParticipantId(snapshotToSave.attacker().participantId());
 
         assertThat(resultGetByParticipantId).isEmpty();
     }
@@ -141,7 +140,7 @@ class CombatSessionStoreAdapterTest extends IntegrationTestContainersConfig {
         CombatSnapshot snapshotToSave = CombatSnapshotMother.aCombat().withCombatStatus(CombatStatus.FINISHED).build();
         combatSessionStoreAdapter.save(snapshotToSave);
 
-        combatSessionStoreAdapter.getActiveCombatByParticipantId(snapshotToSave.attacker().participantId());
+        combatSessionStoreAdapter.getActiveCombatIdByParticipantId(snapshotToSave.attacker().participantId());
 
         String attackerKey = getKeyByParticipantId(snapshotToSave.attacker().participantId());
         String defenderKey = getKeyByParticipantId(snapshotToSave.defender().participantId());

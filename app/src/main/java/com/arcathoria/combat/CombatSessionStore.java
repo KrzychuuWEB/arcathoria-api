@@ -11,7 +11,7 @@ interface CombatSessionStore {
 
     Optional<CombatSnapshot> getCombatById(final CombatId combatId);
 
-    Optional<CombatSnapshot> getActiveCombatByParticipantId(final ParticipantId participantId);
+    Optional<CombatId> getActiveCombatIdByParticipantId(final ParticipantId participantId);
 
     void remove(final CombatId combatId);
 }

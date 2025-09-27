@@ -7,14 +7,14 @@ import org.springframework.context.annotation.Configuration;
 class CombatConfiguration {
 
     @Bean
-    CombatQueryFacade combatQueryFacade(final GetActiveCombatByParticipantId getActiveCombatByParticipantId,
+    CombatQueryFacade combatQueryFacade(final GetActiveCombatIdByParticipantId getActiveCombatIdByParticipantId,
                                         final CombatParticipantService combatParticipantService) {
-        return new CombatQueryFacade(getActiveCombatByParticipantId, combatParticipantService);
+        return new CombatQueryFacade(getActiveCombatIdByParticipantId, combatParticipantService);
     }
 
     @Bean
-    GetActiveCombatByParticipantId getActiveCombatByParticipantId(final CombatSessionStore combatSessionStore) {
-        return new GetActiveCombatByParticipantId(combatSessionStore);
+    GetActiveCombatIdByParticipantId getActiveCombatByParticipantId(final CombatSessionStore combatSessionStore) {
+        return new GetActiveCombatIdByParticipantId(combatSessionStore);
     }
 
     @Bean

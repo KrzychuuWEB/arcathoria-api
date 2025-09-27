@@ -7,18 +7,18 @@ import java.util.UUID;
 
 public class CombatQueryFacade {
 
-    private final GetActiveCombatByParticipantId getActiveCombatByParticipantId;
+    private final GetActiveCombatIdByParticipantId getActiveCombatIdByParticipantId;
     private final CombatParticipantService combatParticipantService;
 
-    CombatQueryFacade(final GetActiveCombatByParticipantId getActiveCombatByParticipantId,
+    CombatQueryFacade(final GetActiveCombatIdByParticipantId getActiveCombatIdByParticipantId,
                       final CombatParticipantService combatParticipantService) {
-        this.getActiveCombatByParticipantId = getActiveCombatByParticipantId;
+        this.getActiveCombatIdByParticipantId = getActiveCombatIdByParticipantId;
         this.combatParticipantService = combatParticipantService;
     }
 
     public UUID getActiveCombatForSelectedCharacterByAccountId(final UUID accountId) {
         ParticipantId participantId = combatParticipantService.getCharacterByAccountId(new AccountId(accountId)).getId();
 
-        return getActiveCombatByParticipantId.getActiveCombat(participantId).getSnapshot().combatId().value();
+        return getActiveCombatIdByParticipantId.getActiveCombat(participantId).value();
     }
 }

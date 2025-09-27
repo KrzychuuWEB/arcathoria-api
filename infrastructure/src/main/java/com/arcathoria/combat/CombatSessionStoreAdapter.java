@@ -99,7 +99,7 @@ class CombatSessionStoreAdapter implements CombatSessionStore {
     }
 
     @Override
-    public Optional<CombatSnapshot> getActiveCombatByParticipantId(final ParticipantId participantId) {
+    public Optional<CombatId> getActiveCombatIdByParticipantId(final ParticipantId participantId) {
         String zKey = getParticipantZKey(participantId);
         int start = 0, end = ZSET_CHUNK - 1;
 
@@ -108,7 +108,7 @@ class CombatSessionStoreAdapter implements CombatSessionStore {
             if (ids == null || ids.isEmpty()) return Optional.empty();
 
             Optional<CombatSnapshot> active = findActiveInBatch(ids, participantId, zKey);
-            if (active.isPresent()) return active;
+            if (active.isPresent()) return Optional.ofNullable(active.get().combatId());
 
             start += ZSET_CHUNK;
             end += ZSET_CHUNK;
