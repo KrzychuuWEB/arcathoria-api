@@ -13,10 +13,12 @@ public final class ParticipantSnapshotMother {
     public static final ParticipantId DEFAULT_ID = new ParticipantId(UUID.randomUUID());
     public static final Health DEFAULT_HEALTH = new Health(new Gauge(100, 100));
     public static final Intelligence DEFAULT_INTELLIGENCE = new Intelligence(new Level(1));
+    public static final ParticipantType DEFAULT_TYPE = ParticipantType.PLAYER;
 
     private ParticipantId uuid = DEFAULT_ID;
     private Health health = DEFAULT_HEALTH;
     private Attributes attributes = new Attributes(DEFAULT_INTELLIGENCE);
+    private ParticipantType participantType = DEFAULT_TYPE;
 
     private ParticipantSnapshotMother() {
     }
@@ -40,7 +42,12 @@ public final class ParticipantSnapshotMother {
         return this;
     }
 
+    public ParticipantSnapshotMother withParticipantType(final ParticipantType participantType) {
+        this.participantType = participantType;
+        return this;
+    }
+
     ParticipantSnapshot build() {
-        return new ParticipantSnapshot(uuid, health, attributes);
+        return new ParticipantSnapshot(uuid, health, attributes, participantType);
     }
 }

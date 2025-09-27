@@ -26,14 +26,16 @@ final class CombatMapper {
                                 new Health(new Gauge(attacker.getCurrentHealth(), attacker.getMaxHealth())),
                                 new Attributes(
                                         new Intelligence(new Level(attacker.getIntelligence()))
-                                )
+                                ),
+                                attacker.getParticipantType()
                         ),
                         new ParticipantSnapshot(
                                 new ParticipantId(defender.getCharacterId()),
                                 new Health(new Gauge(defender.getCurrentHealth(), defender.getMaxHealth())),
                                 new Attributes(
                                         new Intelligence(new Level(defender.getIntelligence()))
-                                )
+                                ),
+                                defender.getParticipantType()
                         ),
                         new CombatTurn(entity.getSide()),
                         entity.getType(),
@@ -68,7 +70,8 @@ final class CombatMapper {
                 side,
                 snapshot.health().getCurrent(),
                 snapshot.health().getMax(),
-                snapshot.attributes().intelligence().level().value()
+                snapshot.attributes().intelligence().level().value(),
+                snapshot.participantType()
         );
     }
 

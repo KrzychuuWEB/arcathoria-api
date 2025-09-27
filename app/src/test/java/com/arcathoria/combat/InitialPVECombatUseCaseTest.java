@@ -5,6 +5,7 @@ import com.arcathoria.account.vo.AccountId;
 import com.arcathoria.character.dto.CharacterDTO;
 import com.arcathoria.combat.command.InitPVECombatCommand;
 import com.arcathoria.combat.exception.CombatParticipantUnavailableException;
+import com.arcathoria.combat.exception.OnlyOneActiveCombatAllowedException;
 import com.arcathoria.monster.dto.MonsterDTO;
 import com.arcathoria.monster.exception.MonsterNotFoundException;
 import com.arcathoria.monster.vo.MonsterId;
@@ -17,8 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class InitialPVECombatUseCaseTest {
@@ -74,6 +74,8 @@ class InitialPVECombatUseCaseTest {
 
         assertThatThrownBy(() -> initialPVECombatUseCase.init(new InitPVECombatCommand(new AccountId(player.id()), new MonsterId(monster.id()))))
                 .isInstanceOf(CombatParticipantUnavailableException.class);
+
+        verify(combatSessionStore, never()).save(any(CombatSnapshot.class));
     }
 
     @Test
@@ -89,5 +91,28 @@ class InitialPVECombatUseCaseTest {
 
         assertThatThrownBy(() -> initialPVECombatUseCase.init(new InitPVECombatCommand(new AccountId(player.id()), new MonsterId(monster.id()))))
                 .isInstanceOf(ApiException.class);
+
+        verify(combatSessionStore, never()).save(any(CombatSnapshot.class));
+    }
+
+    @Test
+    void should_return_OnlyOneActiveCombatAllowedException_when_participant_has_active_combat() {
+        Participant attacker = Participant.restore(ParticipantSnapshotMother.aParticipantBuilder().build());
+        Participant defender = Participant.restore(ParticipantSnapshotMother.aParticipantBuilder().build());
+
+        CharacterDTO player = new CharacterDTO(attacker.getId().value(), "example-player", attacker.getHealth().getMax(), attacker.getIntelligenceLevel());
+        MonsterDTO monster = new MonsterDTO(defender.getId().value(), "example-monster", defender.getHealth().getMax(), defender.getHealth().getMax(), defender.getIntelligenceLevel());
+
+        when(combatParticipantService.getCharacterByAccountId(new AccountId(player.id()))).thenReturn(attacker);
+        when(monsterClient.getMonsterById(monster.id())).thenReturn(Optional.of(monster));
+        when(combatEngine.initialCombat(attacker, defender, CombatType.PVE)).thenThrow(new OnlyOneActiveCombatAllowedException(attacker.getId()));
+
+        assertThatThrownBy(() -> initialPVECombatUseCase.init(new InitPVECombatCommand(new AccountId(player.id()), new MonsterId(monster.id()))))
+                .isInstanceOf(OnlyOneActiveCombatAllowedException.class)
+                .hasMessageContaining(attacker.getId().value().toString());
+
+        verify(combatSessionStore, never()).save(any(CombatSnapshot.class));
+        verify(combatParticipantService).getCharacterByAccountId(new AccountId(player.id()));
+        verify(monsterClient).getMonsterById(monster.id());
     }
 }

@@ -7,6 +7,7 @@ import com.arcathoria.combat.vo.ParticipantId;
 record ParticipantSnapshot(
         ParticipantId participantId,
         Health health,
-        Attributes attributes
+        Attributes attributes,
+        ParticipantType participantType
 ) {
 }

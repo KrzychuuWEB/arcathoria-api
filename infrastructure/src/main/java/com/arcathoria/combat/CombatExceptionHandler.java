@@ -117,7 +117,21 @@ class CombatExceptionHandler {
         return new ApiErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
                 HttpStatus.NOT_FOUND.getReasonPhrase(),
-                messageSource.getMessage("character.get.combat.by.participant.id", null, ex.getMessage(), locale),
+                messageSource.getMessage("combat.get.combat.by.participant.id", null, ex.getMessage(), locale),
+                ex.getErrorCode(),
+                request.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(OnlyOneActiveCombatAllowedException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    ApiErrorResponse handleOnlyOneActiveCombatAllowedException(final OnlyOneActiveCombatAllowedException ex, final HttpServletRequest request, final Locale locale) {
+        logger.warn("Participant {} has request for start new combat", ex.getParticipantId());
+
+        return new ApiErrorResponse(
+                HttpStatus.CONFLICT.value(),
+                HttpStatus.CONFLICT.getReasonPhrase(),
+                messageSource.getMessage("combat.only.one.active.combat.for.participant", null, ex.getMessage(), locale),
                 ex.getErrorCode(),
                 request.getRequestURI()
         );

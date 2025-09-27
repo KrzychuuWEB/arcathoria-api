@@ -62,9 +62,15 @@ class CombatConfiguration {
     @Bean
     CombatEngine combatEngine(
             final CombatFactory combatFactory,
-            final CombatSideStrategyFactory combatSideStrategyFactory
+            final CombatSideStrategyFactory combatSideStrategyFactory,
+            final OnlyOneActiveCombatPolicy onlyOneActiveCombatPolicy
     ) {
-        return new CombatEngine(combatFactory, combatSideStrategyFactory);
+        return new CombatEngine(combatFactory, combatSideStrategyFactory, onlyOneActiveCombatPolicy);
+    }
+
+    @Bean
+    OnlyOneActiveCombatPolicy onlyOneActiveCombatPolicy(final CombatSessionStore combatSessionStore) {
+        return new OnlyOneActiveCombatPolicy(combatSessionStore);
     }
 
     @Bean
