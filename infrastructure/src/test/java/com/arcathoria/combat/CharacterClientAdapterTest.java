@@ -8,7 +8,6 @@ import com.arcathoria.character.CreateCharacterE2EHelper;
 import com.arcathoria.character.SelectCharacterE2EHelper;
 import com.arcathoria.character.dto.CharacterDTO;
 import com.arcathoria.character.dto.CreateCharacterDTO;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import static com.arcathoria.account.JwtTokenDecodeHelper.extractAccountId;
@@ -53,18 +51,9 @@ class CharacterClientAdapterTest extends IntegrationTestContainersConfig {
         CharacterDTO characterDTO = selectCharacterE2EHelper.selectCharacter(createCharacterResponse.getBody().id(), headers);
 
         System.out.println(createCharacterResponse.getBody());
-        Optional<CharacterDTO> optionalResult = characterClientAdapter.getSelectedCharacterByAccountId(accountId);
-        CharacterDTO result = optionalResult.get();
+        CharacterDTO result = characterClientAdapter.getSelectedCharacterByAccountId(accountId);
 
-        Assertions.assertNotNull(characterDTO);
         assertThat(result.id()).isEqualTo(characterDTO.id());
         assertThat(result.characterName()).isEqualTo(characterDTO.characterName());
-    }
-
-    @Test
-    void should_return_empty_optional_if_character_id_is_not_exists() {
-        Optional<CharacterDTO> result = characterClientAdapter.getSelectedCharacterByAccountId(UUID.randomUUID());
-
-        assertThat(result).isEmpty();
     }
 }

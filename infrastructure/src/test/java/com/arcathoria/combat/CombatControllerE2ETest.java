@@ -90,16 +90,16 @@ class CombatControllerE2ETest extends IntegrationTestContainersConfig {
     }
 
     @Test
-    void should_return_CombatParticipantUnavailableException_when_character_not_selected() {
+    void should_return_status_code_CHARACTER_SELECT_NOT_FOUND_when_character_not_selected() {
         InitPveDTO initPveDTO = new InitPveDTO(exampleMonsterId);
 
         HttpHeaders account = accountManagerE2EHelper.registerAndGetAuthHeaders("not_selected_character_CT@combat.arcathoria");
 
         ResponseEntity<ApiErrorResponse> response = restTemplate.postForEntity(baseUrl + "/init/pve", new HttpEntity<>(initPveDTO, account), ApiErrorResponse.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getErrorCode()).isEqualTo("ERR_COMBAT_PARTICIPANT_UNAVAILABLE-400");
+        assertThat(response.getBody().getErrorCode()).isEqualTo("ERR_CHARACTER_SELECTED_NOT_FOUND-404");
     }
 
     @Test
