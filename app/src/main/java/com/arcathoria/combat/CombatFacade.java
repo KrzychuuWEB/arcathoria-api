@@ -1,13 +1,13 @@
 package com.arcathoria.combat;
 
-import com.arcathoria.account.vo.AccountId;
 import com.arcathoria.combat.command.ExecuteActionCommand;
 import com.arcathoria.combat.command.InitPVECombatCommand;
 import com.arcathoria.combat.dto.CombatResultDTO;
 import com.arcathoria.combat.dto.ExecuteActionDTO;
 import com.arcathoria.combat.dto.InitPveDTO;
+import com.arcathoria.combat.vo.AccountId;
 import com.arcathoria.combat.vo.CombatId;
-import com.arcathoria.monster.vo.MonsterId;
+import com.arcathoria.combat.vo.MonsterId;
 
 import java.util.UUID;
 

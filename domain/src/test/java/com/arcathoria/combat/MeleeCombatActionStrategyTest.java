@@ -1,6 +1,6 @@
 package com.arcathoria.combat;
 
-import com.arcathoria.character.vo.Level;
+import com.arcathoria.Level;
 import com.arcathoria.combat.exception.WrongTurnException;
 import com.arcathoria.combat.vo.CombatTurn;
 import com.arcathoria.combat.vo.ParticipantId;

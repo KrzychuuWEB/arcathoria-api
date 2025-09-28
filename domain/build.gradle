@@ -3,6 +3,6 @@ plugins {
 }
 
 dependencies {
+    implementation project(':shared-kernel')
     testImplementation project(':shared-test-helpers')
-    testImplementation project(':shared-kernel')
 }

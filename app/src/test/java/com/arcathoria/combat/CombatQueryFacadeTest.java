@@ -1,7 +1,7 @@
 package com.arcathoria.combat;
 
-import com.arcathoria.account.vo.AccountId;
 import com.arcathoria.combat.dto.CombatResultDTO;
+import com.arcathoria.combat.vo.AccountId;
 import com.arcathoria.combat.vo.CombatId;
 import com.arcathoria.combat.vo.ParticipantId;
 import org.junit.jupiter.api.Test;

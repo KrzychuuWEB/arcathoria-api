@@ -1,7 +1,7 @@
 package com.arcathoria.combat;
 
-import com.arcathoria.account.vo.AccountId;
 import com.arcathoria.character.dto.CharacterDTO;
+import com.arcathoria.combat.vo.AccountId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

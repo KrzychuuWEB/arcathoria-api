@@ -1,5 +1,7 @@
 package com.arcathoria.character.vo;
 
+import com.arcathoria.Level;
+
 import java.util.Objects;
 
 public record Intelligence(Level level) implements Attribute<Intelligence> {

@@ -1,12 +1,8 @@
 package com.arcathoria.monster;
 
-import com.arcathoria.character.vo.Gauge;
-import com.arcathoria.character.vo.Health;
-import com.arcathoria.character.vo.Intelligence;
-import com.arcathoria.character.vo.Level;
-import com.arcathoria.combat.vo.Attributes;
-import com.arcathoria.monster.vo.MonsterId;
-import com.arcathoria.monster.vo.MonsterName;
+import com.arcathoria.Gauge;
+import com.arcathoria.Level;
+import com.arcathoria.monster.vo.*;
 
 public final class MonsterSnapshotMother {
     public static final MonsterId DEFAULT_MONSTER_ID = new MonsterId(null);

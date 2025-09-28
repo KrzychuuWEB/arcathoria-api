@@ -1,6 +1,6 @@
 package com.arcathoria.combat;
 
-import com.arcathoria.account.vo.AccountId;
+import com.arcathoria.combat.vo.AccountId;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

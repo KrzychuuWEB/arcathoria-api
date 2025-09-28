@@ -4,6 +4,7 @@ plugins {
 
 dependencies {
     implementation project(':domain')
+    implementation project(':shared-kernel')
     implementation 'jakarta.validation:jakarta.validation-api:3.1.1'
     implementation 'org.apache.logging.log4j:log4j-api:2.24.3'
     testImplementation project(':shared-test-helpers')

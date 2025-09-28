@@ -1,13 +1,8 @@
 package com.arcathoria.combat;
 
-import com.arcathoria.character.vo.Gauge;
-import com.arcathoria.character.vo.Health;
-import com.arcathoria.character.vo.Intelligence;
-import com.arcathoria.character.vo.Level;
-import com.arcathoria.combat.vo.Attributes;
-import com.arcathoria.combat.vo.CombatId;
-import com.arcathoria.combat.vo.CombatTurn;
-import com.arcathoria.combat.vo.ParticipantId;
+import com.arcathoria.Gauge;
+import com.arcathoria.Level;
+import com.arcathoria.combat.vo.*;
 
 final class CombatMapper {
 

@@ -1,14 +1,14 @@
 package com.arcathoria.combat;
 
 import com.arcathoria.ApiException;
-import com.arcathoria.account.vo.AccountId;
 import com.arcathoria.character.dto.CharacterDTO;
 import com.arcathoria.combat.command.InitPVECombatCommand;
 import com.arcathoria.combat.exception.CombatParticipantUnavailableException;
 import com.arcathoria.combat.exception.OnlyOneActiveCombatAllowedException;
+import com.arcathoria.combat.vo.AccountId;
+import com.arcathoria.combat.vo.MonsterId;
 import com.arcathoria.monster.dto.MonsterDTO;
 import com.arcathoria.monster.exception.MonsterNotFoundException;
-import com.arcathoria.monster.vo.MonsterId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

@@ -1,4 +1,4 @@
-package com.arcathoria.character.vo;
+package com.arcathoria;
 
 import org.junit.jupiter.api.Test;
 

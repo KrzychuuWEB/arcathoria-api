@@ -11,6 +11,7 @@ configurations {
 }
 
 dependencies {
+    implementation project(':shared-kernel')
     implementation project(':app')
     implementation project(':domain')
     implementation 'org.springframework.boot:spring-boot-starter-web'

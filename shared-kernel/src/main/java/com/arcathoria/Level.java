@@ -1,4 +1,4 @@
-package com.arcathoria.character.vo;
+package com.arcathoria;
 
 public record Level(int value) {
 

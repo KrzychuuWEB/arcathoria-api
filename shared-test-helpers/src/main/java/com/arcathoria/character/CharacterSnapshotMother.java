@@ -1,8 +1,9 @@
 package com.arcathoria.character;
 
+import com.arcathoria.Gauge;
+import com.arcathoria.Level;
 import com.arcathoria.character.vo.*;
 import com.arcathoria.character.vo.CharacterName;
-import com.arcathoria.combat.vo.Attributes;
 
 import java.util.UUID;
 

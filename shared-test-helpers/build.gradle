@@ -5,6 +5,7 @@ plugins {
 dependencies {
     implementation project(':domain')
     implementation project(':app')
+    implementation project(':shared-kernel')
     implementation 'jakarta.validation:jakarta.validation-api:3.1.1'
     implementation 'org.hibernate.validator:hibernate-validator:8.0.0.Final'
     implementation 'org.glassfish:jakarta.el:5.0.0-M1'

@@ -1,10 +1,7 @@
 package com.arcathoria.character;
 
-import com.arcathoria.character.vo.AccountId;
-import com.arcathoria.character.vo.CharacterId;
+import com.arcathoria.character.vo.*;
 import com.arcathoria.character.vo.CharacterName;
-import com.arcathoria.character.vo.Health;
-import com.arcathoria.combat.vo.Attributes;
 
 class CharacterSnapshot {
 

@@ -1,13 +1,13 @@
 package com.arcathoria.combat;
 
+import com.arcathoria.Gauge;
+import com.arcathoria.Level;
 import com.arcathoria.character.dto.CharacterDTO;
-import com.arcathoria.character.vo.Gauge;
-import com.arcathoria.character.vo.Health;
-import com.arcathoria.character.vo.Intelligence;
-import com.arcathoria.character.vo.Level;
 import com.arcathoria.combat.dto.CombatResultDTO;
 import com.arcathoria.combat.dto.ParticipantDTO;
 import com.arcathoria.combat.vo.Attributes;
+import com.arcathoria.combat.vo.Health;
+import com.arcathoria.combat.vo.Intelligence;
 import com.arcathoria.combat.vo.ParticipantId;
 import com.arcathoria.monster.dto.MonsterDTO;
 
