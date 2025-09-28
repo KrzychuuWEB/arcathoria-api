@@ -6,7 +6,7 @@ import com.arcathoria.character.vo.CharacterId;
 
 import java.util.UUID;
 
-public final class SelectCharacterCommandMother {
+final class SelectCharacterCommandMother {
     static final AccountId DEFAULT_ACCOUNT_ID = new AccountId(UUID.randomUUID());
     static final CharacterId DEFAULT_CHARACTER_ID = new CharacterId(UUID.randomUUID());
 
@@ -16,21 +16,21 @@ public final class SelectCharacterCommandMother {
     private SelectCharacterCommandMother() {
     }
 
-    public static SelectCharacterCommandMother aSelectCharacterCommand() {
+    static SelectCharacterCommandMother aSelectCharacterCommand() {
         return new SelectCharacterCommandMother();
     }
 
-    public SelectCharacterCommandMother withAccountId(AccountId accountId) {
+    SelectCharacterCommandMother withAccountId(AccountId accountId) {
         this.accountId = accountId;
         return this;
     }
 
-    public SelectCharacterCommandMother withCharacterId(CharacterId characterId) {
+    SelectCharacterCommandMother withCharacterId(CharacterId characterId) {
         this.characterId = characterId;
         return this;
     }
 
-    public SelectCharacterCommand build() {
+    SelectCharacterCommand build() {
         return new SelectCharacterCommand(accountId, characterId);
     }
 }

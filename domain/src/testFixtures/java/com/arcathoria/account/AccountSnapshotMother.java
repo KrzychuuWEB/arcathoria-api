@@ -6,7 +6,7 @@ import com.arcathoria.account.vo.HashedPassword;
 
 import java.util.UUID;
 
-public class AccountSnapshotMother {
+class AccountSnapshotMother {
     static final UUID DEFAULT_ACCOUNT_ID = UUID.randomUUID();
     static final String DEFAULT_EMAIL = "default@email.com";
     static final String DEFAULT_HASHED_PASSWORD = "secret";

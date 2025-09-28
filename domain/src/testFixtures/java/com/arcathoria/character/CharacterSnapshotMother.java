@@ -7,7 +7,7 @@ import com.arcathoria.character.vo.CharacterName;
 
 import java.util.UUID;
 
-public class CharacterSnapshotMother {
+class CharacterSnapshotMother {
 
     static final String DEFAULT_CHARACTER_NAME = "Example_Character-Name";
     static final UUID DEFAULT_ACCOUNT_ID = UUID.randomUUID();

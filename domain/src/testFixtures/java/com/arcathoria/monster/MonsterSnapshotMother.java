@@ -4,7 +4,7 @@ import com.arcathoria.Gauge;
 import com.arcathoria.Level;
 import com.arcathoria.monster.vo.*;
 
-public final class MonsterSnapshotMother {
+final class MonsterSnapshotMother {
     public static final MonsterId DEFAULT_MONSTER_ID = new MonsterId(null);
     public static final MonsterName DEFAULT_MONSTER_NAME = new MonsterName("Wolf");
     public static final Health DEFAULT_HEALTH = new Health(new Gauge(100, 100));
