@@ -29,7 +29,7 @@ class CharacterOwnershipValidatorTest {
         Character result = ownershipValidator.validate(character, accountId);
 
         assertThat(result).isNotNull();
-        assertThat(result.getSnapshot().getCharacterId().value()).isEqualTo(CharacterSnapshotMother.DEFAULT_CHARACTER_ID);
+        assertThat(result.getSnapshot().getCharacterId()).isEqualTo(character.getSnapshot().getCharacterId());
         assertThat(result.getSnapshot().getAccountId()).isEqualTo(accountId);
     }
 

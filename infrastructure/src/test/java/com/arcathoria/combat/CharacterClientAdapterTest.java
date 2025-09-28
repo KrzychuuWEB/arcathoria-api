@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.UUID;
 
 import static com.arcathoria.account.JwtTokenDecodeHelper.extractAccountId;
+import static com.arcathoria.auth.GetJwtTokenHelper.extractToken;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -46,7 +47,7 @@ class CharacterClientAdapterTest extends IntegrationTestContainersConfig {
         CreateCharacterDTO newCharacter = CreateCharacterDTOMother.aCreateCharacterDTO().withCharacterName("combat" + UUIDGenerator.generate(5)).build();
         HttpHeaders headers = accountManagerE2EHelper.registerAndGetAuthHeaders("combatCharacterClientGet@email.com");
         ResponseEntity<CharacterDTO> createCharacterResponse = createCharacterE2EHelper.create(newCharacter, headers);
-        String token = headers.getFirst(HttpHeaders.AUTHORIZATION).substring("Bearer ".length());
+        String token = extractToken(headers);
         UUID accountId = UUID.fromString(extractAccountId(token));
         CharacterDTO characterDTO = selectCharacterE2EHelper.selectCharacter(createCharacterResponse.getBody().id(), headers);
 

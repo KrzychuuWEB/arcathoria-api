@@ -18,7 +18,8 @@ class CharacterSnapshot {
             final CharacterId characterId,
             final AccountId accountId,
             final CharacterName characterName,
-            final Health health, final Attributes attributes
+            final Health health,
+            final Attributes attributes
     ) {
         this.characterId = characterId;
         this.accountId = accountId;

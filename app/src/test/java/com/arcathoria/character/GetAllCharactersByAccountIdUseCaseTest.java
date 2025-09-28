@@ -1,6 +1,5 @@
 package com.arcathoria.character;
 
-import com.arcathoria.account.AccountQueryFacade;
 import com.arcathoria.account.dto.AccountDTO;
 import com.arcathoria.account.exception.AccountNotFoundException;
 import com.arcathoria.account.vo.AccountId;
@@ -28,7 +27,7 @@ class GetAllCharactersByAccountIdUseCaseTest {
     private CharacterQueryRepository characterQueryRepository;
 
     @Mock
-    private AccountQueryFacade accountQueryFacade;
+    private AccountClient accountClient;
 
     @InjectMocks
     private GetAllCharactersByAccountIdUseCase getAllCharactersByAccountIdUseCase;
@@ -39,7 +38,7 @@ class GetAllCharactersByAccountIdUseCaseTest {
 
         List<Character> characters = sortedCharacterList(accountDTO.id());
 
-        when(accountQueryFacade.getById(any(UUID.class))).thenReturn(accountDTO);
+        when(accountClient.getById(any(AccountId.class))).thenReturn(accountDTO);
         when(characterQueryRepository.getAllByAccountId(any(AccountId.class))).thenReturn(characters);
 
         List<Character> result = getAllCharactersByAccountIdUseCase.execute(new AccountId(accountDTO.id()));
@@ -48,7 +47,7 @@ class GetAllCharactersByAccountIdUseCaseTest {
         assertThat(result.get(0).getSnapshot().getCharacterName()).isEqualTo(characters.get(0).getSnapshot().getCharacterName());
         assertThat(result.get(1).getSnapshot().getCharacterName()).isEqualTo(characters.get(1).getSnapshot().getCharacterName());
 
-        verify(accountQueryFacade).getById(any(UUID.class));
+        verify(accountClient).getById(any(AccountId.class));
         verify(characterQueryRepository).getAllByAccountId(any(AccountId.class));
     }
 
@@ -56,7 +55,7 @@ class GetAllCharactersByAccountIdUseCaseTest {
     void should_return_empty_list_when_account_exists() {
         AccountDTO accountDTO = getAccountDto();
 
-        when(accountQueryFacade.getById(any(UUID.class))).thenReturn(accountDTO);
+        when(accountClient.getById(any(AccountId.class))).thenReturn(accountDTO);
         when(characterQueryRepository.getAllByAccountId(any(AccountId.class))).thenReturn(List.of());
 
         List<Character> result = getAllCharactersByAccountIdUseCase.execute(new AccountId(accountDTO.id()));
@@ -68,11 +67,11 @@ class GetAllCharactersByAccountIdUseCaseTest {
     void should_throw_AccountNotFoundException_when_account_does_not_exist() {
         AccountDTO accountDTO = getAccountDto();
 
-        when(accountQueryFacade.getById(any(UUID.class))).thenThrow(AccountNotFoundException.class);
+        when(accountClient.getById(any(AccountId.class))).thenThrow(AccountNotFoundException.class);
 
         assertThatThrownBy(() -> getAllCharactersByAccountIdUseCase.execute(new AccountId(accountDTO.id()))).isInstanceOf(AccountNotFoundException.class);
 
-        verify(accountQueryFacade).getById(any(UUID.class));
+        verify(accountClient).getById(any(AccountId.class));
     }
 
     private AccountDTO getAccountDto() {

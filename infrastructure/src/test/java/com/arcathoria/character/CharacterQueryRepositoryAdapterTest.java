@@ -1,13 +1,10 @@
 package com.arcathoria.character;
 
 import com.arcathoria.IntegrationTestContainersConfig;
-import com.arcathoria.account.AccountFacade;
-import com.arcathoria.account.dto.AccountDTO;
-import com.arcathoria.account.dto.RegisterDTO;
+import com.arcathoria.UUIDGenerator;
 import com.arcathoria.account.vo.AccountId;
 import com.arcathoria.character.vo.CharacterId;
 import com.arcathoria.character.vo.CharacterName;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,15 +16,11 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@Transactional
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CharacterQueryRepositoryAdapterTest extends IntegrationTestContainersConfig {
 
     @Autowired
     private CharacterRepository repository;
-
-    @Autowired
-    private AccountFacade accountFacade;
 
     @Autowired
     private CharacterQueryRepositoryAdapter queryRepository;
@@ -36,7 +29,7 @@ class CharacterQueryRepositoryAdapterTest extends IntegrationTestContainersConfi
     void should_return_true_if_character_name_exist() {
         Character character = Character.restore(
                 CharacterSnapshotMother.create()
-                        .withAccountId(getAccount().id())
+                        .withAccountId(getAccount().value())
                         .withCharacterName("existCharacterName")
                         .build()
         );
@@ -51,8 +44,8 @@ class CharacterQueryRepositoryAdapterTest extends IntegrationTestContainersConfi
     void should_return_false_if_character_name_not_exist() {
         Character character = Character.restore(
                 CharacterSnapshotMother.create()
-                        .withAccountId(getAccount().id())
-                        .withCharacterName("characterName")
+                        .withAccountId(getAccount().value())
+                        .withCharacterName(generateRandomCharacterName().value())
                         .build()
         );
         repository.save(character);
@@ -64,14 +57,14 @@ class CharacterQueryRepositoryAdapterTest extends IntegrationTestContainersConfi
 
     @Test
     void should_return_all_characters_by_account_id() {
-        UUID accountId = getAccount().id();
-        UUID otherAccountId = getAccount().id();
+        UUID accountId = getAccount().value();
+        UUID otherAccountId = getAccount().value();
 
         List<Character> characters = getCharactersList(accountId);
 
         repository.save(Character.restore(CharacterSnapshotMother.create()
                 .withAccountId(otherAccountId)
-                .withCharacterName("characterName")
+                .withCharacterName(generateRandomCharacterName().value())
                 .build()
         ));
 
@@ -92,7 +85,7 @@ class CharacterQueryRepositoryAdapterTest extends IntegrationTestContainersConfi
     void should_get_character_by_id() {
         Character character = repository.save(Character.restore(CharacterSnapshotMother.create()
                 .withAccountId(UUID.randomUUID())
-                .withCharacterName("characterName")
+                .withCharacterName(generateRandomCharacterName().value())
                 .build()
         ));
 
@@ -110,7 +103,7 @@ class CharacterQueryRepositoryAdapterTest extends IntegrationTestContainersConfi
         assertThat(result).isEmpty();
     }
 
-    private CharacterSnapshot sortedCharacterAndGetByIndex(List<Character> characters, Integer index) {
+    private CharacterSnapshot sortedCharacterAndGetByIndex(final List<Character> characters, final Integer index) {
         List<Character> list = characters.stream()
                 .sorted(Comparator.comparing(character -> character.getSnapshot().getCharacterName().value()))
                 .toList();
@@ -118,24 +111,26 @@ class CharacterQueryRepositoryAdapterTest extends IntegrationTestContainersConfi
         return list.get(index).getSnapshot();
     }
 
-    private List<Character> getCharactersList(UUID accountId) {
+    private List<Character> getCharactersList(final UUID accountId) {
         return List.of(
                 repository.save(Character.restore(CharacterSnapshotMother.create()
                         .withAccountId(accountId)
-                        .withCharacterName("characterName")
+                        .withCharacterName(generateRandomCharacterName().value())
                         .build()
                 )),
                 repository.save(Character.restore(CharacterSnapshotMother.create()
                         .withAccountId(accountId)
-                        .withCharacterName("characterName")
+                        .withCharacterName(generateRandomCharacterName().value())
                         .build()
                 ))
         );
     }
 
-    private AccountDTO getAccount() {
-        return accountFacade.createNewAccount(
-                new RegisterDTO("test_" + UUID.randomUUID() + "@email.com", "secretPassword123")
-        );
+    private AccountId getAccount() {
+        return new AccountId(UUID.randomUUID());
+    }
+
+    private CharacterName generateRandomCharacterName() {
+        return new CharacterName("char_name_" + UUIDGenerator.generate(5));
     }
 }

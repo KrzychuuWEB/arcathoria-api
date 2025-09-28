@@ -9,11 +9,10 @@ import java.util.UUID;
 
 public class CharacterSnapshotMother {
 
-    static final UUID DEFAULT_CHARACTER_ID = null;
     static final String DEFAULT_CHARACTER_NAME = "Example_Character-Name";
-    static final UUID DEFAULT_ACCOUNT_ID = null;
+    static final UUID DEFAULT_ACCOUNT_ID = UUID.randomUUID();
 
-    private CharacterId characterId = new CharacterId(DEFAULT_CHARACTER_ID);
+    private CharacterId characterId = new CharacterId(null);
     private CharacterName characterName = new CharacterName(DEFAULT_CHARACTER_NAME);
     private AccountId accountId = new AccountId(DEFAULT_ACCOUNT_ID);
     private final Health health = new Health(new Gauge(100, 100));
@@ -22,7 +21,9 @@ public class CharacterSnapshotMother {
     );
 
     static CharacterSnapshotMother create() {
-        return new CharacterSnapshotMother();
+        CharacterSnapshotMother mother = new CharacterSnapshotMother();
+        mother.characterId = new CharacterId(UUID.randomUUID());
+        return mother;
     }
 
     CharacterSnapshotMother withCharacterId(final UUID uuid) {

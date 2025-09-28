@@ -45,7 +45,7 @@ class AccountQueryRepositoryAdapterTest extends IntegrationTestContainersConfig 
     @Test
     void should_return_true_if_email_exists() {
         Email usedEmail = new Email("used@email.com");
-        persistAccount(AccountSnapshotMother.create().withAccountId(null).withEmail(usedEmail.value()).build());
+        persistAccount(AccountSnapshotMother.create().withEmail(usedEmail.value()).build());
 
         boolean result = accountQueryRepositoryAdapter.existsByEmail(usedEmail);
 
@@ -55,7 +55,7 @@ class AccountQueryRepositoryAdapterTest extends IntegrationTestContainersConfig 
     @Test
     void should_return_account_by_id() {
         Email accountEmail = new Email("example@email.com");
-        Account account = persistAccount(AccountSnapshotMother.create().withEmail(accountEmail.value()).withAccountId(null).build());
+        Account account = persistAccount(AccountSnapshotMother.create().withEmail(accountEmail.value()).build());
 
         AccountId accountId = account.getSnapshot().getAccountId();
 
@@ -75,7 +75,7 @@ class AccountQueryRepositoryAdapterTest extends IntegrationTestContainersConfig 
         assertThat(result).isFalse();
     }
 
-    private Account persistAccount(AccountSnapshot snapshot) {
+    private Account persistAccount(final AccountSnapshot snapshot) {
         return accountRepositoryAdapter.save(
                 Account.restore(snapshot)
         );

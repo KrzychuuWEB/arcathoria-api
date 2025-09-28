@@ -17,7 +17,6 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,7 +32,6 @@ class CharacterControllerE2ETest extends IntegrationTestContainersConfig {
     private TestRestTemplate restTemplate;
 
     private AccountManagerE2EHelper accountManagerE2EHelper;
-
     private CreateCharacterE2EHelper createCharacterE2EHelper;
 
     @BeforeEach
@@ -74,12 +72,20 @@ class CharacterControllerE2ETest extends IntegrationTestContainersConfig {
 
     @Test
     void should_return_all_account_characters() {
+        HttpHeaders otherAccount = accountManagerE2EHelper.registerAndGetAuthHeaders("getAll" + UUIDGenerator.generate(5) + "@email.com");
         HttpHeaders headers = accountManagerE2EHelper.registerAndGetAuthHeaders("getAllCharacters@email.com");
 
-        List<CharacterDTO> characters = List.of(
-                Objects.requireNonNull(createCharacterE2EHelper.create(CreateCharacterDTOMother.aCreateCharacterDTO().withCharacterName(randomCharacterName).build(), headers).getBody()),
-                Objects.requireNonNull(createCharacterE2EHelper.create(CreateCharacterDTOMother.aCreateCharacterDTO().withCharacterName(randomCharacterName + "1").build(), headers).getBody())
-        );
+        ResponseEntity<CharacterDTO> createCharacterForOtherAccount = createCharacterE2EHelper.create(
+                CreateCharacterDTOMother.aCreateCharacterDTO().withCharacterName(randomCharacterName + UUIDGenerator.generate(5)).build(), otherAccount);
+        ResponseEntity<CharacterDTO> character1 = createCharacterE2EHelper.create(
+                CreateCharacterDTOMother.aCreateCharacterDTO().withCharacterName(randomCharacterName + UUIDGenerator.generate(5)).build(), headers);
+        ResponseEntity<CharacterDTO> character2 = createCharacterE2EHelper.create(
+                CreateCharacterDTOMother.aCreateCharacterDTO().withCharacterName(randomCharacterName + UUIDGenerator.generate(5)).build(), headers);
+
+        assertThat(character1.getBody()).isNotNull();
+        assertThat(character2.getBody()).isNotNull();
+
+        List<CharacterDTO> characters = List.of(character1.getBody(), character2.getBody());
 
         HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
 
@@ -91,12 +97,18 @@ class CharacterControllerE2ETest extends IntegrationTestContainersConfig {
                 }
         );
 
+        assertThat(createCharacterForOtherAccount.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(character1.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(character2.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(response.getBody()).isNotEmpty();
         assertThat(response.getBody()).hasSameSizeAs(characters);
     }
 
     @Test
     void should_return_empty_list_if_account_not_have_characters() {
+        HttpHeaders otherAccount = accountManagerE2EHelper.registerAndGetAuthHeaders("getAllCharacters@email.com");
+        createCharacterE2EHelper.create(CreateCharacterDTOMother.aCreateCharacterDTO().withCharacterName(randomCharacterName).build(), otherAccount);
+
         HttpHeaders headers = accountManagerE2EHelper.registerAndGetAuthHeaders("getEmptyListForGetAllCharacters@email.com");
         HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
 
