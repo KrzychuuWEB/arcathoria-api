@@ -2,9 +2,9 @@ package com.arcathoria.character;
 
 import com.arcathoria.account.dto.AccountDTO;
 import com.arcathoria.account.exception.AccountNotFoundException;
-import com.arcathoria.account.vo.AccountId;
 import com.arcathoria.character.command.CreateCharacterCommand;
 import com.arcathoria.character.exception.CharacterNameExistsException;
+import com.arcathoria.character.vo.AccountId;
 import com.arcathoria.character.vo.CharacterName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

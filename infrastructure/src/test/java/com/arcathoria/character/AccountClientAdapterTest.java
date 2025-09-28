@@ -4,7 +4,7 @@ import com.arcathoria.IntegrationTestContainersConfig;
 import com.arcathoria.UUIDGenerator;
 import com.arcathoria.account.AccountManagerE2EHelper;
 import com.arcathoria.account.dto.AccountDTO;
-import com.arcathoria.account.vo.AccountId;
+import com.arcathoria.character.vo.AccountId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

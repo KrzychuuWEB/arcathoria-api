@@ -1,7 +1,7 @@
 package com.arcathoria.character;
 
 import com.arcathoria.IntegrationTestContainersConfig;
-import com.arcathoria.account.vo.AccountId;
+import com.arcathoria.character.vo.AccountId;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

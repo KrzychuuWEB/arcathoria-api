@@ -1,9 +1,9 @@
 package com.arcathoria.character;
 
-import com.arcathoria.account.vo.AccountId;
+import com.arcathoria.character.vo.AccountId;
 
 class RemoveSelectedCharacterUseCase {
-    
+
     private final SelectCharacterCachePort selectCharacterCachePort;
     private final GetSelectedCharacterFromCacheUseCase getSelectedCharacterFromCacheUseCase;
 

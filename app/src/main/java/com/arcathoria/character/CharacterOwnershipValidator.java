@@ -1,6 +1,6 @@
 package com.arcathoria.character;
 
-import com.arcathoria.account.vo.AccountId;
+import com.arcathoria.character.vo.AccountId;
 import com.arcathoria.exception.AccessDeniedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

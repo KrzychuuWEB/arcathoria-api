@@ -2,7 +2,7 @@ package com.arcathoria.character;
 
 import com.arcathoria.account.AccountQueryFacade;
 import com.arcathoria.account.dto.AccountDTO;
-import com.arcathoria.account.vo.AccountId;
+import com.arcathoria.character.vo.AccountId;
 import org.springframework.stereotype.Component;
 
 @Component

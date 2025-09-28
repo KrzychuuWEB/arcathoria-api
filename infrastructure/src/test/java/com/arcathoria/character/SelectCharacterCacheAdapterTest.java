@@ -1,8 +1,8 @@
 package com.arcathoria.character;
 
 import com.arcathoria.IntegrationTestContainersConfig;
-import com.arcathoria.account.vo.AccountId;
 import com.arcathoria.character.exception.SelectedCharacterNotFoundException;
+import com.arcathoria.character.vo.AccountId;
 import com.arcathoria.character.vo.CharacterId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

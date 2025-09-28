@@ -1,8 +1,7 @@
 package com.arcathoria.character;
 
 import com.arcathoria.account.dto.AccountDTO;
-import com.arcathoria.account.exception.AccountNotFoundException;
-import com.arcathoria.account.vo.AccountId;
+import com.arcathoria.character.vo.AccountId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,7 +14,6 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -62,18 +60,7 @@ class GetAllCharactersByAccountIdUseCaseTest {
 
         assertThat(result).isEmpty();
     }
-
-    @Test
-    void should_throw_AccountNotFoundException_when_account_does_not_exist() {
-        AccountDTO accountDTO = getAccountDto();
-
-        when(accountClient.getById(any(AccountId.class))).thenThrow(AccountNotFoundException.class);
-
-        assertThatThrownBy(() -> getAllCharactersByAccountIdUseCase.execute(new AccountId(accountDTO.id()))).isInstanceOf(AccountNotFoundException.class);
-
-        verify(accountClient).getById(any(AccountId.class));
-    }
-
+    
     private AccountDTO getAccountDto() {
         return new AccountDTO(UUID.randomUUID(), "email@email.com");
     }

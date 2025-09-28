@@ -2,7 +2,7 @@ package com.arcathoria.character;
 
 import com.arcathoria.IntegrationTestContainersConfig;
 import com.arcathoria.UUIDGenerator;
-import com.arcathoria.account.vo.AccountId;
+import com.arcathoria.character.vo.AccountId;
 import com.arcathoria.character.vo.CharacterId;
 import com.arcathoria.character.vo.CharacterName;
 import org.junit.jupiter.api.Test;

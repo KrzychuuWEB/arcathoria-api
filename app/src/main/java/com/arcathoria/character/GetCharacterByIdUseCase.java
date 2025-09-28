@@ -1,7 +1,7 @@
 package com.arcathoria.character;
 
-import com.arcathoria.account.vo.AccountId;
 import com.arcathoria.character.exception.CharacterNotFoundException;
+import com.arcathoria.character.vo.AccountId;
 import com.arcathoria.character.vo.CharacterId;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

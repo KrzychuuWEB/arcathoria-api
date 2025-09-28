@@ -1,7 +1,7 @@
 package com.arcathoria.character;
 
-import com.arcathoria.account.vo.AccountId;
 import com.arcathoria.character.exception.SelectedCharacterNotFoundException;
+import com.arcathoria.character.vo.AccountId;
 import com.arcathoria.character.vo.CharacterId;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;

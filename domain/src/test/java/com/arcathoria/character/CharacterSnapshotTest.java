@@ -1,6 +1,6 @@
 package com.arcathoria.character;
 
-import com.arcathoria.account.vo.AccountId;
+import com.arcathoria.character.vo.AccountId;
 import com.arcathoria.character.vo.CharacterId;
 import org.junit.jupiter.api.Test;
 

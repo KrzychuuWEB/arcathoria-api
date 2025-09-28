@@ -1,6 +1,5 @@
 package com.arcathoria.character;
 
-import com.arcathoria.account.vo.AccountId;
 import com.arcathoria.character.vo.*;
 import com.arcathoria.character.vo.CharacterName;
 import com.arcathoria.combat.vo.Attributes;
