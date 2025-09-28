@@ -48,7 +48,8 @@ final class CombatDTOMapper {
     static ParticipantDTO fromParticipantSnapshotToParticipantDTO(final ParticipantSnapshot snapshot) {
         return new ParticipantDTO(
                 snapshot.participantId().value(),
-                snapshot.health().getCurrent()
+                snapshot.health().getCurrent(),
+                snapshot.health().getMax()
         );
     }
 }

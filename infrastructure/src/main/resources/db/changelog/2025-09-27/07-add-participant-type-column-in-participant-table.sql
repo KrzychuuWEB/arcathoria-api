@@ -2,4 +2,4 @@
 
 --changeset krzysztof:6
 ALTER TABLE participants
-ADD COLUMN participantType VARCHAR(15);
+ADD COLUMN participant_type VARCHAR(15);
