@@ -1,5 +1,6 @@
 package com.arcathoria.combat;
 
+import com.arcathoria.combat.dto.CombatIdDTO;
 import com.arcathoria.combat.dto.CombatResultDTO;
 import com.arcathoria.combat.vo.AccountId;
 import com.arcathoria.combat.vo.CombatId;
@@ -40,9 +41,9 @@ class CombatQueryFacadeTest {
         when(participantService.getCharacterByAccountId(any(AccountId.class))).thenReturn(participant);
         when(getActiveCombatIdByParticipantId.getActiveCombat(participant.getId())).thenReturn(combat.getSnapshot().combatId());
 
-        UUID result = combatQueryFacade.getActiveCombatForSelectedCharacterByAccountId(participant.getId().value());
+        CombatIdDTO result = combatQueryFacade.getActiveCombatForSelectedCharacterByAccountId(participant.getId().value());
 
-        assertThat(result).isEqualTo(combat.getSnapshot().combatId().value());
+        assertThat(result.combatId()).isEqualTo(combat.getSnapshot().combatId().value());
 
         verify(getActiveCombatIdByParticipantId).getActiveCombat(participant.getId());
         verify(participantService).getCharacterByAccountId(any(AccountId.class));

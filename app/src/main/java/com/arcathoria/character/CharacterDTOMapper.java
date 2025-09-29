@@ -22,12 +22,15 @@ final class CharacterDTOMapper {
 
     static List<CharacterDTO> toCharacterDTOList(final List<Character> characters) {
         return characters.stream()
-                .map(character -> new CharacterDTO(
-                        character.getSnapshot().getCharacterId().value(),
-                        character.getSnapshot().getCharacterName().value(),
-                        character.getSnapshot().getHealth().getMax(),
-                        character.getSnapshot().getAttributes().intelligence().level().value()
-                ))
+                .map(character -> {
+                    CharacterSnapshot snapshot = character.getSnapshot();
+                    return new CharacterDTO(
+                            snapshot.getCharacterId().value(),
+                            snapshot.getCharacterName().value(),
+                            snapshot.getHealth().getMax(),
+                            snapshot.getAttributes().intelligence().level().value()
+                    );
+                })
                 .toList();
     }
 

@@ -3,7 +3,6 @@ package com.arcathoria.auth;
 import com.arcathoria.ApiErrorResponse;
 import com.arcathoria.IntegrationTestContainersConfig;
 import com.arcathoria.account.AccountManagerE2EHelper;
-import com.arcathoria.account.RegisterDTOMother;
 import com.arcathoria.account.dto.RegisterDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,7 +34,7 @@ class AuthControllerE2ETest extends IntegrationTestContainersConfig {
 
     @Test
     void should_authenticate_success_and_return_token() {
-        RegisterDTO registerDTO = RegisterDTOMother.aRegisterDTO().withEmail("authAccountSuccessAuth@email.com").build();
+        RegisterDTO registerDTO = new RegisterDTO("authAccountSuccessAuth@email.com", "examplePassword");
         AuthRequestDTO authRequestDTO = new AuthRequestDTO(registerDTO.email(), registerDTO.password());
 
         accountManagerE2EHelper.register(registerDTO);

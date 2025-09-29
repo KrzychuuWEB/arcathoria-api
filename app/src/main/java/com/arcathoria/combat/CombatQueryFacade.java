@@ -1,5 +1,6 @@
 package com.arcathoria.combat;
 
+import com.arcathoria.combat.dto.CombatIdDTO;
 import com.arcathoria.combat.dto.CombatResultDTO;
 import com.arcathoria.combat.vo.AccountId;
 import com.arcathoria.combat.vo.CombatId;
@@ -23,10 +24,10 @@ public class CombatQueryFacade {
         this.getCombatFromStoreByIdAndParticipantId = getCombatFromStoreByIdAndParticipantId;
     }
 
-    public UUID getActiveCombatForSelectedCharacterByAccountId(final UUID accountId) {
+    public CombatIdDTO getActiveCombatForSelectedCharacterByAccountId(final UUID accountId) {
         ParticipantId participantId = combatParticipantService.getCharacterByAccountId(new AccountId(accountId)).getId();
 
-        return getActiveCombatIdByParticipantId.getActiveCombat(participantId).value();
+        return new CombatIdDTO(getActiveCombatIdByParticipantId.getActiveCombat(participantId).value());
     }
 
     public CombatResultDTO getCombatByIdAndParticipantId(final UUID combatId, final UUID accountId) {

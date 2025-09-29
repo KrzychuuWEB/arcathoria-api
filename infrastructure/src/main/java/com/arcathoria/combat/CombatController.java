@@ -51,7 +51,7 @@ class CombatController {
     @GetMapping("/active")
     @ResponseStatus(HttpStatus.OK)
     CombatIdDTO getActiveCombatByParticipantId(@AuthenticationPrincipal MyUserDetails userDetails) {
-        return new CombatIdDTO(combatQueryFacade.getActiveCombatForSelectedCharacterByAccountId(userDetails.getId()));
+        return combatQueryFacade.getActiveCombatForSelectedCharacterByAccountId(userDetails.getId());
     }
 
     @GetMapping("/{id}")
