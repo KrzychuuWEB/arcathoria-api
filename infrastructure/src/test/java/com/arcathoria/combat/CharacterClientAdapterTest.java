@@ -3,11 +3,12 @@ package com.arcathoria.combat;
 import com.arcathoria.IntegrationTestContainersConfig;
 import com.arcathoria.UUIDGenerator;
 import com.arcathoria.account.AccountManagerE2EHelper;
-import com.arcathoria.character.CreateCharacterDTOMother;
 import com.arcathoria.character.CreateCharacterE2EHelper;
 import com.arcathoria.character.SelectCharacterE2EHelper;
 import com.arcathoria.character.dto.CharacterDTO;
 import com.arcathoria.character.dto.CreateCharacterDTO;
+import com.arcathoria.combat.dto.ParticipantView;
+import com.arcathoria.combat.vo.AccountId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,17 +45,17 @@ class CharacterClientAdapterTest extends IntegrationTestContainersConfig {
 
     @Test
     void should_get_selected_character_by_account_id() {
-        CreateCharacterDTO newCharacter = CreateCharacterDTOMother.aCreateCharacterDTO().withCharacterName("combat" + UUIDGenerator.generate(5)).build();
+        CreateCharacterDTO newCharacter = new CreateCharacterDTO("charName_" + UUIDGenerator.generate(5));
         HttpHeaders headers = accountManagerE2EHelper.registerAndGetAuthHeaders("combatCharacterClientGet@email.com");
         ResponseEntity<CharacterDTO> createCharacterResponse = createCharacterE2EHelper.create(newCharacter, headers);
         String token = extractToken(headers);
-        UUID accountId = UUID.fromString(extractAccountId(token));
+        AccountId accountId = new AccountId(UUID.fromString(extractAccountId(token)));
         CharacterDTO characterDTO = selectCharacterE2EHelper.selectCharacter(createCharacterResponse.getBody().id(), headers);
 
         System.out.println(createCharacterResponse.getBody());
-        CharacterDTO result = characterClientAdapter.getSelectedCharacterByAccountId(accountId);
+        ParticipantView result = characterClientAdapter.getSelectedCharacterByAccountId(accountId);
 
         assertThat(result.id()).isEqualTo(characterDTO.id());
-        assertThat(result.characterName()).isEqualTo(characterDTO.characterName());
+        assertThat(result.name()).isEqualTo(characterDTO.characterName());
     }
 }

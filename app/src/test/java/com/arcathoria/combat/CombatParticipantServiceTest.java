@@ -1,14 +1,12 @@
 package com.arcathoria.combat;
 
-import com.arcathoria.character.dto.CharacterDTO;
+import com.arcathoria.combat.dto.ParticipantView;
 import com.arcathoria.combat.vo.AccountId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -25,9 +23,9 @@ class CombatParticipantServiceTest {
 
     @Test
     void should_return_character_by_account_id() {
-        CharacterDTO characterDTO = mapToCharacterDTO(Participant.restore(ParticipantSnapshotMother.aParticipantBuilder().build()));
+        ParticipantView characterDTO = mapToParticipantView(Participant.restore(ParticipantSnapshotMother.aParticipantBuilder().build()));
 
-        when(characterClient.getSelectedCharacterByAccountId(any(UUID.class))).thenReturn(characterDTO);
+        when(characterClient.getSelectedCharacterByAccountId(any(AccountId.class))).thenReturn(characterDTO);
 
         Participant result = combatParticipantService.getCharacterByAccountId(new AccountId(characterDTO.id()));
 
@@ -36,12 +34,13 @@ class CombatParticipantServiceTest {
         assertThat(result.getIntelligenceLevel()).isEqualTo(characterDTO.intelligence());
     }
 
-    private CharacterDTO mapToCharacterDTO(final Participant participant) {
-        return new CharacterDTO(
+    private ParticipantView mapToParticipantView(final Participant participant) {
+        return new ParticipantView(
                 participant.getId().value(),
                 participant.getId().value().toString(),
                 participant.getHealth().getMax(),
-                participant.getIntelligenceLevel()
+                participant.getIntelligenceLevel(),
+                participant.getSnapshot().participantType()
         );
     }
 }

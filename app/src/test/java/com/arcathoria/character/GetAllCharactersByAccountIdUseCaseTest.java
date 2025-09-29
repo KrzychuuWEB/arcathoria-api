@@ -1,6 +1,6 @@
 package com.arcathoria.character;
 
-import com.arcathoria.account.dto.AccountDTO;
+import com.arcathoria.character.dto.AccountView;
 import com.arcathoria.character.vo.AccountId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,14 +32,14 @@ class GetAllCharactersByAccountIdUseCaseTest {
 
     @Test
     void should_return_character_list_when_account_exists() {
-        AccountDTO accountDTO = getAccountDto();
+        AccountView accountView = getAccountView();
 
-        List<Character> characters = sortedCharacterList(accountDTO.id());
+        List<Character> characters = sortedCharacterList(accountView.accountId());
 
-        when(accountClient.getById(any(AccountId.class))).thenReturn(accountDTO);
+        when(accountClient.getById(any(AccountId.class))).thenReturn(accountView);
         when(characterQueryRepository.getAllByAccountId(any(AccountId.class))).thenReturn(characters);
 
-        List<Character> result = getAllCharactersByAccountIdUseCase.execute(new AccountId(accountDTO.id()));
+        List<Character> result = getAllCharactersByAccountIdUseCase.execute(new AccountId(accountView.accountId()));
 
         assertThat(result).hasSameSizeAs(characters);
         assertThat(result.get(0).getSnapshot().getCharacterName()).isEqualTo(characters.get(0).getSnapshot().getCharacterName());
@@ -51,18 +51,18 @@ class GetAllCharactersByAccountIdUseCaseTest {
 
     @Test
     void should_return_empty_list_when_account_exists() {
-        AccountDTO accountDTO = getAccountDto();
+        AccountView accountView = getAccountView();
 
-        when(accountClient.getById(any(AccountId.class))).thenReturn(accountDTO);
+        when(accountClient.getById(any(AccountId.class))).thenReturn(accountView);
         when(characterQueryRepository.getAllByAccountId(any(AccountId.class))).thenReturn(List.of());
 
-        List<Character> result = getAllCharactersByAccountIdUseCase.execute(new AccountId(accountDTO.id()));
+        List<Character> result = getAllCharactersByAccountIdUseCase.execute(new AccountId(accountView.accountId()));
 
         assertThat(result).isEmpty();
     }
-    
-    private AccountDTO getAccountDto() {
-        return new AccountDTO(UUID.randomUUID(), "email@email.com");
+
+    private AccountView getAccountView() {
+        return new AccountView(UUID.randomUUID());
     }
 
     private List<Character> sortedCharacterList(UUID accountId) {

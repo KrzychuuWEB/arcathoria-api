@@ -1,7 +1,7 @@
 package com.arcathoria.character;
 
 import com.arcathoria.account.AccountQueryFacade;
-import com.arcathoria.account.dto.AccountDTO;
+import com.arcathoria.character.dto.AccountView;
 import com.arcathoria.character.vo.AccountId;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +15,7 @@ class AccountClientAdapter implements AccountClient {
     }
 
     @Override
-    public AccountDTO getById(final AccountId accountId) {
-        return accountQueryFacade.getById(accountId.value());
+    public AccountView getById(final AccountId accountId) {
+        return new AccountView(accountQueryFacade.getById(accountId.value()).id());
     }
 }

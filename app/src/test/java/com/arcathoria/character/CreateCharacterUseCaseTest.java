@@ -1,8 +1,8 @@
 package com.arcathoria.character;
 
-import com.arcathoria.account.dto.AccountDTO;
 import com.arcathoria.account.exception.AccountNotFoundException;
 import com.arcathoria.character.command.CreateCharacterCommand;
+import com.arcathoria.character.dto.AccountView;
 import com.arcathoria.character.exception.CharacterNameExistsException;
 import com.arcathoria.character.vo.AccountId;
 import com.arcathoria.character.vo.CharacterName;
@@ -39,23 +39,23 @@ class CreateCharacterUseCaseTest {
 
     @Test
     void should_create_new_character() {
-        AccountDTO accountDTO = new AccountDTO(UUID.randomUUID(), "example@email.com");
+        AccountView accountView = new AccountView(UUID.randomUUID());
         CreateCharacterCommand command = CreateCharacterCommandMother.aCreateCharacterCommand().build();
         Character character = Character.restore(
                 CharacterSnapshotMother.create()
-                        .withAccountId(accountDTO.id())
+                        .withAccountId(accountView.accountId())
                         .withCharacterName(command.characterName().value())
                         .build()
         );
 
-        when(accountClient.getById(any(AccountId.class))).thenReturn(accountDTO);
+        when(accountClient.getById(any(AccountId.class))).thenReturn(accountView);
         when(characterFactory.createCharacter(any(AccountId.class), any(CharacterName.class))).thenReturn(character);
         when(characterRepository.save(any(Character.class))).thenReturn(character);
 
         Character result = createCharacterUseCase.execute(command);
 
         assertThat(result).isNotNull();
-        assertThat(result.getSnapshot().getAccountId().value()).isEqualTo(accountDTO.id());
+        assertThat(result.getSnapshot().getAccountId().value()).isEqualTo(accountView.accountId());
         assertThat(result.getSnapshot().getCharacterName()).isEqualTo(command.characterName());
 
         verify(accountClient).getById(any(AccountId.class));
@@ -81,10 +81,10 @@ class CreateCharacterUseCaseTest {
 
     @Test
     void should_throw_exception_when_character_name_already_exists() {
-        AccountDTO accountDTO = new AccountDTO(UUID.randomUUID(), "example@email.com");
+        AccountView accountView = new AccountView(UUID.randomUUID());
         CreateCharacterCommand command = CreateCharacterCommandMother.aCreateCharacterCommand().build();
 
-        when(accountClient.getById(any(AccountId.class))).thenReturn(accountDTO);
+        when(accountClient.getById(any(AccountId.class))).thenReturn(accountView);
         doThrow(new CharacterNameExistsException("exampleName")).when(checkCharacterNameIsExistsUseCase).execute(any(CharacterName.class));
 
         assertThatThrownBy(() -> createCharacterUseCase.execute(command))

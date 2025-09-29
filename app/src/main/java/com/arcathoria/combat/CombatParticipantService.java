@@ -4,7 +4,7 @@ import com.arcathoria.combat.vo.AccountId;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import static com.arcathoria.combat.CombatDTOMapper.fromCharacterDTOToParticipant;
+import static com.arcathoria.combat.CombatDTOMapper.fromParticipantViewToParticipant;
 
 class CombatParticipantService {
 
@@ -16,6 +16,6 @@ class CombatParticipantService {
     }
 
     Participant getCharacterByAccountId(final AccountId accountId) {
-        return fromCharacterDTOToParticipant(characterClient.getSelectedCharacterByAccountId(accountId.value()));
+        return fromParticipantViewToParticipant(characterClient.getSelectedCharacterByAccountId(accountId));
     }
 }

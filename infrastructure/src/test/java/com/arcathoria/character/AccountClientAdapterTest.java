@@ -3,7 +3,7 @@ package com.arcathoria.character;
 import com.arcathoria.IntegrationTestContainersConfig;
 import com.arcathoria.UUIDGenerator;
 import com.arcathoria.account.AccountManagerE2EHelper;
-import com.arcathoria.account.dto.AccountDTO;
+import com.arcathoria.character.dto.AccountView;
 import com.arcathoria.character.vo.AccountId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,8 +43,8 @@ class AccountClientAdapterTest extends IntegrationTestContainersConfig {
                 )
         );
 
-        AccountDTO result = accountClientAdapter.getById(accountId);
+        AccountView result = accountClientAdapter.getById(accountId);
 
-        assertThat(result.id()).isEqualTo(accountId.value());
+        assertThat(result.accountId()).isEqualTo(accountId.value());
     }
 }

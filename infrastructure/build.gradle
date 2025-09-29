@@ -34,6 +34,8 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.testcontainers:junit-jupiter'
     testImplementation 'org.testcontainers:postgresql'
+    testImplementation testFixtures(project(':app'))
+    testImplementation testFixtures(project(':domain'))
 }
 
 test {

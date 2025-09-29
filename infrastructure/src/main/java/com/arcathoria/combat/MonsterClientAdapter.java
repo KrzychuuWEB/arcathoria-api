@@ -1,13 +1,10 @@
 package com.arcathoria.combat;
 
-import com.arcathoria.ApiException;
+import com.arcathoria.combat.dto.ParticipantView;
+import com.arcathoria.combat.vo.MonsterId;
 import com.arcathoria.monster.MonsterQueryFacade;
 import com.arcathoria.monster.dto.MonsterDTO;
-import com.arcathoria.monster.exception.MonsterNotFoundException;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
-import java.util.UUID;
 
 @Component
 class MonsterClientAdapter implements MonsterClient {
@@ -19,11 +16,17 @@ class MonsterClientAdapter implements MonsterClient {
     }
 
     @Override
-    public Optional<MonsterDTO> getMonsterById(final UUID monsterId) throws MonsterNotFoundException {
-        try {
-            return Optional.ofNullable(monsterQueryFacade.getMonsterById(monsterId));
-        } catch (ApiException e) {
-            return Optional.empty();
-        }
+    public ParticipantView getMonsterById(final MonsterId monsterId) {
+        return mapToParticipantView(monsterQueryFacade.getMonsterById(monsterId.value()));
+    }
+
+    private ParticipantView mapToParticipantView(final MonsterDTO monsterDTO) {
+        return new ParticipantView(
+                monsterDTO.id(),
+                monsterDTO.name(),
+                monsterDTO.maxHealth(),
+                monsterDTO.intelligence(),
+                ParticipantType.MONSTER
+        );
     }
 }

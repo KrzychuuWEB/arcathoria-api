@@ -99,9 +99,9 @@ class CombatControllerE2ETest extends IntegrationTestContainersConfig {
 
         ResponseEntity<ApiErrorResponse> response = restTemplate.postForEntity(baseUrl + "/init/pve", new HttpEntity<>(initPveDTO, context.accountHeaders()), ApiErrorResponse.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getErrorCode()).isEqualTo("ERR_COMBAT_PARTICIPANT_UNAVAILABLE-400");
+        assertThat(response.getBody().getErrorCode()).isEqualTo("ERR_MONSTER_NOT_FOUND-404");
     }
 
     @Test
