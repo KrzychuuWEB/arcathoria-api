@@ -13,6 +13,6 @@ public final class ResponseExceptionBuilder {
     }
 
     public static String generateKeyWithDots(final String domain, final DomainErrorCode domainErrorCode) {
-        return domain + "." + domainErrorCode.getCodeName().replace('_', '.');
+        return domain + "." + domainErrorCode.getCodeName().replace('_', '.').toLowerCase(Locale.ROOT);
     }
 }

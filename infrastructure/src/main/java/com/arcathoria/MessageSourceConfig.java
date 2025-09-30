@@ -17,6 +17,7 @@ class MessageSourceConfig {
                 "classpath:i18n/auth/messages",
                 "classpath:i18n/validation/messages",
                 "classpath:i18n/monster/messages",
+                "classpath:i18n/combat/messages",
                 "classpath:i18n/messages"
         );
         messageSource.setDefaultEncoding("UTF-8");

@@ -12,7 +12,7 @@ public enum CombatExceptionErrorCode implements DomainErrorCode {
     ERR_COMBAT_ALREADY_FINISHED(DomainExceptionCodeCategory.CONFLICT),
     ERR_PARTICIPANT_NOT_HAS_ACTIVE_COMBAT(DomainExceptionCodeCategory.NOT_FOUND),
     ERR_COMBAT_NOT_FOUND(DomainExceptionCodeCategory.NOT_FOUND),
-    ERR_COMBAT_PARTICIPANT_UNAVAILABLE(DomainExceptionCodeCategory.CONFLICT);
+    ERR_PARTICIPANT_NOT_FOUND(DomainExceptionCodeCategory.NOT_FOUND);
 
     private final DomainExceptionCodeCategory category;
 

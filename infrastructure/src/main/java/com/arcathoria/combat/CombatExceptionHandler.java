@@ -35,7 +35,8 @@ class CombatExceptionHandler {
         String detail = messageSource.getMessage(generateKeyWithDots(ex.getDomain(), ex.getErrorCode()),
                 ex.getContext().values().toArray(),
                 ex.getMessage(),
-                locale);
+                locale
+        );
 
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(status, detail);
         problemDetail.setType(URI.create(generateType(ex.getDomain(), ex.getErrorCode())));

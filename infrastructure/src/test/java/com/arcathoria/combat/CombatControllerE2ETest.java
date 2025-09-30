@@ -2,6 +2,7 @@ package com.arcathoria.combat;
 
 import com.arcathoria.ApiErrorResponse;
 import com.arcathoria.IntegrationTestContainersConfig;
+import com.arcathoria.SetLocaleHelper;
 import com.arcathoria.account.AccountManagerE2EHelper;
 import com.arcathoria.character.CharacterWithAccountContext;
 import com.arcathoria.character.SetupCharacterE2EHelper;
@@ -81,14 +82,19 @@ class CombatControllerE2ETest extends IntegrationTestContainersConfig {
     void should_return_ERR_COMBAT_ONLY_ONE_ACTIVE_COMBAT_code_when_participant_has_active_combat_before_init_new() {
         InitPveDTO initPveDTO = new InitPveDTO(exampleMonsterId);
         CharacterWithAccountContext context = selectCharacterE2EHelper.setupSelectedCharacterWithAccount();
+        HttpHeaders headers = context.accountHeaders();
+        SetLocaleHelper.withLocale(headers, "pl");
 
         createCombatE2EHelper.initPveCombat(initPveDTO, context.accountHeaders()).getBody();
 
-        ResponseEntity<ApiErrorResponse> response = restTemplate.postForEntity(baseUrl + "/init/pve", new HttpEntity<>(initPveDTO, context.accountHeaders()), ApiErrorResponse.class);
+        ResponseEntity<ProblemDetail> response = restTemplate.postForEntity(baseUrl + "/init/pve", new HttpEntity<>(initPveDTO, headers), ProblemDetail.class);
+        ProblemDetail problem = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
-        assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getErrorCode()).isEqualTo("ERR_COMBAT_ONLY_ONE_ACTIVE_COMBAT");
+        assertThat(problem).isNotNull();
+        assertThat(problem.getProperties())
+                .containsEntry("errorCode", "ERR_COMBAT_ONLY_ONE_ACTIVE_COMBAT");
+        assertThat(problem.getDetail()).contains("tylko jedną aktywną walkę");
     }
 
     @Test
@@ -190,18 +196,23 @@ class CombatControllerE2ETest extends IntegrationTestContainersConfig {
     @Test
     void should_return_ParticipantNotHasActiveCombatsException_when_selected_character_not_has_active_combat() {
         CharacterWithAccountContext context = selectCharacterE2EHelper.setupSelectedCharacterWithAccount();
+        HttpHeaders headers = context.accountHeaders();
+        SetLocaleHelper.withLocale(headers, "pl");
 
-        ResponseEntity<ApiErrorResponse> response = restTemplate.exchange(
+        ResponseEntity<ProblemDetail> response = restTemplate.exchange(
                 baseUrl + "/active",
                 HttpMethod.GET,
-                new HttpEntity<>(context.accountHeaders()),
+                new HttpEntity<>(headers),
                 new ParameterizedTypeReference<>() {
                 }
         );
+        ProblemDetail problem = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getErrorCode()).isEqualTo("ERR_PARTICIPANT_NOT_HAS_ACTIVE_COMBAT");
+        assertThat(problem).isNotNull();
+        assertThat(problem.getProperties())
+                .containsEntry("errorCode", "ERR_PARTICIPANT_NOT_HAS_ACTIVE_COMBAT");
+        assertThat(problem.getDetail()).contains("nie ma aktywnych walk");
     }
 
     @Test
@@ -228,18 +239,23 @@ class CombatControllerE2ETest extends IntegrationTestContainersConfig {
     @Test
     void should_return_COMBAT_NOT_FOUND_when_combat_not_found_for_get_combat_by_id() {
         CharacterWithAccountContext context = selectCharacterE2EHelper.setupSelectedCharacterWithAccount();
+        HttpHeaders headers = context.accountHeaders();
+        SetLocaleHelper.withLocale(headers, "pl");
 
-        ResponseEntity<ApiErrorResponse> response = restTemplate.exchange(
+        ResponseEntity<ProblemDetail> response = restTemplate.exchange(
                 baseUrl + "/" + UUID.randomUUID(),
                 HttpMethod.GET,
                 new HttpEntity<>(context.accountHeaders()),
                 new ParameterizedTypeReference<>() {
                 }
         );
+        ProblemDetail problem = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getErrorCode()).isEqualTo("ERR_COMBAT_NOT_FOUND");
+        assertThat(problem).isNotNull();
+        assertThat(problem.getProperties())
+                .containsEntry("errorCode", "ERR_COMBAT_NOT_FOUND");
+        assertThat(problem.getDetail()).contains("Walka o");
     }
 
     @Test
@@ -251,16 +267,22 @@ class CombatControllerE2ETest extends IntegrationTestContainersConfig {
 
         CharacterWithAccountContext newAccountContext = selectCharacterE2EHelper.setupSelectedCharacterWithAccount();
 
-        ResponseEntity<ApiErrorResponse> response = restTemplate.exchange(
+        HttpHeaders headers = newAccountContext.accountHeaders();
+        SetLocaleHelper.withLocale(headers, "pl");
+
+        ResponseEntity<ProblemDetail> response = restTemplate.exchange(
                 baseUrl + "/" + saveCombat.combatId(),
                 HttpMethod.GET,
-                new HttpEntity<>(newAccountContext.accountHeaders()),
+                new HttpEntity<>(headers),
                 new ParameterizedTypeReference<>() {
                 }
         );
+        ProblemDetail problem = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getErrorCode()).isEqualTo("ERR_COMBAT_PARTICIPANT_NOT_FOUND_IN_COMBAT");
+        assertThat(problem).isNotNull();
+        assertThat(problem.getProperties())
+                .containsEntry("errorCode", "ERR_COMBAT_PARTICIPANT_NOT_FOUND_IN_COMBAT");
+        assertThat(problem.getDetail()).contains("nie został znaleziony");
     }
 }

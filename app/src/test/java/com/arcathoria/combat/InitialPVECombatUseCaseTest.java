@@ -3,7 +3,7 @@ package com.arcathoria.combat;
 import com.arcathoria.ApiException;
 import com.arcathoria.combat.command.InitPVECombatCommand;
 import com.arcathoria.combat.dto.ParticipantView;
-import com.arcathoria.combat.exception.CombatParticipantUnavailableException;
+import com.arcathoria.combat.exception.CombatParticipantNotFoundException;
 import com.arcathoria.combat.exception.OnlyOneActiveCombatAllowedException;
 import com.arcathoria.combat.vo.AccountId;
 import com.arcathoria.combat.vo.MonsterId;
@@ -65,10 +65,10 @@ class InitialPVECombatUseCaseTest {
         ParticipantView player = ParticipantViewMother.aParticipantBuilder().withParticipantType(ParticipantType.PLAYER).build();
         ParticipantView monster = ParticipantViewMother.aParticipantBuilder().withParticipantType(ParticipantType.MONSTER).build();
 
-        when(combatParticipantService.getCharacterByAccountId(new AccountId(player.id()))).thenThrow(new CombatParticipantUnavailableException(new ParticipantId(player.id())));
+        when(combatParticipantService.getCharacterByAccountId(new AccountId(player.id()))).thenThrow(new CombatParticipantNotFoundException(new ParticipantId(player.id())));
 
         assertThatThrownBy(() -> initialPVECombatUseCase.init(new InitPVECombatCommand(new AccountId(player.id()), new MonsterId(monster.id()))))
-                .isInstanceOf(CombatParticipantUnavailableException.class)
+                .isInstanceOf(CombatParticipantNotFoundException.class)
                 .hasMessageContaining(player.id().toString());
 
         verify(combatSessionStore, never()).save(any(CombatSnapshot.class));
