@@ -1,18 +1,21 @@
 package com.arcathoria.combat;
 
-import com.arcathoria.ApiErrorResponse;
-import com.arcathoria.combat.exception.*;
+import com.arcathoria.combat.exception.CombatException;
+import com.arcathoria.exception.DomainExceptionCodeCategory;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.MessageSource;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.net.URI;
 import java.util.Locale;
+
+import static com.arcathoria.exception.ResponseExceptionBuilder.*;
 
 @RestControllerAdvice
 @Order(1)
@@ -25,115 +28,35 @@ class CombatExceptionHandler {
         this.messageSource = messageSource;
     }
 
-    @ExceptionHandler(CombatParticipantUnavailableException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    ApiErrorResponse handleCombatParticipantUnavailableException(final CombatParticipantUnavailableException ex, final HttpServletRequest request, final Locale locale) {
-        logger.warn("Could not retrieve {} participant for combat.", ex.getId());
+    @ExceptionHandler(CombatException.class)
+    ProblemDetail handleCombatExceptions(final CombatException ex, final HttpServletRequest request, final Locale locale) {
+        HttpStatus status = mapStatus(ex);
 
-        return new ApiErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                messageSource.getMessage("combat.initial.participant.not.found", new Object[]{ex.getId()}, ex.getMessage(), locale),
-                ex.getErrorCode(),
-                request.getRequestURI()
-        );
+        String detail = messageSource.getMessage(generateKeyWithDots(ex.getDomain(), ex.getErrorCode()),
+                ex.getContext().values().toArray(),
+                ex.getMessage(),
+                locale);
+
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(status, detail);
+        problemDetail.setType(URI.create(generateType(ex.getDomain(), ex.getErrorCode())));
+        problemDetail.setTitle(generateTitle(ex.getErrorCode()));
+        problemDetail.setInstance(URI.create(request.getRequestURI()));
+        problemDetail.setProperty("errorCode", ex.getErrorCode().getCodeName());
+        problemDetail.setProperty("context", ex.getContext());
+
+        if (status.is4xxClientError()) {
+            logger.warn("Domain error: {} {} ctx={}", ex.getDomain(), ex.getErrorCode().getCodeName(), ex.getContext());
+        } else {
+            logger.error("Domain error: {} {} ctx={}", ex.getDomain(), ex.getErrorCode().getCodeName(), ex.getContext(), ex);
+        }
+
+        return problemDetail;
     }
 
-    @ExceptionHandler(WrongTurnException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    ApiErrorResponse handleWrongTurnException(final WrongTurnException ex, final HttpServletRequest request, final Locale locale) {
-        logger.warn("Currently the turn belongs to {}", ex.getCombatSide());
-
-        return new ApiErrorResponse(
-                HttpStatus.CONFLICT.value(),
-                HttpStatus.CONFLICT.getReasonPhrase(),
-                messageSource.getMessage("combat.turn.conflict", new Object[]{ex.getCombatSide()}, ex.getMessage(), locale),
-                ex.getErrorCode(),
-                request.getRequestURI()
-        );
-    }
-
-    @ExceptionHandler(CombatAlreadyFinishedException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    ApiErrorResponse handleCombatAlreadyFinishedException(final CombatAlreadyFinishedException ex, final HttpServletRequest request, final Locale locale) {
-        logger.warn("CombatStatus for Combat {} is FINISHED", ex.getCombatId());
-
-        return new ApiErrorResponse(
-                HttpStatus.CONFLICT.value(),
-                HttpStatus.CONFLICT.getReasonPhrase(),
-                messageSource.getMessage("combat.already.finished.conflict", new Object[]{ex.getCombatId()}, ex.getMessage(), locale),
-                ex.getErrorCode(),
-                request.getRequestURI()
-        );
-    }
-
-    @ExceptionHandler(CombatNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    ApiErrorResponse handleCombatNotFoundException(final CombatNotFoundException ex, final HttpServletRequest request, final Locale locale) {
-        logger.warn("Combat not found with id: {}", ex.getCombatId());
-
-        return new ApiErrorResponse(
-                HttpStatus.NOT_FOUND.value(),
-                HttpStatus.NOT_FOUND.getReasonPhrase(),
-                messageSource.getMessage("combat.not.found", new Object[]{ex.getCombatId()}, ex.getMessage(), locale),
-                ex.getErrorCode(),
-                request.getRequestURI()
-        );
-    }
-
-    @ExceptionHandler(UnsupportedActionTypeException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    ApiErrorResponse handleUnsupportedActionTypeException(final UnsupportedActionTypeException ex, final HttpServletRequest request, final Locale locale) {
-        logger.warn("Action type not supported: {}", ex.getActionType());
-
-        return new ApiErrorResponse(
-                HttpStatus.NOT_FOUND.value(),
-                HttpStatus.NOT_FOUND.getReasonPhrase(),
-                messageSource.getMessage("combat.action.type.not.found", new Object[]{ex.getActionType()}, ex.getMessage(), locale),
-                ex.getErrorCode(),
-                request.getRequestURI()
-        );
-    }
-
-    @ExceptionHandler(ParticipantNotFoundInCombatException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    ApiErrorResponse handleParticipantNotFoundException(final ParticipantNotFoundInCombatException ex, final HttpServletRequest request, final Locale locale) {
-        logger.warn("Participant with id: {} not found in combat: {}", ex.getParticipantId(), ex.getCombatId());
-
-        return new ApiErrorResponse(
-                HttpStatus.NOT_FOUND.value(),
-                HttpStatus.NOT_FOUND.getReasonPhrase(),
-                messageSource.getMessage("combat.participant.not.found", new Object[]{ex.getParticipantId(), ex.getCombatId()}, ex.getMessage(), locale),
-                ex.getErrorCode(),
-                request.getRequestURI()
-        );
-    }
-
-    @ExceptionHandler(ParticipantNotHasActiveCombatsException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    ApiErrorResponse handleParticipantNotHasActiveCombat(final ParticipantNotHasActiveCombatsException ex, final HttpServletRequest request, final Locale locale) {
-        logger.warn("Participant with id {} not has active combats", ex.getParticipantId());
-
-        return new ApiErrorResponse(
-                HttpStatus.NOT_FOUND.value(),
-                HttpStatus.NOT_FOUND.getReasonPhrase(),
-                messageSource.getMessage("combat.get.combat.by.participant.id", null, ex.getMessage(), locale),
-                ex.getErrorCode(),
-                request.getRequestURI()
-        );
-    }
-
-    @ExceptionHandler(OnlyOneActiveCombatAllowedException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    ApiErrorResponse handleOnlyOneActiveCombatAllowedException(final OnlyOneActiveCombatAllowedException ex, final HttpServletRequest request, final Locale locale) {
-        logger.warn("Participant {} has request for start new combat", ex.getParticipantId());
-
-        return new ApiErrorResponse(
-                HttpStatus.CONFLICT.value(),
-                HttpStatus.CONFLICT.getReasonPhrase(),
-                messageSource.getMessage("combat.only.one.active.combat.for.participant", null, ex.getMessage(), locale),
-                ex.getErrorCode(),
-                request.getRequestURI()
-        );
+    HttpStatus mapStatus(CombatException ex) {
+        return switch (ex.getErrorCode().getCategory()) {
+            case DomainExceptionCodeCategory.NOT_FOUND -> HttpStatus.NOT_FOUND;
+            case DomainExceptionCodeCategory.CONFLICT -> HttpStatus.CONFLICT;
+        };
     }
 }

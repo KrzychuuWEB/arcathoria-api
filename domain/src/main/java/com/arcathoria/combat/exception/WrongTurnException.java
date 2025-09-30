@@ -1,14 +1,18 @@
 package com.arcathoria.combat.exception;
 
-import com.arcathoria.DomainException;
 import com.arcathoria.combat.CombatSide;
 
-public class WrongTurnException extends DomainException {
+import java.util.Map;
+
+public class WrongTurnException extends CombatException {
 
     private final CombatSide combatSide;
 
     public WrongTurnException(final CombatSide combatSide) {
-        super("Turn belongs to " + combatSide + " you cannot perform the action now", "ERR_COMBAT_WRONG_TURN");
+        super("Turn belongs to " + combatSide + " you cannot perform the action now",
+                CombatExceptionErrorCode.ERR_COMBAT_WRONG_TURN,
+                Map.of("combatSide", combatSide.name())
+        );
         this.combatSide = combatSide;
     }
 

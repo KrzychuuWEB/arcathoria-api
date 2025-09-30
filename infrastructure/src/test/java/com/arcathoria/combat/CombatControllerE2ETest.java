@@ -201,7 +201,7 @@ class CombatControllerE2ETest extends IntegrationTestContainersConfig {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getErrorCode()).isEqualTo("ERR_PARTICIPANT_NOT_HAS_ACTIVE_COMBAT-404");
+        assertThat(response.getBody().getErrorCode()).isEqualTo("ERR_PARTICIPANT_NOT_HAS_ACTIVE_COMBAT");
     }
 
     @Test
@@ -239,7 +239,7 @@ class CombatControllerE2ETest extends IntegrationTestContainersConfig {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getErrorCode()).isEqualTo("ERR_COMBAT_NOT_FOUND-404");
+        assertThat(response.getBody().getErrorCode()).isEqualTo("ERR_COMBAT_NOT_FOUND");
     }
 
     @Test

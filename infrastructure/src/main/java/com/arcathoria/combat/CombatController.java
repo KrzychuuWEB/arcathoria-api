@@ -6,6 +6,7 @@ import com.arcathoria.combat.dto.CombatResultDTO;
 import com.arcathoria.combat.dto.ExecuteActionDTO;
 import com.arcathoria.combat.dto.InitPveDTO;
 import com.arcathoria.combat.exception.CombatNotFoundException;
+import com.arcathoria.combat.vo.CombatId;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -42,7 +43,7 @@ class CombatController {
             @AuthenticationPrincipal MyUserDetails userDetails
     ) {
         if (!id.equals(dto.combatId())) {
-            throw new CombatNotFoundException(id);
+            throw new CombatNotFoundException(new CombatId(id));
         }
 
         return combatFacade.performActionInCombat(userDetails.getId(), dto);

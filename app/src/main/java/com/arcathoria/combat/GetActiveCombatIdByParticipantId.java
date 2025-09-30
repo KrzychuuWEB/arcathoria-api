@@ -14,6 +14,6 @@ class GetActiveCombatIdByParticipantId {
 
     CombatId getActiveCombat(final ParticipantId participantId) {
         return combatSessionStore.getActiveCombatIdByParticipantId(participantId)
-                .orElseThrow(() -> new ParticipantNotHasActiveCombatsException(participantId.value()));
+                .orElseThrow(() -> new ParticipantNotHasActiveCombatsException(participantId));
     }
 }

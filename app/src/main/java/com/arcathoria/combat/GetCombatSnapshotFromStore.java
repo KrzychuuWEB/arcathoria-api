@@ -18,7 +18,7 @@ class GetCombatSnapshotFromStore {
         return combatSessionStore.getCombatById(combatId)
                 .orElseThrow(() -> {
                     log.warn("Combat not found with id: {}", combatId.value());
-                    return new CombatNotFoundException(combatId.value());
+                    return new CombatNotFoundException(combatId);
                 });
     }
 }

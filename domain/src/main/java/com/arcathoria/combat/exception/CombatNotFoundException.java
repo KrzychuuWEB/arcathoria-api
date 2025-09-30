@@ -4,13 +4,13 @@ import com.arcathoria.combat.vo.CombatId;
 
 import java.util.Map;
 
-public class CombatAlreadyFinishedException extends CombatException {
+public class CombatNotFoundException extends CombatException {
 
     private final CombatId combatId;
 
-    public CombatAlreadyFinishedException(final CombatId combatId) {
-        super("The fight for id " + combatId + " is already finished, this action cannot be performed",
-                CombatExceptionErrorCode.ERR_COMBAT_ALREADY_FINISHED,
+    public CombatNotFoundException(final CombatId combatId) {
+        super("Combat not found with id: " + combatId,
+                CombatExceptionErrorCode.ERR_COMBAT_NOT_FOUND,
                 Map.of("combatId", combatId.value())
         );
         this.combatId = combatId;
