@@ -25,7 +25,7 @@ class GetCharacterByIdUseCase {
         return characterQueryRepository.getById(characterId)
                 .orElseThrow(() -> {
                     log.warn("Character with id not found, id: {}", characterId.value());
-                    return new CharacterNotFoundException(characterId.value().toString());
+                    return new CharacterNotFoundException(characterId);
                 });
     }
 

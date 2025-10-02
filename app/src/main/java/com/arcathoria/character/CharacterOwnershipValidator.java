@@ -16,7 +16,7 @@ class CharacterOwnershipValidator {
                     character.getSnapshot().getCharacterId().value(),
                     accountId.value()
             );
-            throw new CharacterAccessDenied();
+            throw new CharacterAccessDenied(character.getSnapshot().getCharacterId());
         }
 
         return character;

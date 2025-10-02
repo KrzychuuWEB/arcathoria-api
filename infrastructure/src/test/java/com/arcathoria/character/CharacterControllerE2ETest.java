@@ -1,6 +1,5 @@
 package com.arcathoria.character;
 
-import com.arcathoria.ApiErrorResponse;
 import com.arcathoria.IntegrationTestContainersConfig;
 import com.arcathoria.SetLocaleHelper;
 import com.arcathoria.UUIDGenerator;
@@ -8,6 +7,7 @@ import com.arcathoria.account.AccountManagerE2EHelper;
 import com.arcathoria.character.dto.CharacterDTO;
 import com.arcathoria.character.dto.CreateCharacterDTO;
 import com.arcathoria.character.dto.SelectCharacterDTO;
+import com.arcathoria.character.exception.CharacterExceptionErrorCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,11 +63,14 @@ class CharacterControllerE2ETest extends IntegrationTestContainersConfig {
 
         createCharacterE2EHelper.create(createCharacterDTO, headers);
 
-        ResponseEntity<ApiErrorResponse> response = restTemplate.postForEntity(baseUrl, new HttpEntity<>(createCharacterDTO, headers), ApiErrorResponse.class);
+        ResponseEntity<ProblemDetail> response = restTemplate.postForEntity(baseUrl, new HttpEntity<>(createCharacterDTO, headers), ProblemDetail.class);
+        ProblemDetail result = response.getBody();
+
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
-        assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getErrorCode()).isEqualTo("ERR_CHARACTER_NAME_EXISTS-409");
-        assertThat(response.getBody().getMessage()).contains("Nazwa postaci");
+        assertThat(result).isNotNull();
+        assertThat(result.getDetail()).contains("Nazwa postaci");
+        assertThat(result.getProperties())
+                .containsEntry("errorCode", CharacterExceptionErrorCode.ERR_CHARACTER_NAME_EXISTS.getCodeName());
     }
 
     @Test
@@ -142,12 +145,14 @@ class CharacterControllerE2ETest extends IntegrationTestContainersConfig {
         SetLocaleHelper.withLocale(headers, "pl");
         SelectCharacterDTO selectCharacterDTO = new SelectCharacterDTO(UUID.randomUUID());
 
-        ResponseEntity<ApiErrorResponse> response = restTemplate.postForEntity(baseSelectCharacterUrl, new HttpEntity<>(selectCharacterDTO, headers), ApiErrorResponse.class);
+        ResponseEntity<ProblemDetail> response = restTemplate.postForEntity(baseSelectCharacterUrl, new HttpEntity<>(selectCharacterDTO, headers), ProblemDetail.class);
+        ProblemDetail result = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getErrorCode()).isEqualTo("ERR_CHARACTER_NOT_FOUND-404");
-        assertThat(response.getBody().getMessage()).contains("Postać z podanym");
+        assertThat(result).isNotNull();
+        assertThat(result.getDetail()).contains("Postać z podanym");
+        assertThat(result.getProperties())
+                .containsEntry("errorCode", CharacterExceptionErrorCode.ERR_CHARACTER_NOT_FOUND.getCodeName());
     }
 
     @Test
@@ -161,13 +166,15 @@ class CharacterControllerE2ETest extends IntegrationTestContainersConfig {
                 account1
         ).getBody();
         SelectCharacterDTO selectCharacterDTO = new SelectCharacterDTO(responseForAccount1.id());
-        
-        ResponseEntity<ApiErrorResponse> response = restTemplate.postForEntity(baseSelectCharacterUrl, new HttpEntity<>(selectCharacterDTO, account2), ApiErrorResponse.class);
+
+        ResponseEntity<ProblemDetail> response = restTemplate.postForEntity(baseSelectCharacterUrl, new HttpEntity<>(selectCharacterDTO, account2), ProblemDetail.class);
+        ProblemDetail result = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
-        assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getErrorCode()).isEqualTo("ERR_ACCESS_DENIED-403");
-        assertThat(response.getBody().getMessage()).contains("Brak dostepu");
+        assertThat(result).isNotNull();
+        assertThat(result.getDetail()).contains("nie ma dostepu");
+        assertThat(result.getProperties())
+                .containsEntry("errorCode", CharacterExceptionErrorCode.ERR_CHARACTER_ACCESS_DENIED.getCodeName());
     }
 
     @Test
@@ -197,17 +204,21 @@ class CharacterControllerE2ETest extends IntegrationTestContainersConfig {
         SetLocaleHelper.withLocale(headers, "pl");
 
         HttpEntity<Void> request = new HttpEntity<>(headers);
-        ResponseEntity<ApiErrorResponse> response = restTemplate.exchange(
+        ResponseEntity<ProblemDetail> response = restTemplate.exchange(
                 baseSelectCharacterUrl + "/me",
                 HttpMethod.GET,
                 request,
-                ApiErrorResponse.class
+                ProblemDetail.class
         );
+        ProblemDetail result = response.getBody();
 
-        assertThat(response.getBody()).isNotNull();
+        System.out.println(result);
+
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(response.getBody().getErrorCode()).isEqualTo("ERR_CHARACTER_SELECTED_NOT_FOUND-404");
-        assertThat(response.getBody().getMessage()).contains("Postać nie została wybrana");
+        assertThat(result).isNotNull();
+        assertThat(result.getDetail()).contains("Postać nie została wybrana");
+        assertThat(result.getProperties())
+                .containsEntry("errorCode", CharacterExceptionErrorCode.ERR_CHARACTER_SELECTED_NOT_FOUND.getCodeName());
     }
 
     @Test
@@ -221,7 +232,7 @@ class CharacterControllerE2ETest extends IntegrationTestContainersConfig {
         HttpEntity<Void> request = new HttpEntity<>(headers);
         ResponseEntity<Void> deleteResponse = restTemplate.exchange(baseSelectCharacterUrl, HttpMethod.DELETE, request, Void.class);
 
-        ResponseEntity<ApiErrorResponse> response = restTemplate.exchange(baseSelectCharacterUrl + "/me", HttpMethod.GET, request, ApiErrorResponse.class);
+        ResponseEntity<ProblemDetail> response = restTemplate.exchange(baseSelectCharacterUrl + "/me", HttpMethod.GET, request, ProblemDetail.class);
 
         assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -233,11 +244,13 @@ class CharacterControllerE2ETest extends IntegrationTestContainersConfig {
         SetLocaleHelper.withLocale(headers, "pl");
 
         HttpEntity<Void> request = new HttpEntity<>(headers);
-        ResponseEntity<ApiErrorResponse> response = restTemplate.exchange(baseSelectCharacterUrl, HttpMethod.DELETE, request, ApiErrorResponse.class);
+        ResponseEntity<ProblemDetail> response = restTemplate.exchange(baseSelectCharacterUrl, HttpMethod.DELETE, request, ProblemDetail.class);
+        ProblemDetail result = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getErrorCode()).isEqualTo("ERR_CHARACTER_SELECTED_NOT_FOUND-404");
-        assertThat(response.getBody().getMessage()).contains("Postać nie została wybrana");
+        assertThat(result).isNotNull();
+        assertThat(result.getDetail()).contains("Postać nie została wybrana");
+        assertThat(result.getProperties())
+                .containsEntry("errorCode", CharacterExceptionErrorCode.ERR_CHARACTER_SELECTED_NOT_FOUND.getCodeName());
     }
 }

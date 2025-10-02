@@ -85,7 +85,7 @@ class CreateCharacterUseCaseTest {
         CreateCharacterCommand command = CreateCharacterCommandMother.aCreateCharacterCommand().build();
 
         when(accountClient.getById(any(AccountId.class))).thenReturn(accountView);
-        doThrow(new CharacterNameExistsException("exampleName")).when(checkCharacterNameIsExistsUseCase).execute(any(CharacterName.class));
+        doThrow(new CharacterNameExistsException(new CharacterName("exampleName"))).when(checkCharacterNameIsExistsUseCase).execute(any(CharacterName.class));
 
         assertThatThrownBy(() -> createCharacterUseCase.execute(command))
                 .isInstanceOf(CharacterNameExistsException.class);

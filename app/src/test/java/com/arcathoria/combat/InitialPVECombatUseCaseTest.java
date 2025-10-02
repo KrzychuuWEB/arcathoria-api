@@ -1,6 +1,5 @@
 package com.arcathoria.combat;
 
-import com.arcathoria.ApiException;
 import com.arcathoria.combat.command.InitPVECombatCommand;
 import com.arcathoria.combat.dto.ParticipantView;
 import com.arcathoria.combat.exception.CombatParticipantNotAvailableDomainException;
@@ -8,7 +7,6 @@ import com.arcathoria.combat.exception.OnlyOneActiveCombatAllowedDomainException
 import com.arcathoria.combat.vo.AccountId;
 import com.arcathoria.combat.vo.MonsterId;
 import com.arcathoria.combat.vo.ParticipantId;
-import com.arcathoria.monster.exception.MonsterNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -82,10 +80,10 @@ class InitialPVECombatUseCaseTest {
         ParticipantView monster = ParticipantViewMother.aParticipantBuilder().withParticipantType(ParticipantType.MONSTER).build();
 
         when(combatParticipantService.getCharacterByAccountId(new AccountId(player.id()))).thenReturn(attacker);
-        when(monsterClient.getMonsterById(new MonsterId(monster.id()))).thenThrow(MonsterNotFoundException.class);
+        when(monsterClient.getMonsterById(new MonsterId(monster.id()))).thenThrow(CombatParticipantNotAvailableDomainException.class);
 
         assertThatThrownBy(() -> initialPVECombatUseCase.init(new InitPVECombatCommand(new AccountId(player.id()), new MonsterId(monster.id()))))
-                .isInstanceOf(ApiException.class);
+                .isInstanceOf(CombatParticipantNotAvailableDomainException.class);
 
         verify(combatSessionStore, never()).save(any(CombatSnapshot.class));
     }

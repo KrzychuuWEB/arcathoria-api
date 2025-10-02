@@ -1,6 +1,5 @@
 package com.arcathoria.auth;
 
-import com.arcathoria.ApiErrorResponse;
 import com.arcathoria.IntegrationTestContainersConfig;
 import com.arcathoria.account.AccountManagerE2EHelper;
 import com.arcathoria.account.dto.RegisterDTO;
@@ -11,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -53,11 +53,11 @@ class AuthControllerE2ETest extends IntegrationTestContainersConfig {
     }
 
     @Test
-    void should_invalid_credentials_return_bad_request() {
+    void should_invalid_credentials_return_unauthorized() {
         AuthRequestDTO authRequestDTO = new AuthRequestDTO("invalid@email.com", "secret_invalid_password123");
 
-        ResponseEntity<ApiErrorResponse> response = restTemplate.postForEntity(authenticateUrl, new HttpEntity<>(authRequestDTO), ApiErrorResponse.class);
+        ResponseEntity<ProblemDetail> response = restTemplate.postForEntity(authenticateUrl, new HttpEntity<>(authRequestDTO), ProblemDetail.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 }

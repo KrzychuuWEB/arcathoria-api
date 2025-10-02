@@ -32,7 +32,7 @@ class SelectCharacterCacheAdapter implements SelectCharacterCachePort {
         String value = redisTemplate.opsForValue().get(key);
 
         if (value == null) {
-            throw new SelectedCharacterNotFoundException(accountId.value());
+            throw new SelectedCharacterNotFoundException(accountId);
         }
 
         redisTemplate.expire(key, TTL);

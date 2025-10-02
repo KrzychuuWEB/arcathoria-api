@@ -1,19 +1,22 @@
 package com.arcathoria.character.exception;
 
-import com.arcathoria.ApiException;
+import com.arcathoria.character.vo.AccountId;
 
-import java.util.UUID;
+import java.util.Map;
 
-public class SelectedCharacterNotFoundException extends ApiException {
+public class SelectedCharacterNotFoundException extends CharacterApplicationException {
 
-    private UUID id = null;
+    private final AccountId accountId;
 
-    public SelectedCharacterNotFoundException(final UUID id) {
-        super("The selected character was not found for id: " + id, "ERR_CHARACTER_SELECTED_NOT_FOUND-404");
-        this.id = id;
+    public SelectedCharacterNotFoundException(final AccountId accountId) {
+        super("The selected character was not found for account: " + accountId.value(),
+                CharacterExceptionErrorCode.ERR_CHARACTER_SELECTED_NOT_FOUND,
+                Map.of("accountId", accountId.value())
+        );
+        this.accountId = accountId;
     }
 
-    public UUID getId() {
-        return id;
+    public AccountId getAccountId() {
+        return accountId;
     }
 }

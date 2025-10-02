@@ -1,19 +1,22 @@
 package com.arcathoria.account.exception;
 
-import com.arcathoria.ApiException;
+import com.arcathoria.account.vo.AccountId;
 
-import java.util.UUID;
+import java.util.Map;
 
-public class AccountNotFoundException extends ApiException {
+public class AccountNotFoundException extends AccountApplicationException {
 
-    private final UUID uuid;
+    private final AccountId accountId;
 
-    public AccountNotFoundException(final UUID uuid) {
-        super("Account not found for id " + uuid, "ERR_ACCOUNT_NOT_FOUND-404");
-        this.uuid = uuid;
+    public AccountNotFoundException(final AccountId accountId) {
+        super("Account not found for id " + accountId,
+                AccountExceptionErrorCode.ERR_ACCOUNT_NOT_FOUND,
+                Map.of("accountId", accountId.value())
+        );
+        this.accountId = accountId;
     }
 
-    public UUID getUuid() {
-        return uuid;
+    public AccountId getAccountId() {
+        return accountId;
     }
 }

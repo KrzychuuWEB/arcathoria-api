@@ -1,18 +1,15 @@
 package com.arcathoria.account;
 
-import com.arcathoria.ApiErrorResponse;
 import com.arcathoria.IntegrationTestContainersConfig;
 import com.arcathoria.SetLocaleHelper;
 import com.arcathoria.account.dto.AccountDTO;
 import com.arcathoria.account.dto.RegisterDTO;
+import com.arcathoria.account.exception.AccountExceptionErrorCode;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -36,7 +33,7 @@ class AccountControllerE2ETest extends IntegrationTestContainersConfig {
     }
 
     @Test
-    void should_return_409_when_email_already_exists() {
+    void should_return_EER_ACCOUNT_EMAIL_EXISTS_code_when_email_already_exists() {
         RegisterDTO registerDTO = RegisterDTOMother.aRegisterDTO().withEmail("takenRegisterAccount@email.com").build();
 
         restTemplate.postForEntity(registerUrl, new HttpEntity<>(registerDTO), AccountDTO.class);
@@ -44,11 +41,13 @@ class AccountControllerE2ETest extends IntegrationTestContainersConfig {
         HttpHeaders headers = new HttpHeaders();
         SetLocaleHelper.withLocale(headers, "pl");
 
-        ResponseEntity<ApiErrorResponse> result = restTemplate.postForEntity(registerUrl, new HttpEntity<>(registerDTO, headers), ApiErrorResponse.class);
+        ResponseEntity<ProblemDetail> response = restTemplate.postForEntity(registerUrl, new HttpEntity<>(registerDTO, headers), ProblemDetail.class);
+        ProblemDetail result = response.getBody();
 
-        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
-        assertThat(result.getBody()).isNotNull();
-        assertThat(result.getBody().getErrorCode()).isEqualTo("ERR_ACCOUNT_EMAIL_EXISTS-409");
-        assertThat(result.getBody().getMessage()).contains("już istnieje");
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+        assertThat(result).isNotNull();
+        assertThat(result.getDetail()).contains("już istnieje");
+        assertThat(result.getProperties())
+                .containsEntry("errorCode", AccountExceptionErrorCode.ERR_ACCOUNT_EMAIL_EXISTS.getCodeName());
     }
 }

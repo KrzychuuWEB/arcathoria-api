@@ -24,8 +24,8 @@ class MonsterClientAdapter implements MonsterClient {
         try {
             return mapToParticipantView(monsterQueryFacade.getMonsterById(monsterId.value()));
         } catch (MonsterNotFoundException e) {
-            throw new CombatParticipantNotAvailableDomainException(new ParticipantId(e.getMonsterId()),
-                    new UpstreamInfo("test", "test1"));
+            throw new CombatParticipantNotAvailableDomainException(new ParticipantId(e.getMonsterId().value()),
+                    new UpstreamInfo(e.getDomain(), e.getErrorCode().getCodeName()));
         }
     }
 

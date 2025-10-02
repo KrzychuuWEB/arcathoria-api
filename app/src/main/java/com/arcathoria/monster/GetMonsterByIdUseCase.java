@@ -13,6 +13,6 @@ class GetMonsterByIdUseCase {
 
     Monster execute(final MonsterId monsterId) {
         return monsterQueryRepository.getById(monsterId)
-                .orElseThrow(() -> new MonsterNotFoundException(monsterId.value()));
+                .orElseThrow(() -> new MonsterNotFoundException(monsterId));
     }
 }

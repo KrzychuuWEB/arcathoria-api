@@ -24,8 +24,8 @@ class CharacterClientAdapter implements CharacterClient {
         try {
             return mapToParticipantView(characterQueryFacade.getSelectedCharacter(accountId.value()));
         } catch (SelectedCharacterNotFoundException e) {
-            throw new CombatParticipantNotAvailableDomainException(new ParticipantId(e.getId()),
-                    new UpstreamInfo("test", "test1"));
+            throw new CombatParticipantNotAvailableDomainException(new ParticipantId(e.getAccountId().value()),
+                    new UpstreamInfo(e.getDomain(), e.getErrorCode().getCodeName()));
         }
     }
 

@@ -10,6 +10,7 @@ import com.arcathoria.combat.dto.CombatIdDTO;
 import com.arcathoria.combat.dto.CombatResultDTO;
 import com.arcathoria.combat.dto.ExecuteActionDTO;
 import com.arcathoria.combat.dto.InitPveDTO;
+import com.arcathoria.combat.exception.CombatExceptionErrorCode;
 import com.arcathoria.combat.vo.CombatId;
 import com.arcathoria.combat.vo.Damage;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +23,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -52,7 +54,7 @@ class CombatControllerE2ETest extends IntegrationTestContainersConfig {
         this.createCombatE2EHelper = new CreateCombatE2EHelper(restTemplate);
         this.accountManagerE2EHelper = new AccountManagerE2EHelper(restTemplate);
     }
-    
+
     @Test
     void should_init_pve_combat_and_save_combat_in_cache() {
         InitPveDTO initPveDTO = new InitPveDTO(exampleMonsterId);
@@ -90,9 +92,14 @@ class CombatControllerE2ETest extends IntegrationTestContainersConfig {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(problem).isNotNull();
         assertThat(problem.getProperties())
-                .containsEntry("errorCode", "ERR_COMBAT_PARTICIPANT_NOT_AVAILABLE");
-        assertThat(problem.getProperties().get("upstream")).isNotNull();
+                .containsEntry("errorCode", CombatExceptionErrorCode.ERR_COMBAT_PARTICIPANT_NOT_AVAILABLE.getCodeName());
         assertThat(problem.getDetail()).contains("dostępny");
+
+        assertThat(problem.getProperties().get("upstream")).isNotNull();
+        @SuppressWarnings("unchecked")
+        Map<String, Object> upstream = (Map<String, Object>) problem.getProperties().get("upstream");
+        assertThat(upstream.get("type")).isEqualTo("character");
+        assertThat(upstream.get("code")).isEqualTo("ERR_CHARACTER_SELECTED_NOT_FOUND");
     }
 
     @Test
@@ -110,7 +117,7 @@ class CombatControllerE2ETest extends IntegrationTestContainersConfig {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
         assertThat(problem).isNotNull();
         assertThat(problem.getProperties())
-                .containsEntry("errorCode", "ERR_COMBAT_ONLY_ONE_ACTIVE_COMBAT");
+                .containsEntry("errorCode", CombatExceptionErrorCode.ERR_COMBAT_ONLY_ONE_ACTIVE_COMBAT.getCodeName());
         assertThat(problem.getDetail()).contains("tylko jedną aktywną walkę");
     }
 
@@ -127,9 +134,14 @@ class CombatControllerE2ETest extends IntegrationTestContainersConfig {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(problem).isNotNull();
         assertThat(problem.getProperties())
-                .containsEntry("errorCode", "ERR_COMBAT_PARTICIPANT_NOT_AVAILABLE");
-        assertThat(problem.getProperties().get("upstream")).isNotNull();
+                .containsEntry("errorCode", CombatExceptionErrorCode.ERR_COMBAT_PARTICIPANT_NOT_AVAILABLE.getCodeName());
         assertThat(problem.getDetail()).contains("dostępny");
+
+        assertThat(problem.getProperties().get("upstream")).isNotNull();
+        @SuppressWarnings("unchecked")
+        Map<String, Object> upstream = (Map<String, Object>) problem.getProperties().get("upstream");
+        assertThat(upstream.get("type")).isEqualTo("monster");
+        assertThat(upstream.get("code")).isEqualTo("ERR_MONSTER_NOT_FOUND");
     }
 
     @Test
@@ -140,13 +152,12 @@ class CombatControllerE2ETest extends IntegrationTestContainersConfig {
         SetLocaleHelper.withLocale(account, "pl");
 
         ResponseEntity<ProblemDetail> response = restTemplate.postForEntity(baseUrl + "/init/pve", new HttpEntity<>(initPveDTO, account), ProblemDetail.class);
-
         ProblemDetail problem = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(problem).isNotNull();
         assertThat(problem.getProperties())
-                .containsEntry("errorCode", "ERR_COMBAT_PARTICIPANT_NOT_AVAILABLE");
+                .containsEntry("errorCode", CombatExceptionErrorCode.ERR_COMBAT_PARTICIPANT_NOT_AVAILABLE.getCodeName());
         assertThat(problem.getProperties().get("upstream")).isNotNull();
         assertThat(problem.getDetail()).contains("dostępny");
     }
@@ -239,7 +250,7 @@ class CombatControllerE2ETest extends IntegrationTestContainersConfig {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(problem).isNotNull();
         assertThat(problem.getProperties())
-                .containsEntry("errorCode", "ERR_PARTICIPANT_NOT_HAS_ACTIVE_COMBAT");
+                .containsEntry("errorCode", CombatExceptionErrorCode.ERR_PARTICIPANT_NOT_HAS_ACTIVE_COMBAT.getCodeName());
         assertThat(problem.getDetail()).contains("nie ma aktywnych walk");
     }
 
@@ -282,7 +293,7 @@ class CombatControllerE2ETest extends IntegrationTestContainersConfig {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(problem).isNotNull();
         assertThat(problem.getProperties())
-                .containsEntry("errorCode", "ERR_COMBAT_NOT_FOUND");
+                .containsEntry("errorCode", CombatExceptionErrorCode.ERR_COMBAT_NOT_FOUND.getCodeName());
         assertThat(problem.getDetail()).contains("Walka o");
     }
 
@@ -310,7 +321,7 @@ class CombatControllerE2ETest extends IntegrationTestContainersConfig {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(problem).isNotNull();
         assertThat(problem.getProperties())
-                .containsEntry("errorCode", "ERR_COMBAT_PARTICIPANT_NOT_FOUND_IN_COMBAT");
+                .containsEntry("errorCode", CombatExceptionErrorCode.ERR_COMBAT_PARTICIPANT_NOT_FOUND_IN_COMBAT.getCodeName());
         assertThat(problem.getDetail()).contains("nie został znaleziony");
     }
 }

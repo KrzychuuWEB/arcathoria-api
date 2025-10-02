@@ -10,6 +10,7 @@ public class DefaultHttpStatusMapper implements HttpStatusMapper {
         return switch (category) {
             case DomainExceptionCodeCategory.NOT_FOUND -> HttpStatus.NOT_FOUND;
             case DomainExceptionCodeCategory.CONFLICT -> HttpStatus.CONFLICT;
+            case DomainExceptionCodeCategory.FORBIDDEN -> HttpStatus.FORBIDDEN;
             default -> HttpStatus.BAD_REQUEST;
         };
     }

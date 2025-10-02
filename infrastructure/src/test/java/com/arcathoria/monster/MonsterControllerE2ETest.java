@@ -1,10 +1,10 @@
 package com.arcathoria.monster;
 
-import com.arcathoria.ApiErrorResponse;
 import com.arcathoria.IntegrationTestContainersConfig;
 import com.arcathoria.SetLocaleHelper;
 import com.arcathoria.account.AccountManagerE2EHelper;
 import com.arcathoria.monster.dto.MonsterDTO;
+import com.arcathoria.monster.exception.MonsterExceptionErrorCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,16 +50,18 @@ class MonsterControllerE2ETest extends IntegrationTestContainersConfig {
         SetLocaleHelper.withLocale(headers, "pl");
         HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
 
-        ResponseEntity<ApiErrorResponse> response = restTemplate.exchange(
+        ResponseEntity<ProblemDetail> response = restTemplate.exchange(
                 baseUrl + "/00000000-0000-0000-0000-000000000000",
                 HttpMethod.GET,
                 requestEntity,
-                ApiErrorResponse.class
+                ProblemDetail.class
         );
+        ProblemDetail result = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getErrorCode()).isEqualTo("ERR_MONSTER_NOT_FOUND-404");
-        assertThat(response.getBody().getMessage()).contains("potwora");
+        assertThat(result).isNotNull();
+        assertThat(result.getDetail()).contains("potwora");
+        assertThat(result.getProperties())
+                .containsEntry("errorCode", MonsterExceptionErrorCode.ERR_MONSTER_NOT_FOUND.getCodeName());
     }
 }

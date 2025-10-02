@@ -1,10 +1,23 @@
 package com.arcathoria.character.exception;
 
-import com.arcathoria.ApiException;
+import com.arcathoria.character.vo.CharacterId;
 
-public class CharacterAccessDenied extends ApiException {
+import java.util.Map;
 
-    public CharacterAccessDenied() {
-        super("No access to resource", "ERR_CHARACTER-ACCESS_DENIED");
+public class CharacterAccessDenied extends CharacterApplicationException {
+
+    private CharacterId characterId;
+
+    public CharacterAccessDenied(final CharacterId characterId) {
+        super("Character with id " + characterId.value() + " is not have access to this operation",
+                CharacterExceptionErrorCode.ERR_CHARACTER_ACCESS_DENIED,
+                Map.of("characterId", characterId.value())
+        );
+
+        this.characterId = characterId;
+    }
+
+    public CharacterId getCharacterId() {
+        return characterId;
     }
 }
