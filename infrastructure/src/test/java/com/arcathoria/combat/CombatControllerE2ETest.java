@@ -1,6 +1,5 @@
 package com.arcathoria.combat;
 
-import com.arcathoria.ApiErrorResponse;
 import com.arcathoria.IntegrationTestContainersConfig;
 import com.arcathoria.SetLocaleHelper;
 import com.arcathoria.UUIDGenerator;
@@ -120,25 +119,36 @@ class CombatControllerE2ETest extends IntegrationTestContainersConfig {
         InitPveDTO initPveDTO = new InitPveDTO(UUID.randomUUID());
 
         CharacterWithAccountContext context = selectCharacterE2EHelper.setupSelectedCharacterWithAccount();
+        SetLocaleHelper.withLocale(context.accountHeaders(), "pl");
 
-        ResponseEntity<ApiErrorResponse> response = restTemplate.postForEntity(baseUrl + "/init/pve", new HttpEntity<>(initPveDTO, context.accountHeaders()), ApiErrorResponse.class);
+        ResponseEntity<ProblemDetail> response = restTemplate.postForEntity(baseUrl + "/init/pve", new HttpEntity<>(initPveDTO, context.accountHeaders()), ProblemDetail.class);
+        ProblemDetail problem = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getErrorCode()).isEqualTo("ERR_MONSTER_NOT_FOUND-404");
+        assertThat(problem).isNotNull();
+        assertThat(problem.getProperties())
+                .containsEntry("errorCode", "ERR_COMBAT_PARTICIPANT_NOT_AVAILABLE");
+        assertThat(problem.getProperties().get("upstream")).isNotNull();
+        assertThat(problem.getDetail()).contains("dostępny");
     }
 
     @Test
-    void should_return_status_code_CHARACTER_SELECT_NOT_FOUND_when_character_not_selected() {
+    void should_return_CombatParticipantUnavailableException_when_character_not_selected() {
         InitPveDTO initPveDTO = new InitPveDTO(exampleMonsterId);
 
         HttpHeaders account = accountManagerE2EHelper.registerAndGetAuthHeaders("not_selected_character_CT@combat.arcathoria");
+        SetLocaleHelper.withLocale(account, "pl");
 
-        ResponseEntity<ApiErrorResponse> response = restTemplate.postForEntity(baseUrl + "/init/pve", new HttpEntity<>(initPveDTO, account), ApiErrorResponse.class);
+        ResponseEntity<ProblemDetail> response = restTemplate.postForEntity(baseUrl + "/init/pve", new HttpEntity<>(initPveDTO, account), ProblemDetail.class);
+
+        ProblemDetail problem = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getErrorCode()).isEqualTo("ERR_CHARACTER_SELECTED_NOT_FOUND-404");
+        assertThat(problem).isNotNull();
+        assertThat(problem.getProperties())
+                .containsEntry("errorCode", "ERR_COMBAT_PARTICIPANT_NOT_AVAILABLE");
+        assertThat(problem.getProperties().get("upstream")).isNotNull();
+        assertThat(problem.getDetail()).contains("dostępny");
     }
 
     @Test

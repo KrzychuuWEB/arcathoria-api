@@ -161,8 +161,7 @@ class CharacterControllerE2ETest extends IntegrationTestContainersConfig {
                 account1
         ).getBody();
         SelectCharacterDTO selectCharacterDTO = new SelectCharacterDTO(responseForAccount1.id());
-
-
+        
         ResponseEntity<ApiErrorResponse> response = restTemplate.postForEntity(baseSelectCharacterUrl, new HttpEntity<>(selectCharacterDTO, account2), ApiErrorResponse.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);

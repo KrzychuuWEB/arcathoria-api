@@ -1,9 +1,13 @@
 package com.arcathoria.combat;
 
 import com.arcathoria.combat.dto.ParticipantView;
+import com.arcathoria.combat.exception.CombatParticipantNotAvailableDomainException;
 import com.arcathoria.combat.vo.MonsterId;
+import com.arcathoria.combat.vo.ParticipantId;
+import com.arcathoria.exception.UpstreamInfo;
 import com.arcathoria.monster.MonsterQueryFacade;
 import com.arcathoria.monster.dto.MonsterDTO;
+import com.arcathoria.monster.exception.MonsterNotFoundException;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -17,7 +21,12 @@ class MonsterClientAdapter implements MonsterClient {
 
     @Override
     public ParticipantView getMonsterById(final MonsterId monsterId) {
-        return mapToParticipantView(monsterQueryFacade.getMonsterById(monsterId.value()));
+        try {
+            return mapToParticipantView(monsterQueryFacade.getMonsterById(monsterId.value()));
+        } catch (MonsterNotFoundException e) {
+            throw new CombatParticipantNotAvailableDomainException(new ParticipantId(e.getMonsterId()),
+                    new UpstreamInfo("test", "test1"));
+        }
     }
 
     private ParticipantView mapToParticipantView(final MonsterDTO monsterDTO) {
