@@ -1,6 +1,6 @@
 package com.arcathoria.combat;
 
-import com.arcathoria.combat.exception.OnlyOneActiveCombatAllowedException;
+import com.arcathoria.combat.exception.OnlyOneActiveCombatAllowedDomainException;
 import com.arcathoria.combat.vo.ParticipantId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -88,7 +88,7 @@ class CombatEngineTest {
         fakeCombatSessionPort.save(CombatSnapshotMother.aCombat().withAttacker(attacker.getSnapshot()).build());
 
         assertThatThrownBy(() -> combatEngine.initialCombat(attacker, defender, CombatType.PVE))
-                .isInstanceOf(OnlyOneActiveCombatAllowedException.class)
+                .isInstanceOf(OnlyOneActiveCombatAllowedDomainException.class)
                 .hasMessageContaining(attacker.getId().value().toString());
     }
 }

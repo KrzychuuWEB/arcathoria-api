@@ -1,6 +1,6 @@
 package com.arcathoria.combat;
 
-import com.arcathoria.combat.exception.UnsupportedActionTypeException;
+import com.arcathoria.combat.exception.UnsupportedActionTypeDomainException;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -26,7 +26,7 @@ class InMemoryCombatActionRegistryTest {
         CombatActionRegistry combatActionRegistry = new InMemoryCombatActionRegistry(Map.of());
 
         assertThatThrownBy(() -> combatActionRegistry.get(ActionType.MELEE))
-                .isInstanceOf(UnsupportedActionTypeException.class)
+                .isInstanceOf(UnsupportedActionTypeDomainException.class)
                 .hasMessageContaining("This type of action is not supported");
     }
 }

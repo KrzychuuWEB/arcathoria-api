@@ -1,6 +1,6 @@
 package com.arcathoria.combat;
 
-import com.arcathoria.combat.exception.CombatNotFoundException;
+import com.arcathoria.combat.exception.CombatNotFoundDomainException;
 import com.arcathoria.combat.vo.CombatId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -48,7 +48,7 @@ class GetCombatSnapshotFromStoreTest {
         when(combatSessionStore.getCombatById(any(CombatId.class))).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> getCombatSnapshotFromStore.getSnapshotById(new CombatId(UUID.randomUUID())))
-                .isInstanceOf(CombatNotFoundException.class)
+                .isInstanceOf(CombatNotFoundDomainException.class)
                 .hasMessageContaining("Combat not found");
     }
 }

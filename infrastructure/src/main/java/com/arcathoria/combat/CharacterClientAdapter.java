@@ -2,8 +2,12 @@ package com.arcathoria.combat;
 
 import com.arcathoria.character.CharacterQueryFacade;
 import com.arcathoria.character.dto.CharacterDTO;
+import com.arcathoria.character.exception.SelectedCharacterNotFoundException;
 import com.arcathoria.combat.dto.ParticipantView;
+import com.arcathoria.combat.exception.CombatParticipantNotAvailableDomainException;
 import com.arcathoria.combat.vo.AccountId;
+import com.arcathoria.combat.vo.ParticipantId;
+import com.arcathoria.exception.UpstreamInfo;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -17,7 +21,12 @@ class CharacterClientAdapter implements CharacterClient {
 
     @Override
     public ParticipantView getSelectedCharacterByAccountId(final AccountId accountId) {
-        return mapToParticipantView(characterQueryFacade.getSelectedCharacter(accountId.value()));
+        try {
+            return mapToParticipantView(characterQueryFacade.getSelectedCharacter(accountId.value()));
+        } catch (SelectedCharacterNotFoundException e) {
+            throw new CombatParticipantNotAvailableDomainException(new ParticipantId(e.getId()),
+                    new UpstreamInfo("test", "test1"));
+        }
     }
 
     private ParticipantView mapToParticipantView(final CharacterDTO characterDTO) {

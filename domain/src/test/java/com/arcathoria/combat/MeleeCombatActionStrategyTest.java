@@ -1,7 +1,7 @@
 package com.arcathoria.combat;
 
 import com.arcathoria.Level;
-import com.arcathoria.combat.exception.WrongTurnException;
+import com.arcathoria.combat.exception.WrongTurnDomainException;
 import com.arcathoria.combat.vo.CombatTurn;
 import com.arcathoria.combat.vo.ParticipantId;
 import org.junit.jupiter.api.BeforeEach;
@@ -59,6 +59,6 @@ class MeleeCombatActionStrategyTest {
                 .build());
 
         assertThatThrownBy(() -> meleeCombatActionStrategy.execute(combat, Participant.restore(defender)))
-                .isInstanceOf(WrongTurnException.class);
+                .isInstanceOf(WrongTurnDomainException.class);
     }
 }

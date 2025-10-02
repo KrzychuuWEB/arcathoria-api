@@ -1,8 +1,8 @@
 package com.arcathoria.combat;
 
-import com.arcathoria.combat.exception.CombatAlreadyFinishedException;
-import com.arcathoria.combat.exception.ParticipantNotFoundInCombatException;
-import com.arcathoria.combat.exception.WrongTurnException;
+import com.arcathoria.combat.exception.CombatAlreadyFinishedDomainException;
+import com.arcathoria.combat.exception.ParticipantNotFoundInCombatDomainException;
+import com.arcathoria.combat.exception.WrongTurnDomainException;
 import com.arcathoria.combat.vo.CombatId;
 import com.arcathoria.combat.vo.CombatTurn;
 import com.arcathoria.combat.vo.Damage;
@@ -75,7 +75,7 @@ class Combat {
         if (attacker.getId().equals(participantId)) return attacker;
         if (defender.getId().equals(participantId)) return defender;
 
-        throw new ParticipantNotFoundInCombatException(combatId, participantId);
+        throw new ParticipantNotFoundInCombatDomainException(combatId, participantId);
     }
 
     void performAttack(final ParticipantId participantId, final Damage damage) {
@@ -117,10 +117,11 @@ class Combat {
 
     private void requireInProgress() {
         if (this.combatStatus == CombatStatus.FINISHED || this.combatStatus == CombatStatus.CANCELLED)
-            throw new CombatAlreadyFinishedException(combatId);
+            throw new CombatAlreadyFinishedDomainException(combatId);
     }
 
     private void requireTurnOf(final ParticipantId participantId) {
-        if (!getCurrentTurnParticipant().getId().equals(participantId)) throw new WrongTurnException(getCurrentTurn());
+        if (!getCurrentTurnParticipant().getId().equals(participantId))
+            throw new WrongTurnDomainException(getCurrentTurn());
     }
 }

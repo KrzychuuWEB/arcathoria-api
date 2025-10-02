@@ -1,22 +1,20 @@
 package com.arcathoria;
 
-import com.arcathoria.exception.AccessDeniedException;
+import com.arcathoria.character.exception.CharacterAccessDenied;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.context.MessageSource;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@RestControllerAdvice
-@Order(9999)
+//@RestControllerAdvice
+//@Order(9999)
 class GlobalExceptionHandler {
 
     private final MessageSource messageSource;
@@ -25,10 +23,10 @@ class GlobalExceptionHandler {
         this.messageSource = messageSource;
     }
 
-    @ExceptionHandler(AccessDeniedException.class)
+    @ExceptionHandler(CharacterAccessDenied.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     ApiErrorResponse handleAccessDeniedException(
-            final AccessDeniedException ex, final HttpServletRequest request, final Locale locale) {
+            final CharacterAccessDenied ex, final HttpServletRequest request, final Locale locale) {
 
         return new ApiErrorResponse(
                 HttpStatus.FORBIDDEN.value(),

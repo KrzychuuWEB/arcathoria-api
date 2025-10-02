@@ -3,6 +3,7 @@ package com.arcathoria.combat;
 import com.arcathoria.ApiErrorResponse;
 import com.arcathoria.IntegrationTestContainersConfig;
 import com.arcathoria.SetLocaleHelper;
+import com.arcathoria.UUIDGenerator;
 import com.arcathoria.account.AccountManagerE2EHelper;
 import com.arcathoria.character.CharacterWithAccountContext;
 import com.arcathoria.character.SetupCharacterE2EHelper;
@@ -76,6 +77,23 @@ class CombatControllerE2ETest extends IntegrationTestContainersConfig {
         assertThat(snapshot.combatStatus()).isEqualTo(CombatStatus.IN_PROGRESS);
         assertThat(snapshot.attacker().participantId().value()).isEqualTo(context.characterDTO().id());
         assertThat(snapshot.defender().participantId().value()).isEqualTo(initPveDTO.monsterId());
+    }
+
+    @Test
+    void should_return_CombatParticipantNotAvailableException_when_character_not_selected() {
+        InitPveDTO initPveDTO = new InitPveDTO(exampleMonsterId);
+        HttpHeaders headers = accountManagerE2EHelper.registerAndGetAuthHeaders("test" + UUIDGenerator.generate(5) + "@arcathoria.com");
+        SetLocaleHelper.withLocale(headers, "pl");
+
+        ResponseEntity<ProblemDetail> response = restTemplate.postForEntity(baseUrl + "/init/pve", new HttpEntity<>(initPveDTO, headers), ProblemDetail.class);
+        ProblemDetail problem = response.getBody();
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(problem).isNotNull();
+        assertThat(problem.getProperties())
+                .containsEntry("errorCode", "ERR_COMBAT_PARTICIPANT_NOT_AVAILABLE");
+        assertThat(problem.getProperties().get("upstream")).isNotNull();
+        assertThat(problem.getDetail()).contains("dostępny");
     }
 
     @Test

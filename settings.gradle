@@ -5,4 +5,4 @@ include 'app'
 include 'bootstrap'
 include 'shared-test-helpers'
 include 'shared-kernel'
-
+include 'errors-spring-boot-starter'
