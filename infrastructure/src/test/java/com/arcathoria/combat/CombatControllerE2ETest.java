@@ -52,7 +52,7 @@ class CombatControllerE2ETest extends IntegrationTestContainersConfig {
         this.createCombatE2EHelper = new CreateCombatE2EHelper(restTemplate);
         this.accountManagerE2EHelper = new AccountManagerE2EHelper(restTemplate);
     }
-
+    
     @Test
     void should_init_pve_combat_and_save_combat_in_cache() {
         InitPveDTO initPveDTO = new InitPveDTO(exampleMonsterId);
