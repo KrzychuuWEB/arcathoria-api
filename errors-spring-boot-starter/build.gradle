@@ -1,7 +1,21 @@
 plugins {
-    id 'java'
-    id 'org.springframework.boot' version '3.4.1'
     id 'io.spring.dependency-management' version '1.1.7'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:3.4.1"
+    }
+}
+
+jar {
+    enabled = true
+}
+
+plugins.withId('org.springframework.boot') {
+    tasks.named('bootJar') {
+        enabled = false
+    }
 }
 
 dependencies {
