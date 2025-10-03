@@ -1,6 +1,6 @@
 package com.arcathoria.combat;
 
-import com.arcathoria.combat.exception.OnlyOneActiveCombatAllowedDomainException;
+import com.arcathoria.combat.exception.OnlyOneActiveCombatAllowedException;
 import com.arcathoria.combat.vo.ParticipantId;
 
 class OnlyOneActiveCombatPolicy {
@@ -13,7 +13,7 @@ class OnlyOneActiveCombatPolicy {
 
     void ensureNoneActiveFor(final ParticipantId participantId) {
         if (combatSessionStore.getActiveCombatIdByParticipantId(participantId).isPresent()) {
-            throw new OnlyOneActiveCombatAllowedDomainException(participantId);
+            throw new OnlyOneActiveCombatAllowedException(participantId);
         }
     }
 }

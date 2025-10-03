@@ -4,11 +4,11 @@ import com.arcathoria.combat.vo.CombatId;
 
 import java.util.Map;
 
-public class CombatNotFoundDomainException extends CombatDomainException {
+public class CombatNotFoundException extends CombatDomainException {
 
     private final CombatId combatId;
 
-    public CombatNotFoundDomainException(final CombatId combatId) {
+    public CombatNotFoundException(final CombatId combatId) {
         super("Combat not found with id: " + combatId,
                 CombatExceptionErrorCode.ERR_COMBAT_NOT_FOUND,
                 Map.of("combatId", combatId.value())

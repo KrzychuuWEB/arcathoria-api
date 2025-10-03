@@ -1,8 +1,8 @@
 package com.arcathoria.combat;
 
-import com.arcathoria.combat.exception.CombatAlreadyFinishedDomainException;
-import com.arcathoria.combat.exception.ParticipantNotFoundInCombatDomainException;
-import com.arcathoria.combat.exception.WrongTurnDomainException;
+import com.arcathoria.combat.exception.CombatAlreadyFinishedException;
+import com.arcathoria.combat.exception.ParticipantNotFoundInCombatException;
+import com.arcathoria.combat.exception.WrongTurnException;
 import com.arcathoria.combat.vo.CombatId;
 import com.arcathoria.combat.vo.CombatTurn;
 import com.arcathoria.combat.vo.Damage;
@@ -194,7 +194,7 @@ class CombatTest {
         );
 
         assertThatThrownBy(() -> combat.performAttack(combat.getCurrentTurnParticipant().getId(), new Damage(combat.getSnapshot().attacker().health().getCurrent())))
-                .isInstanceOf(CombatAlreadyFinishedDomainException.class)
+                .isInstanceOf(CombatAlreadyFinishedException.class)
                 .hasMessageContaining("is already finished, this action cannot be performed");
     }
 
@@ -211,7 +211,7 @@ class CombatTest {
         );
 
         assertThatThrownBy(() -> combat.performAttack(attacker.participantId(), new Damage(50)))
-                .isInstanceOf(WrongTurnDomainException.class)
+                .isInstanceOf(WrongTurnException.class)
                 .hasMessageContaining("Turn belongs to");
     }
 
@@ -248,7 +248,7 @@ class CombatTest {
         Combat combat = Combat.restore(CombatSnapshotMother.aCombat().withAttacker(attacker).build());
 
         assertThatThrownBy(() -> combat.getParticipant(participantId))
-                .isInstanceOf(ParticipantNotFoundInCombatDomainException.class)
+                .isInstanceOf(ParticipantNotFoundInCombatException.class)
                 .hasMessageContaining("Participant with id");
     }
 }

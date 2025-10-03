@@ -2,8 +2,8 @@ package com.arcathoria.combat;
 
 import com.arcathoria.combat.command.InitPVECombatCommand;
 import com.arcathoria.combat.dto.ParticipantView;
-import com.arcathoria.combat.exception.CombatParticipantNotAvailableDomainException;
-import com.arcathoria.combat.exception.OnlyOneActiveCombatAllowedDomainException;
+import com.arcathoria.combat.exception.CombatParticipantNotAvailableException;
+import com.arcathoria.combat.exception.OnlyOneActiveCombatAllowedException;
 import com.arcathoria.combat.vo.AccountId;
 import com.arcathoria.combat.vo.MonsterId;
 import com.arcathoria.combat.vo.ParticipantId;
@@ -63,10 +63,10 @@ class InitialPVECombatUseCaseTest {
         ParticipantView player = ParticipantViewMother.aParticipantBuilder().withParticipantType(ParticipantType.PLAYER).build();
         ParticipantView monster = ParticipantViewMother.aParticipantBuilder().withParticipantType(ParticipantType.MONSTER).build();
 
-        when(combatParticipantService.getCharacterByAccountId(new AccountId(player.id()))).thenThrow(new CombatParticipantNotAvailableDomainException(new ParticipantId(player.id()), null));
+        when(combatParticipantService.getCharacterByAccountId(new AccountId(player.id()))).thenThrow(new CombatParticipantNotAvailableException(new ParticipantId(player.id()), null));
 
         assertThatThrownBy(() -> initialPVECombatUseCase.init(new InitPVECombatCommand(new AccountId(player.id()), new MonsterId(monster.id()))))
-                .isInstanceOf(CombatParticipantNotAvailableDomainException.class)
+                .isInstanceOf(CombatParticipantNotAvailableException.class)
                 .hasMessageContaining(player.id().toString());
 
         verify(combatSessionStore, never()).save(any(CombatSnapshot.class));
@@ -80,10 +80,10 @@ class InitialPVECombatUseCaseTest {
         ParticipantView monster = ParticipantViewMother.aParticipantBuilder().withParticipantType(ParticipantType.MONSTER).build();
 
         when(combatParticipantService.getCharacterByAccountId(new AccountId(player.id()))).thenReturn(attacker);
-        when(monsterClient.getMonsterById(new MonsterId(monster.id()))).thenThrow(CombatParticipantNotAvailableDomainException.class);
+        when(monsterClient.getMonsterById(new MonsterId(monster.id()))).thenThrow(CombatParticipantNotAvailableException.class);
 
         assertThatThrownBy(() -> initialPVECombatUseCase.init(new InitPVECombatCommand(new AccountId(player.id()), new MonsterId(monster.id()))))
-                .isInstanceOf(CombatParticipantNotAvailableDomainException.class);
+                .isInstanceOf(CombatParticipantNotAvailableException.class);
 
         verify(combatSessionStore, never()).save(any(CombatSnapshot.class));
     }
@@ -98,10 +98,10 @@ class InitialPVECombatUseCaseTest {
 
         when(combatParticipantService.getCharacterByAccountId(new AccountId(player.id()))).thenReturn(attacker);
         when(monsterClient.getMonsterById(new MonsterId(monster.id()))).thenReturn(monster);
-        when(combatEngine.initialCombat(attacker, defender, CombatType.PVE)).thenThrow(new OnlyOneActiveCombatAllowedDomainException(attacker.getId()));
+        when(combatEngine.initialCombat(attacker, defender, CombatType.PVE)).thenThrow(new OnlyOneActiveCombatAllowedException(attacker.getId()));
 
         assertThatThrownBy(() -> initialPVECombatUseCase.init(new InitPVECombatCommand(new AccountId(player.id()), new MonsterId(monster.id()))))
-                .isInstanceOf(OnlyOneActiveCombatAllowedDomainException.class)
+                .isInstanceOf(OnlyOneActiveCombatAllowedException.class)
                 .hasMessageContaining(attacker.getId().value().toString());
 
         verify(combatSessionStore, never()).save(any(CombatSnapshot.class));

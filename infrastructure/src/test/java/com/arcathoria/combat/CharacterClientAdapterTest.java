@@ -58,4 +58,14 @@ class CharacterClientAdapterTest extends IntegrationTestContainersConfig {
         assertThat(result.id()).isEqualTo(characterDTO.id());
         assertThat(result.name()).isEqualTo(characterDTO.characterName());
     }
+
+    @Test
+    void should_return_CombatParticipantNotFound_when_character_not_found() {
+
+    }
+
+    @Test
+    void should_return_CombatParticipantNotFound_when_character_not_selected() {
+
+    }
 }

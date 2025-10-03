@@ -7,12 +7,12 @@ import com.arcathoria.exception.UpstreamInfo;
 import java.util.Map;
 import java.util.Optional;
 
-public class CombatParticipantNotAvailableDomainException extends CombatApplicationDomainException implements UpstreamAware {
+public class CombatParticipantNotAvailableException extends CombatApplicationException implements UpstreamAware {
 
     private final ParticipantId participantId;
     private final UpstreamInfo upstreamInfo;
 
-    public CombatParticipantNotAvailableDomainException(final ParticipantId participantId, final UpstreamInfo upstreamInfo) {
+    public CombatParticipantNotAvailableException(final ParticipantId participantId, final UpstreamInfo upstreamInfo) {
         super("Participant with id " + participantId.value() + " not found",
                 CombatExceptionErrorCode.ERR_COMBAT_PARTICIPANT_NOT_AVAILABLE,
                 Map.of("participantId", participantId.value())

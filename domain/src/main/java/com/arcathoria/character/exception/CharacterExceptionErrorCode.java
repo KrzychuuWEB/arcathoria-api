@@ -7,6 +7,7 @@ public enum CharacterExceptionErrorCode implements DomainErrorCode {
 
     ERR_CHARACTER_SELECTED_NOT_FOUND(DomainExceptionCodeCategory.NOT_FOUND),
     ERR_CHARACTER_NOT_FOUND(DomainExceptionCodeCategory.NOT_FOUND),
+    ERR_CHARACTER_OWNER_NOT_FOUND(DomainExceptionCodeCategory.NOT_FOUND),
     ERR_CHARACTER_NAME_EXISTS(DomainExceptionCodeCategory.CONFLICT),
     ERR_CHARACTER_ACCESS_DENIED(DomainExceptionCodeCategory.FORBIDDEN);
 

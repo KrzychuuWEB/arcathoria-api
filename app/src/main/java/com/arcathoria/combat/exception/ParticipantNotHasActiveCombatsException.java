@@ -4,13 +4,13 @@ import com.arcathoria.combat.vo.ParticipantId;
 
 import java.util.Map;
 
-public class OnlyOneActiveCombatAllowedDomainException extends CombatDomainException {
+public class ParticipantNotHasActiveCombatsException extends CombatDomainException {
 
     private final ParticipantId participantId;
 
-    public OnlyOneActiveCombatAllowedDomainException(final ParticipantId participantId) {
-        super("Participant " + participantId.value() + " already has an active combat",
-                CombatExceptionErrorCode.ERR_COMBAT_ONLY_ONE_ACTIVE_COMBAT,
+    public ParticipantNotHasActiveCombatsException(final ParticipantId participantId) {
+        super("Participant " + participantId + " not has active combats.",
+                CombatExceptionErrorCode.ERR_PARTICIPANT_NOT_HAS_ACTIVE_COMBAT,
                 Map.of("participantId", participantId.value())
         );
         this.participantId = participantId;

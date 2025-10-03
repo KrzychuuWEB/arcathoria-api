@@ -1,7 +1,7 @@
 package com.arcathoria.combat;
 
 import com.arcathoria.ProblemDetailsFactory;
-import com.arcathoria.combat.exception.CombatApplicationDomainException;
+import com.arcathoria.combat.exception.CombatApplicationException;
 import com.arcathoria.combat.exception.CombatDomainException;
 import com.arcathoria.exception.DomainExceptionContract;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,7 +25,7 @@ class CombatExceptionHandler {
         this.problemDetailsFactory = problemDetailsFactory;
     }
 
-    @ExceptionHandler({CombatDomainException.class, CombatApplicationDomainException.class})
+    @ExceptionHandler({CombatDomainException.class, CombatApplicationException.class})
     ProblemDetail handleCombatExceptions(final DomainExceptionContract ex, final HttpServletRequest request, final Locale locale) {
         return problemDetailsFactory.build(ex, request.getRequestURI(), locale, logger);
     }

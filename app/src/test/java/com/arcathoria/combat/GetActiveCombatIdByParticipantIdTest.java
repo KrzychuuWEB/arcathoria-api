@@ -1,6 +1,6 @@
 package com.arcathoria.combat;
 
-import com.arcathoria.combat.exception.ParticipantNotHasActiveCombatsDomainException;
+import com.arcathoria.combat.exception.ParticipantNotHasActiveCombatsException;
 import com.arcathoria.combat.vo.CombatId;
 import com.arcathoria.combat.vo.ParticipantId;
 import org.junit.jupiter.api.Test;
@@ -46,7 +46,7 @@ class GetActiveCombatIdByParticipantIdTest {
         when(combatSessionStore.getActiveCombatIdByParticipantId(any(ParticipantId.class))).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> getActiveCombatIdByParticipantId.getActiveCombat(new ParticipantId(UUID.randomUUID())))
-                .isInstanceOf(ParticipantNotHasActiveCombatsDomainException.class)
+                .isInstanceOf(ParticipantNotHasActiveCombatsException.class)
                 .hasMessageContaining("not has active combats");
 
         verify(combatSessionStore).getActiveCombatIdByParticipantId(any(ParticipantId.class));

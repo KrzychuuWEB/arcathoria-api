@@ -2,9 +2,10 @@ package com.arcathoria.combat;
 
 import com.arcathoria.character.CharacterQueryFacade;
 import com.arcathoria.character.dto.CharacterDTO;
+import com.arcathoria.character.exception.CharacterNotFoundException;
 import com.arcathoria.character.exception.SelectedCharacterNotFoundException;
 import com.arcathoria.combat.dto.ParticipantView;
-import com.arcathoria.combat.exception.CombatParticipantNotAvailableDomainException;
+import com.arcathoria.combat.exception.CombatParticipantNotAvailableException;
 import com.arcathoria.combat.vo.AccountId;
 import com.arcathoria.combat.vo.ParticipantId;
 import com.arcathoria.exception.UpstreamInfo;
@@ -24,7 +25,10 @@ class CharacterClientAdapter implements CharacterClient {
         try {
             return mapToParticipantView(characterQueryFacade.getSelectedCharacter(accountId.value()));
         } catch (SelectedCharacterNotFoundException e) {
-            throw new CombatParticipantNotAvailableDomainException(new ParticipantId(e.getAccountId().value()),
+            throw new CombatParticipantNotAvailableException(new ParticipantId(e.getAccountId().value()),
+                    new UpstreamInfo(e.getDomain(), e.getErrorCode().getCodeName()));
+        } catch (CharacterNotFoundException e) {
+            throw new CombatParticipantNotAvailableException(new ParticipantId(e.getCharacterId().value()),
                     new UpstreamInfo(e.getDomain(), e.getErrorCode().getCodeName()));
         }
     }

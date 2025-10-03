@@ -1,6 +1,6 @@
 package com.arcathoria.combat;
 
-import com.arcathoria.combat.exception.CombatNotFoundDomainException;
+import com.arcathoria.combat.exception.CombatNotFoundException;
 import com.arcathoria.combat.vo.CombatId;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,7 +18,7 @@ class GetCombatSnapshotFromStore {
         return combatSessionStore.getCombatById(combatId)
                 .orElseThrow(() -> {
                     log.warn("Combat not found with id: {}", combatId.value());
-                    return new CombatNotFoundDomainException(combatId);
+                    return new CombatNotFoundException(combatId);
                 });
     }
 }

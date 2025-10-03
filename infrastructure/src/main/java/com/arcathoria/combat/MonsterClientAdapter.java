@@ -1,7 +1,7 @@
 package com.arcathoria.combat;
 
 import com.arcathoria.combat.dto.ParticipantView;
-import com.arcathoria.combat.exception.CombatParticipantNotAvailableDomainException;
+import com.arcathoria.combat.exception.CombatParticipantNotAvailableException;
 import com.arcathoria.combat.vo.MonsterId;
 import com.arcathoria.combat.vo.ParticipantId;
 import com.arcathoria.exception.UpstreamInfo;
@@ -24,7 +24,7 @@ class MonsterClientAdapter implements MonsterClient {
         try {
             return mapToParticipantView(monsterQueryFacade.getMonsterById(monsterId.value()));
         } catch (MonsterNotFoundException e) {
-            throw new CombatParticipantNotAvailableDomainException(new ParticipantId(e.getMonsterId().value()),
+            throw new CombatParticipantNotAvailableException(new ParticipantId(e.getMonsterId().value()),
                     new UpstreamInfo(e.getDomain(), e.getErrorCode().getCodeName()));
         }
     }

@@ -1,6 +1,6 @@
 package com.arcathoria.combat;
 
-import com.arcathoria.combat.exception.ParticipantNotFoundInCombatDomainException;
+import com.arcathoria.combat.exception.ParticipantNotFoundInCombatException;
 import com.arcathoria.combat.vo.ParticipantId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,7 +47,7 @@ class GetCombatFromStoreByIdAndParticipantIdTest {
         when(getCombatSnapshotFromStore.getSnapshotById(snapshot.combatId())).thenReturn(snapshot);
 
         assertThatThrownBy(() -> getCombatFromStoreByIdAndParticipantId.getByCombatIdAndParticipantId(snapshot.combatId(), otherParticipant))
-                .isInstanceOf(ParticipantNotFoundInCombatDomainException.class)
+                .isInstanceOf(ParticipantNotFoundInCombatException.class)
                 .hasMessageContaining(otherParticipant.value().toString());
 
         verify(getCombatSnapshotFromStore).getSnapshotById(snapshot.combatId());
