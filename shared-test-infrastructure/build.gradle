@@ -1,0 +1,20 @@
+plugins {
+    id 'java'
+    id 'java-test-fixtures'
+}
+
+ext {
+    springBootVersion = '3.4.1'
+    testcontainersVersion = '1.19.8'
+}
+
+dependencies {
+    testFixturesApi "org.testcontainers:junit-jupiter:${testcontainersVersion}"
+    testFixturesApi "org.testcontainers:postgresql:${testcontainersVersion}"
+    testFixturesApi "org.testcontainers:testcontainers:${testcontainersVersion}"
+    testFixturesApi "org.springframework.boot:spring-boot-test:${springBootVersion}"
+    testFixturesApi "org.springframework.boot:spring-boot-testcontainers:${springBootVersion}"
+    testFixturesApi "org.springframework:spring-test:6.2.1"
+    testFixturesApi "org.springframework:spring-web:6.2.1"
+    testFixturesApi "org.springframework:spring-context:6.2.1"
+}

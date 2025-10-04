@@ -1,7 +1,7 @@
 package com.arcathoria.character;
 
-import com.arcathoria.IntegrationTestContainersConfig;
 import com.arcathoria.UUIDGenerator;
+import com.arcathoria.WithPostgres;
 import com.arcathoria.character.vo.AccountId;
 import com.arcathoria.character.vo.CharacterId;
 import com.arcathoria.character.vo.CharacterName;
@@ -21,7 +21,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import({CharacterQueryRepositoryAdapter.class, CharacterRepositoryAdapter.class})
-class CharacterQueryRepositoryAdapterTest extends IntegrationTestContainersConfig {
+@WithPostgres
+class CharacterQueryRepositoryAdapterTest {
 
     @Autowired
     private CharacterRepository repository;

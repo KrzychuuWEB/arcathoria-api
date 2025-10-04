@@ -1,6 +1,6 @@
 package com.arcathoria.account;
 
-import com.arcathoria.IntegrationTestContainersConfig;
+import com.arcathoria.WithPostgres;
 import com.arcathoria.account.vo.AccountId;
 import com.arcathoria.account.vo.Email;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import({AccountQueryRepositoryAdapter.class, AccountRepositoryAdapter.class})
-class AccountQueryRepositoryAdapterTest extends IntegrationTestContainersConfig {
+@WithPostgres
+class AccountQueryRepositoryAdapterTest {
 
     @Autowired
     private AccountQueryRepositoryAdapter accountQueryRepositoryAdapter;

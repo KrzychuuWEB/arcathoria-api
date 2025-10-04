@@ -1,7 +1,7 @@
 package com.arcathoria.monster;
 
-import com.arcathoria.IntegrationTestContainersConfig;
 import com.arcathoria.SetLocaleHelper;
+import com.arcathoria.WithPostgres;
 import com.arcathoria.account.AccountManagerE2EHelper;
 import com.arcathoria.monster.dto.MonsterDTO;
 import com.arcathoria.monster.exception.MonsterExceptionErrorCode;
@@ -15,11 +15,14 @@ import org.springframework.http.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class MonsterControllerE2ETest extends IntegrationTestContainersConfig {
+@WithPostgres
+class MonsterControllerE2ETest {
 
     private final String baseUrl = "/monsters";
+
     @Autowired
     private TestRestTemplate restTemplate;
+
     private AccountManagerE2EHelper accountManagerE2EHelper;
 
     @BeforeEach

@@ -1,8 +1,9 @@
 package com.arcathoria.combat;
 
-import com.arcathoria.IntegrationTestContainersConfig;
 import com.arcathoria.SetLocaleHelper;
 import com.arcathoria.UUIDGenerator;
+import com.arcathoria.WithPostgres;
+import com.arcathoria.WithRedis;
 import com.arcathoria.account.AccountManagerE2EHelper;
 import com.arcathoria.character.CharacterWithAccountContext;
 import com.arcathoria.character.SetupCharacterE2EHelper;
@@ -30,7 +31,9 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class CombatControllerE2ETest extends IntegrationTestContainersConfig {
+@WithRedis
+@WithPostgres
+class CombatControllerE2ETest {
 
     private final String baseUrl = "/combats";
     private final UUID exampleMonsterId = UUID.fromString("bf4397d8-b4dc-361e-9b6d-191a352e9134");

@@ -7,8 +7,7 @@ import java.util.Locale;
 
 public class SetLocaleHelper {
 
-    public static HttpHeaders withLocale(HttpHeaders headers, String langTag) {
+    public static void withLocale(final HttpHeaders headers, final String langTag) {
         headers.setAcceptLanguageAsLocales(List.of(Locale.forLanguageTag(langTag)));
-        return headers;
     }
 }

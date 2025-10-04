@@ -1,13 +1,14 @@
 package com.arcathoria.character;
 
-import com.arcathoria.IntegrationTestContainersConfig;
+import com.arcathoria.WithRedis;
 import com.arcathoria.character.exception.CharacterNotSelectedException;
 import com.arcathoria.character.vo.AccountId;
 import com.arcathoria.character.vo.CharacterId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.data.redis.DataRedisTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.UUID;
@@ -15,8 +16,10 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@SpringBootTest
-class SelectCharacterCacheAdapterTest extends IntegrationTestContainersConfig {
+@DataRedisTest
+@Import({SelectCharacterCacheAdapter.class})
+@WithRedis
+class SelectCharacterCacheAdapterTest {
 
     @Autowired
     private SelectCharacterCacheAdapter characterCacheAdapter;

@@ -1,6 +1,6 @@
 package com.arcathoria.character;
 
-import com.arcathoria.IntegrationTestContainersConfig;
+import com.arcathoria.WithPostgres;
 import com.arcathoria.character.vo.AccountId;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import(CharacterRepositoryAdapter.class)
-class CharacterRepositoryAdapterTest extends IntegrationTestContainersConfig {
+@WithPostgres
+class CharacterRepositoryAdapterTest {
 
     @Autowired
     private CharacterRepositoryAdapter repository;

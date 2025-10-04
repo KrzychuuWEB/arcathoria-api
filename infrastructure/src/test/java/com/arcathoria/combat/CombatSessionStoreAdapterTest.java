@@ -1,11 +1,13 @@
 package com.arcathoria.combat;
 
-import com.arcathoria.IntegrationTestContainersConfig;
+import com.arcathoria.WithRedis;
 import com.arcathoria.combat.vo.CombatId;
 import com.arcathoria.combat.vo.ParticipantId;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.data.redis.DataRedisTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.Optional;
@@ -14,8 +16,10 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class CombatSessionStoreAdapterTest extends IntegrationTestContainersConfig {
+@DataRedisTest
+@Import({CombatSessionStoreAdapter.class, JacksonAutoConfiguration.class})
+@WithRedis
+class CombatSessionStoreAdapterTest {
 
     @Autowired
     private CombatSessionStoreAdapter combatSessionStoreAdapter;

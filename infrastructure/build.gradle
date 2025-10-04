@@ -27,16 +27,17 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-jackson:0.12.5'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.4'
     runtimeOnly 'org.postgresql:postgresql'
-    testImplementation project(':bootstrap')
-    testImplementation project(':shared-test-helpers')
     testImplementation 'org.postgresql:postgresql'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.boot:spring-boot-testcontainers'
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.testcontainers:junit-jupiter'
     testImplementation 'org.testcontainers:postgresql'
+    testImplementation project(':bootstrap')
+    testImplementation project(':shared-test-helpers')
     testImplementation testFixtures(project(':app'))
     testImplementation testFixtures(project(':domain'))
+    testImplementation testFixtures(project(":shared-test-infrastructure"))
 }
 
 test {

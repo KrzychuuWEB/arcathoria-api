@@ -1,8 +1,9 @@
 package com.arcathoria.character;
 
-import com.arcathoria.IntegrationTestContainersConfig;
 import com.arcathoria.SetLocaleHelper;
 import com.arcathoria.UUIDGenerator;
+import com.arcathoria.WithPostgres;
+import com.arcathoria.WithRedis;
 import com.arcathoria.account.AccountManagerE2EHelper;
 import com.arcathoria.character.dto.CharacterDTO;
 import com.arcathoria.character.dto.CreateCharacterDTO;
@@ -22,7 +23,9 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class CharacterControllerE2ETest extends IntegrationTestContainersConfig {
+@WithPostgres
+@WithRedis
+class CharacterControllerE2ETest {
 
     private String randomCharacterName;
     private final String baseUrl = "/characters";

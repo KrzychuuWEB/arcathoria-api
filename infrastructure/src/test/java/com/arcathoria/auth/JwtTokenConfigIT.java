@@ -1,12 +1,11 @@
 package com.arcathoria.auth;
 
-import com.arcathoria.IntegrationTestContainersConfig;
+import com.arcathoria.WithPostgres;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.util.UUID;
 
@@ -14,8 +13,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
-@ActiveProfiles("test")
-class JwtTokenConfigIT extends IntegrationTestContainersConfig {
+@WithPostgres
+class JwtTokenConfigIT {
 
     @Autowired
     private JwtTokenService jwtTokenService;

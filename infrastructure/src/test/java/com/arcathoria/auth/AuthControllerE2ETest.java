@@ -1,6 +1,6 @@
 package com.arcathoria.auth;
 
-import com.arcathoria.IntegrationTestContainersConfig;
+import com.arcathoria.WithPostgres;
 import com.arcathoria.account.AccountManagerE2EHelper;
 import com.arcathoria.account.dto.RegisterDTO;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,13 +12,12 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
-class AuthControllerE2ETest extends IntegrationTestContainersConfig {
+@WithPostgres
+class AuthControllerE2ETest {
 
     private String authenticateUrl = "/authenticate";
 

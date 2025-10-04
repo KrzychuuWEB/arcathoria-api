@@ -1,7 +1,7 @@
 package com.arcathoria.account;
 
-import com.arcathoria.IntegrationTestContainersConfig;
 import com.arcathoria.SetLocaleHelper;
+import com.arcathoria.WithPostgres;
 import com.arcathoria.account.dto.AccountDTO;
 import com.arcathoria.account.dto.RegisterDTO;
 import com.arcathoria.account.exception.AccountExceptionErrorCode;
@@ -14,7 +14,8 @@ import org.springframework.http.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class AccountControllerE2ETest extends IntegrationTestContainersConfig {
+@WithPostgres
+class AccountControllerE2ETest {
 
     @Autowired
     private TestRestTemplate restTemplate;
