@@ -212,13 +212,11 @@ class CharacterControllerE2ETest extends IntegrationTestContainersConfig {
         );
         ProblemDetail result = response.getBody();
 
-        System.out.println(result);
-
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(result).isNotNull();
         assertThat(result.getDetail()).contains("Postać nie została wybrana");
         assertThat(result.getProperties())
-                .containsEntry("errorCode", CharacterExceptionErrorCode.ERR_CHARACTER_SELECTED_NOT_FOUND.getCodeName());
+                .containsEntry("errorCode", CharacterExceptionErrorCode.ERR_CHARACTER_NOT_SELECTED.getCodeName());
     }
 
     @Test
@@ -251,6 +249,6 @@ class CharacterControllerE2ETest extends IntegrationTestContainersConfig {
         assertThat(result).isNotNull();
         assertThat(result.getDetail()).contains("Postać nie została wybrana");
         assertThat(result.getProperties())
-                .containsEntry("errorCode", CharacterExceptionErrorCode.ERR_CHARACTER_SELECTED_NOT_FOUND.getCodeName());
+                .containsEntry("errorCode", CharacterExceptionErrorCode.ERR_CHARACTER_NOT_SELECTED.getCodeName());
     }
 }

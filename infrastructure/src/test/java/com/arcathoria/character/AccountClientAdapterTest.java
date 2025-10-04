@@ -5,6 +5,7 @@ import com.arcathoria.account.dto.AccountDTO;
 import com.arcathoria.account.exception.AccountNotFoundException;
 import com.arcathoria.character.dto.AccountView;
 import com.arcathoria.character.exception.CharacterOwnerNotFound;
+import com.arcathoria.character.exception.ExternalServiceUnavailableException;
 import com.arcathoria.character.vo.AccountId;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,8 @@ class AccountClientAdapterTest {
     @Autowired
     private AccountClientAdapter accountClientAdapter;
 
+    private final AccountId accountId = new AccountId(UUID.randomUUID());
+
     @Test
     void should_get_account_by_account_id() {
         AccountId accountId = new AccountId(UUID.randomUUID());
@@ -40,27 +43,32 @@ class AccountClientAdapterTest {
     }
 
     @Test
-    void should_return_CharacterNotFoundException_when_account_id_not_exists() {
-        AccountId accountId = new AccountId(UUID.randomUUID());
-
+    void should_return_CharacterNotFoundException_when_account_id_not_exists_for_get_by_id() {
         when(accountQueryFacade.getById(accountId.value()))
                 .thenThrow(new AccountNotFoundException(new com.arcathoria.account.vo.AccountId(accountId.value())));
 
 
         assertThatThrownBy(() -> accountClientAdapter.getById(accountId))
                 .isInstanceOf(CharacterOwnerNotFound.class)
-                .satisfies(throwable -> {
-                    var ex = (CharacterOwnerNotFound) throwable;
-
-                    assertThat(ex.getUpstreamInfo())
-                            .isPresent()
-                            .get()
-                            .satisfies(up -> {
-                                assertThat(up.type()).isEqualTo("account");
-                                assertThat(up.code()).isEqualTo("ERR_ACCOUNT_NOT_FOUND");
-                            });
-
+                .satisfies(e -> {
+                    CharacterOwnerNotFound ex = (CharacterOwnerNotFound) e;
+                    assertThat(ex.getUpstreamInfo()).isPresent();
+                    assertThat(ex.getUpstreamInfo().get().type()).isEqualTo("account");
+                    assertThat(ex.getUpstreamInfo().get().code()).isEqualTo("ERR_ACCOUNT_NOT_FOUND");
                     assertThat(ex.getContext()).containsEntry("accountId", accountId.value());
+                });
+    }
+
+    @Test
+    void should_return_ServiceUnavailable_when_account_query_facade_throws_exception_for_get_by_id() {
+        when(accountQueryFacade.getById(accountId.value()))
+                .thenThrow(new RuntimeException("test exception"));
+
+        assertThatThrownBy(() -> accountClientAdapter.getById(accountId))
+                .isInstanceOf(ExternalServiceUnavailableException.class)
+                .satisfies(e -> {
+                    ExternalServiceUnavailableException ex = (ExternalServiceUnavailableException) e;
+                    assertThat(ex.getContext()).containsEntry("service", "account");
                 });
     }
 }

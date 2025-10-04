@@ -5,10 +5,11 @@ import com.arcathoria.exception.DomainExceptionCodeCategory;
 
 public enum CharacterExceptionErrorCode implements DomainErrorCode {
 
-    ERR_CHARACTER_SELECTED_NOT_FOUND(DomainExceptionCodeCategory.NOT_FOUND),
+    ERR_CHARACTER_NOT_SELECTED(DomainExceptionCodeCategory.NOT_FOUND),
     ERR_CHARACTER_NOT_FOUND(DomainExceptionCodeCategory.NOT_FOUND),
     ERR_CHARACTER_OWNER_NOT_FOUND(DomainExceptionCodeCategory.NOT_FOUND),
     ERR_CHARACTER_NAME_EXISTS(DomainExceptionCodeCategory.CONFLICT),
+    ERR_SERVICE_UNAVAILABLE(DomainExceptionCodeCategory.SERVICE_UNAVAILABLE),
     ERR_CHARACTER_ACCESS_DENIED(DomainExceptionCodeCategory.FORBIDDEN);
 
     private final DomainExceptionCodeCategory category;

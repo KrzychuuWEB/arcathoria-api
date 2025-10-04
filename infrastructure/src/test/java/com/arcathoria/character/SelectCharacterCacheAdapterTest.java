@@ -1,7 +1,7 @@
 package com.arcathoria.character;
 
 import com.arcathoria.IntegrationTestContainersConfig;
-import com.arcathoria.character.exception.SelectedCharacterNotFoundException;
+import com.arcathoria.character.exception.CharacterNotSelectedException;
 import com.arcathoria.character.vo.AccountId;
 import com.arcathoria.character.vo.CharacterId;
 import org.junit.jupiter.api.BeforeEach;
@@ -66,13 +66,13 @@ class SelectCharacterCacheAdapterTest extends IntegrationTestContainersConfig {
         characterCacheAdapter.remove(this.accountId);
 
         assertThatThrownBy(() -> characterCacheAdapter.getAndSetNewExpiredTime(this.accountId))
-                .isInstanceOf(SelectedCharacterNotFoundException.class);
+                .isInstanceOf(CharacterNotSelectedException.class);
     }
 
     @Test
     void should_throw_exception_when_character_id_is_not_in_redis() {
         assertThatThrownBy(() -> characterCacheAdapter.getAndSetNewExpiredTime(this.accountId))
-                .isInstanceOf(SelectedCharacterNotFoundException.class);
+                .isInstanceOf(CharacterNotSelectedException.class);
     }
 
     private void sleep(long millis) {

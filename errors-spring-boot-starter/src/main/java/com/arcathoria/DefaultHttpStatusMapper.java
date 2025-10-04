@@ -11,6 +11,7 @@ public class DefaultHttpStatusMapper implements HttpStatusMapper {
             case DomainExceptionCodeCategory.NOT_FOUND -> HttpStatus.NOT_FOUND;
             case DomainExceptionCodeCategory.CONFLICT -> HttpStatus.CONFLICT;
             case DomainExceptionCodeCategory.FORBIDDEN -> HttpStatus.FORBIDDEN;
+            case DomainExceptionCodeCategory.SERVICE_UNAVAILABLE -> HttpStatus.SERVICE_UNAVAILABLE;
             default -> HttpStatus.BAD_REQUEST;
         };
     }

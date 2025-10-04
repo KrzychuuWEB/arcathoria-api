@@ -99,7 +99,7 @@ class CombatControllerE2ETest extends IntegrationTestContainersConfig {
         @SuppressWarnings("unchecked")
         Map<String, Object> upstream = (Map<String, Object>) problem.getProperties().get("upstream");
         assertThat(upstream.get("type")).isEqualTo("character");
-        assertThat(upstream.get("code")).isEqualTo("ERR_CHARACTER_SELECTED_NOT_FOUND");
+        assertThat(upstream.get("code")).isEqualTo("ERR_CHARACTER_NOT_SELECTED");
     }
 
     @Test
