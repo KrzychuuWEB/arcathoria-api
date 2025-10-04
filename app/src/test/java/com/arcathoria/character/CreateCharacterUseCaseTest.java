@@ -1,9 +1,9 @@
 package com.arcathoria.character;
 
-import com.arcathoria.account.exception.AccountNotFoundException;
 import com.arcathoria.character.command.CreateCharacterCommand;
 import com.arcathoria.character.dto.AccountView;
 import com.arcathoria.character.exception.CharacterNameExistsException;
+import com.arcathoria.character.exception.CharacterOwnerNotFound;
 import com.arcathoria.character.vo.AccountId;
 import com.arcathoria.character.vo.CharacterName;
 import org.junit.jupiter.api.Test;
@@ -68,10 +68,10 @@ class CreateCharacterUseCaseTest {
     void should_propagate_exception_when_account_does_not_exist() {
         CreateCharacterCommand command = CreateCharacterCommandMother.aCreateCharacterCommand().build();
 
-        when(accountClient.getById(any(AccountId.class))).thenThrow(AccountNotFoundException.class);
+        when(accountClient.getById(any(AccountId.class))).thenThrow(CharacterOwnerNotFound.class);
 
         assertThatThrownBy(() -> createCharacterUseCase.execute(command))
-                .isInstanceOf(AccountNotFoundException.class);
+                .isInstanceOf(CharacterOwnerNotFound.class);
 
         verify(accountClient).getById(any(AccountId.class));
         verify(checkCharacterNameIsExistsUseCase, never()).execute(any(CharacterName.class));
