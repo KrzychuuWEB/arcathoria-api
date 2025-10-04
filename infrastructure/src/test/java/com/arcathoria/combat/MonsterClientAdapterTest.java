@@ -39,7 +39,10 @@ class MonsterClientAdapterTest {
 
         ParticipantView result = monsterClientAdapter.getMonsterById(monsterId);
 
-        assertThat(result.id()).isEqualTo(monsterId.value());
+        assertThat(result.id()).isEqualTo(monsterDTO.id());
+        assertThat(result.name()).isEqualTo(monsterDTO.name());
+        assertThat(result.health()).isEqualTo(monsterDTO.maxHealth());
+        assertThat(result.intelligence()).isEqualTo(monsterDTO.intelligence());
 
         verify(monsterQueryFacade).getMonsterById(monsterId.value());
     }

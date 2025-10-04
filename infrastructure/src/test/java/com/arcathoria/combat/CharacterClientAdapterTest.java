@@ -49,6 +49,8 @@ class CharacterClientAdapterTest {
 
         assertThat(result.id()).isEqualTo(characterDTO.id());
         assertThat(result.name()).isEqualTo(characterDTO.characterName());
+        assertThat(result.health()).isEqualTo(characterDTO.health());
+        assertThat(result.intelligence()).isEqualTo(characterDTO.intelligence());
 
         verify(characterQueryFacade).getSelectedCharacter(accountId.value());
     }
