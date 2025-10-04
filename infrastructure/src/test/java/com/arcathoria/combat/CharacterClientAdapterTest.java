@@ -1,6 +1,5 @@
 package com.arcathoria.combat;
 
-import com.arcathoria.IntegrationTestContainersConfig;
 import com.arcathoria.character.CharacterQueryFacade;
 import com.arcathoria.character.dto.CharacterDTO;
 import com.arcathoria.character.exception.CharacterNotFoundException;
@@ -25,7 +24,7 @@ import static org.mockito.Mockito.when;
 
 @SpringJUnitConfig
 @ContextConfiguration(classes = {CharacterClientAdapter.class})
-class CharacterClientAdapterTest extends IntegrationTestContainersConfig {
+class CharacterClientAdapterTest {
 
     @MockitoBean
     private CharacterQueryFacade characterQueryFacade;
