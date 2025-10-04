@@ -17,4 +17,5 @@ dependencies {
     testFixturesApi "org.springframework:spring-test:6.2.1"
     testFixturesApi "org.springframework:spring-web:6.2.1"
     testFixturesApi "org.springframework:spring-context:6.2.1"
+    testFixturesApi "com.redis:testcontainers-redis:2.2.2"
 }
