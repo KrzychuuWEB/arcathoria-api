@@ -1,5 +1,6 @@
 package com.arcathoria.auth;
 
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
@@ -9,7 +10,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtGra
 import java.util.Collection;
 import java.util.UUID;
 
-class AccountJwtAuthenticationConverter implements Conventer<Jwt, AbstractAuthenticationToken> {
+class AccountJwtAuthenticationConverter implements Converter<Jwt, AbstractAuthenticationToken> {
 
     private static final String ACCOUNT_ID_CLAIM = "id";
 
