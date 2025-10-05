@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.jwt.JwtException;
 
 import java.util.UUID;
 
@@ -71,17 +70,15 @@ class JwtTokenConfigIT {
 
     @Test
     void should_invalidate_expired_token() {
-        properties.setValidity(-1L);
+        long previous = properties.getValidity();
+        try {
+            properties.setValidity(-1L);
 
-        String token = jwtTokenService.generateToken(username, userId);
-
-        UserDetails userDetails = User.builder()
-                .username(username)
-                .password("password")
-                .roles("USER")
-                .build();
-
-        assertThatThrownBy(() -> jwtTokenService.validateToken(token, userDetails))
-                .isInstanceOf(JwtException.class);
+            assertThatThrownBy(() -> jwtTokenService.generateToken(username, userId))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageContaining("expiresAt must be after issuedAt");
+        } finally {
+            properties.setValidity(previous);
+        }
     }
 }

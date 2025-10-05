@@ -25,9 +25,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
     implementation 'org.liquibase:liquibase-core'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.4'
-    implementation 'io.jsonwebtoken:jjwt-jackson:0.12.5'
-    implementation 'io.jsonwebtoken:jjwt-impl:0.12.5'
-    implementation 'io.jsonwebtoken:jjwt-api:0.12.5'
     runtimeOnly 'org.postgresql:postgresql'
     testImplementation 'org.postgresql:postgresql'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -43,7 +40,9 @@ dependencies {
     testFixturesImplementation project(':app')
     testFixturesImplementation project(':domain')
     testFixturesImplementation project(':shared-kernel')
-    testFixturesApi 'org.springframework.boot:spring-boot-starter-web'
+    testFixturesImplementation 'org.springframework.boot:spring-boot-starter-web'
+    testFixturesImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testFixturesImplementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 }
 
 test {

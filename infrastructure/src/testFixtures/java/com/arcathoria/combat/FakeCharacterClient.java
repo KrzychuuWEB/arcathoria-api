@@ -6,11 +6,17 @@ import com.arcathoria.combat.exception.ExternalServiceUnavailableException;
 import com.arcathoria.combat.vo.AccountId;
 import com.arcathoria.combat.vo.ParticipantId;
 import com.arcathoria.exception.UpstreamInfo;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+@TestConfiguration
+@Profile("test")
+@Primary
 class FakeCharacterClient implements CharacterClient {
 
     private final Map<AccountId, ParticipantView> selectedCharacters = new HashMap<>();
@@ -33,20 +39,18 @@ class FakeCharacterClient implements CharacterClient {
         return participant;
     }
 
-    public FakeCharacterClient withCustomCharacter(final AccountId accountId, final ParticipantView participant) {
-        selectedCharacters.put(accountId, participant);
+    public FakeCharacterClient withCustomCharacter(final AccountId accountId, final ParticipantViewMother participantViewMother) {
+        participantViewMother.withType(ParticipantType.PLAYER);
+        selectedCharacters.put(accountId, participantViewMother.build());
         return this;
     }
 
     public FakeCharacterClient withDefaultCharacter(final AccountId accountId) {
-        UUID characterId = UUID.randomUUID();
-        ParticipantView participant = new ParticipantView(
-                characterId,
-                "Test Warrior",
-                100,
-                50,
-                ParticipantType.PLAYER
-        );
+        ParticipantView participant = ParticipantViewMother.aParticipant()
+                .withName("character" + accountId.value())
+                .withHealth(100)
+                .withIntelligence(1)
+                .build();
         selectedCharacters.put(accountId, participant);
         return this;
     }
@@ -73,10 +77,6 @@ class FakeCharacterClient implements CharacterClient {
         selectedCharacters.clear();
         shouldThrowException = false;
         exceptionType = null;
-    }
-
-    public void clear() {
-        reset();
     }
 
     private void throwConfiguredException(final AccountId accountId) {

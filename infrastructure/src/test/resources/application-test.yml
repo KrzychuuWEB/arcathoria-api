@@ -22,6 +22,8 @@ logging:
     org.hibernate.SQL: OFF
     org.hibernate.orm.jdbc.bind: OFF
     org.hibernate.orm.jdbc.extract: OFF
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: TRACE
 
 
 jwt:

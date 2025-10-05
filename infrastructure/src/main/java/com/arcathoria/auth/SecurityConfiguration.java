@@ -1,7 +1,6 @@
 package com.arcathoria.auth;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
-import io.jsonwebtoken.io.Decoders;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -60,7 +59,7 @@ class SecurityConfiguration {
 
     @Bean
     JwtDecoder jwtDecoder(final JwtConfigurationProperties jwtConfigurationProperties) {
-        byte[] keyBytes = Decoders.BASE64.decode(jwtConfigurationProperties.getSecret());
+        byte[] keyBytes = Base64.getDecoder().decode(jwtConfigurationProperties.getSecret());
         SecretKey secretKey = new SecretKeySpec(keyBytes, "HmacSHA256");
         return NimbusJwtDecoder.withSecretKey(secretKey)
                 .macAlgorithm(MacAlgorithm.HS256)
