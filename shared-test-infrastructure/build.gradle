@@ -1,21 +1,17 @@
 plugins {
     id 'java'
     id 'java-test-fixtures'
-}
-
-ext {
-    springBootVersion = '3.4.1'
-    testcontainersVersion = '1.19.8'
+    id 'org.springframework.boot' version '3.4.1'
+    id 'io.spring.dependency-management' version '1.1.7'
 }
 
 dependencies {
-    testFixturesImplementation "org.testcontainers:junit-jupiter:${testcontainersVersion}"
-    testFixturesImplementation "org.testcontainers:postgresql:${testcontainersVersion}"
-    testFixturesImplementation "org.testcontainers:testcontainers:${testcontainersVersion}"
-    testFixturesImplementation "org.springframework.boot:spring-boot-test:${springBootVersion}"
-    testFixturesImplementation "org.springframework.boot:spring-boot-testcontainers:${springBootVersion}"
-    testFixturesImplementation "org.springframework:spring-test:6.2.1"
-    testFixturesImplementation "org.springframework:spring-web:6.2.1"
-    testFixturesImplementation "org.springframework:spring-context:6.2.1"
+    testFixturesImplementation 'org.springframework.boot:spring-boot-starter-web'
+    testFixturesImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testFixturesImplementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    testFixturesImplementation "org.springframework.boot:spring-boot-testcontainers"
+    testFixturesImplementation "org.testcontainers:junit-jupiter"
+    testFixturesImplementation "org.testcontainers:postgresql"
+    testFixturesImplementation "org.testcontainers:testcontainers"
     testFixturesImplementation "com.redis:testcontainers-redis:2.2.2"
 }

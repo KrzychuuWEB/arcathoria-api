@@ -1,4 +1,4 @@
-package com.arcathoria;
+package com.arcathoria.auth;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import org.springframework.context.annotation.Primary;

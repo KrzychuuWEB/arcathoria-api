@@ -1,9 +1,9 @@
-package com.arcathoria;
+package com.arcathoria.auth;
 
+import com.arcathoria.SetLocaleHelper;
 import org.springframework.http.HttpHeaders;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.UUID;
 
 public class AccountWithAuthenticated {
@@ -24,7 +24,7 @@ public class AccountWithAuthenticated {
 
     public HttpHeaders authenticatedWithLangPL(final UUID uuid) {
         HttpHeaders headers = authenticatedUser(uuid);
-        headers.setAcceptLanguageAsLocales(List.of(Locale.forLanguageTag("pl")));
+        SetLocaleHelper.withLocale(headers, "pl-PL");
         return headers;
     }
 }

@@ -1,6 +1,10 @@
 package com.arcathoria.character;
 
-import com.arcathoria.*;
+import com.arcathoria.UUIDGenerator;
+import com.arcathoria.WithPostgres;
+import com.arcathoria.WithRedis;
+import com.arcathoria.auth.AccountWithAuthenticated;
+import com.arcathoria.auth.TestJwtTokenGenerator;
 import com.arcathoria.character.dto.CharacterDTO;
 import com.arcathoria.character.dto.CreateCharacterDTO;
 import com.arcathoria.character.dto.SelectCharacterDTO;
