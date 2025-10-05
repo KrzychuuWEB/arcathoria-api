@@ -8,7 +8,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 
-public class CreateCombatE2EHelper {
+class CreateCombatE2EHelper {
 
     private final String combatInitUrl = "/combats/init";
 
@@ -18,7 +18,7 @@ public class CreateCombatE2EHelper {
         this.restTemplate = restTemplate;
     }
 
-    public ResponseEntity<CombatResultDTO> initPveCombat(final InitPveDTO initPveDTO, final HttpHeaders headers) {
+    ResponseEntity<CombatResultDTO> initPveCombat(final InitPveDTO initPveDTO, final HttpHeaders headers) {
         return restTemplate.postForEntity(combatInitUrl + "/pve", new HttpEntity<>(initPveDTO, headers), CombatResultDTO.class);
     }
 }

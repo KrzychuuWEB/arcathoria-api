@@ -1,7 +1,6 @@
 package com.arcathoria.auth;
 
 import com.arcathoria.account.MyUserDetailsService;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

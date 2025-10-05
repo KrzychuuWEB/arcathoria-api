@@ -63,5 +63,4 @@ public class AccountManagerE2EHelper {
         headers.setBearerAuth(tokenResponse.token());
         return headers;
     }
-
 }
