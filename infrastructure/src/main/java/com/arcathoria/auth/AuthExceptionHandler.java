@@ -1,6 +1,5 @@
 package com.arcathoria.auth;
 
-import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -59,8 +59,8 @@ class AuthExceptionHandler {
         return pd;
     }
 
-    @ExceptionHandler(ExpiredJwtException.class)
-    ProblemDetail handleExpiredJwt(final ExpiredJwtException ex,
+    @ExceptionHandler(JwtException.class)
+    ProblemDetail handleExpiredJwt(final JwtException ex,
                                    final HttpServletRequest req,
                                    final Locale locale) {
 

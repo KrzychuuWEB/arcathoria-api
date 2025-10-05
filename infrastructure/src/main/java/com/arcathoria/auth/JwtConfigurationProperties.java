@@ -13,10 +13,6 @@ class JwtConfigurationProperties {
         return secret;
     }
 
-    void setSecret(String secret) {
-        this.secret = secret;
-    }
-
     long getValidity() {
         return validity;
     }

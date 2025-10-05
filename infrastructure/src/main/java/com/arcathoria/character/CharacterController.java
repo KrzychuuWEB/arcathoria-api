@@ -1,6 +1,6 @@
 package com.arcathoria.character;
 
-import com.arcathoria.account.MyUserDetails;
+import com.arcathoria.auth.AccountPrincipal;
 import com.arcathoria.character.dto.CharacterDTO;
 import com.arcathoria.character.dto.CreateCharacterDTO;
 import com.arcathoria.character.dto.SelectCharacterDTO;
@@ -31,37 +31,37 @@ class CharacterController {
 
     @GetMapping("/selects")
     @ResponseStatus(HttpStatus.OK)
-    List<CharacterDTO> getAllByAccountId(@AuthenticationPrincipal MyUserDetails details) {
-        return characterQueryFacade.getAllByAccountId(details.getId());
+    List<CharacterDTO> getAllByAccountId(@AuthenticationPrincipal AccountPrincipal principal) {
+        return characterQueryFacade.getAllByAccountId(principal.id());
     }
 
     @PostMapping("/selects")
     @ResponseStatus(HttpStatus.OK)
     CharacterDTO selectCharacter(
             @Valid @RequestBody SelectCharacterDTO dto,
-            @AuthenticationPrincipal MyUserDetails details
+            @AuthenticationPrincipal AccountPrincipal principal
     ) {
-        return characterFacade.selectCharacter(dto, details.getId());
+        return characterFacade.selectCharacter(dto, principal.id());
     }
 
     @GetMapping("/selects/me")
     @ResponseStatus(HttpStatus.OK)
-    CharacterDTO getSelectedCharacter(@AuthenticationPrincipal MyUserDetails details) {
-        return characterQueryFacade.getSelectedCharacter(details.getId());
+    CharacterDTO getSelectedCharacter(@AuthenticationPrincipal AccountPrincipal principal) {
+        return characterQueryFacade.getSelectedCharacter(principal.id());
     }
 
     @DeleteMapping("/selects")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void removeSelectedCharacter(@AuthenticationPrincipal MyUserDetails details) {
-        characterFacade.removeSelectedCharacter(details.getId());
+    void removeSelectedCharacter(@AuthenticationPrincipal AccountPrincipal principal) {
+        characterFacade.removeSelectedCharacter(principal.id());
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     CharacterDTO create(
             @Valid @RequestBody CreateCharacterDTO dto,
-            @AuthenticationPrincipal MyUserDetails details
+            @AuthenticationPrincipal AccountPrincipal principal
     ) {
-        return createCharacterTransactionalAdapter.transactionalCreateCharacter(dto, details.getId());
+        return createCharacterTransactionalAdapter.transactionalCreateCharacter(dto, principal.id());
     }
 }
