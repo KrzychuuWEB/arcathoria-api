@@ -15,14 +15,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringJUnitConfig(classes = {AuthAuthAccountClientAdapter.class})
-class AuthAuthAccountClientAdapterTest {
+@SpringJUnitConfig(classes = {AuthAccountClientAdapter.class})
+class AuthAccountClientAdapterTest {
 
     @MockitoBean
     private AccountQueryFacade accountQueryFacade;
 
     @Autowired
-    private AuthAuthAccountClientAdapter authAccountClientAdapter;
+    private AuthAccountClientAdapter authAccountClientAdapter;
 
     @Test
     void should_return_correct_account_id_when_valid_email_and_password_and_map_to_account_view() {

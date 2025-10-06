@@ -6,11 +6,11 @@ import com.arcathoria.account.exception.AccountBadCredentialsException;
 import org.springframework.stereotype.Component;
 
 @Component
-class AuthAuthAccountClientAdapter implements AuthAccountClient {
+class AuthAccountClientAdapter implements AuthAccountClient {
 
     private final AccountQueryFacade accountQueryFacade;
 
-    AuthAuthAccountClientAdapter(final AccountQueryFacade accountQueryFacade) {
+    AuthAccountClientAdapter(final AccountQueryFacade accountQueryFacade) {
         this.accountQueryFacade = accountQueryFacade;
     }
 
