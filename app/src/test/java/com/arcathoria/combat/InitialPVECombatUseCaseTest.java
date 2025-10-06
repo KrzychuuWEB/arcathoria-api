@@ -1,24 +1,20 @@
 package com.arcathoria.combat;
 
-import com.arcathoria.ApiException;
-import com.arcathoria.account.vo.AccountId;
-import com.arcathoria.character.dto.CharacterDTO;
 import com.arcathoria.combat.command.InitPVECombatCommand;
-import com.arcathoria.combat.exception.CombatParticipantUnavailableException;
-import com.arcathoria.monster.dto.MonsterDTO;
-import com.arcathoria.monster.exception.MonsterNotFoundException;
-import com.arcathoria.monster.vo.MonsterId;
+import com.arcathoria.combat.dto.ParticipantView;
+import com.arcathoria.combat.exception.CombatParticipantNotAvailableException;
+import com.arcathoria.combat.exception.OnlyOneActiveCombatAllowedException;
+import com.arcathoria.combat.vo.AccountId;
+import com.arcathoria.combat.vo.MonsterId;
+import com.arcathoria.combat.vo.ParticipantId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class InitialPVECombatUseCaseTest {
@@ -43,7 +39,7 @@ class InitialPVECombatUseCaseTest {
         Participant attacker = Participant.restore(ParticipantSnapshotMother.aParticipantBuilder().build());
         Participant defender = Participant.restore(ParticipantSnapshotMother.aParticipantBuilder().build());
         Combat combat = Combat.restore(CombatSnapshotMother.aCombat().withAttacker(attacker.getSnapshot()).withDefender(defender.getSnapshot()).build());
-        MonsterDTO monster = new MonsterDTO(defender.getId().value(), "example-monster", defender.getHealth().getMax(), defender.getHealth().getMax(), defender.getIntelligenceLevel());
+        ParticipantView monster = ParticipantViewMother.aParticipantBuilder().withId(defender.getId().value()).withParticipantType(ParticipantType.MONSTER).build();
 
         AccountId accountId = new AccountId(attacker.getId().value());
         MonsterId monsterId = new MonsterId(defender.getId().value());
@@ -51,43 +47,65 @@ class InitialPVECombatUseCaseTest {
         InitPVECombatCommand command = new InitPVECombatCommand(accountId, monsterId);
 
         when(combatParticipantService.getCharacterByAccountId(new AccountId(accountId.value()))).thenReturn(attacker);
-        when(monsterClient.getMonsterById(monsterId.value())).thenReturn(Optional.of(monster));
+        when(monsterClient.getMonsterById(monsterId)).thenReturn(monster);
         when(combatEngine.initialCombat(attacker, defender, CombatType.PVE)).thenReturn(combat);
 
         initialPVECombatUseCase.init(command);
 
         verify(combatParticipantService).getCharacterByAccountId(new AccountId(accountId.value()));
-        verify(monsterClient).getMonsterById(monsterId.value());
+        verify(monsterClient).getMonsterById(monsterId);
         verify(combatEngine).initialCombat(attacker, defender, CombatType.PVE);
         verify(combatSessionStore).save(CombatSnapshotMother.aCombat().withAttacker(attacker.getSnapshot()).withDefender(defender.getSnapshot()).build());
     }
 
     @Test
     void should_throw_when_character_not_found() {
-        Participant attacker = Participant.restore(ParticipantSnapshotMother.aParticipantBuilder().build());
-        Participant defender = Participant.restore(ParticipantSnapshotMother.aParticipantBuilder().build());
+        ParticipantView player = ParticipantViewMother.aParticipantBuilder().withParticipantType(ParticipantType.PLAYER).build();
+        ParticipantView monster = ParticipantViewMother.aParticipantBuilder().withParticipantType(ParticipantType.MONSTER).build();
 
-        CharacterDTO player = new CharacterDTO(attacker.getId().value(), "example-player", attacker.getHealth().getMax(), attacker.getIntelligenceLevel());
-        MonsterDTO monster = new MonsterDTO(defender.getId().value(), "example-monster", defender.getHealth().getMax(), defender.getHealth().getMax(), defender.getIntelligenceLevel());
-
-        when(combatParticipantService.getCharacterByAccountId(new AccountId(player.id()))).thenThrow(CombatParticipantUnavailableException.class);
+        when(combatParticipantService.getCharacterByAccountId(new AccountId(player.id()))).thenThrow(new CombatParticipantNotAvailableException(new ParticipantId(player.id()), null));
 
         assertThatThrownBy(() -> initialPVECombatUseCase.init(new InitPVECombatCommand(new AccountId(player.id()), new MonsterId(monster.id()))))
-                .isInstanceOf(CombatParticipantUnavailableException.class);
+                .isInstanceOf(CombatParticipantNotAvailableException.class)
+                .hasMessageContaining(player.id().toString());
+
+        verify(combatSessionStore, never()).save(any(CombatSnapshot.class));
     }
 
     @Test
     void should_throw_when_monster_not_found() {
         Participant attacker = Participant.restore(ParticipantSnapshotMother.aParticipantBuilder().build());
-        Participant defender = Participant.restore(ParticipantSnapshotMother.aParticipantBuilder().build());
 
-        CharacterDTO player = new CharacterDTO(attacker.getId().value(), "example-player", attacker.getHealth().getMax(), attacker.getIntelligenceLevel());
-        MonsterDTO monster = new MonsterDTO(defender.getId().value(), "example-monster", defender.getHealth().getMax(), defender.getHealth().getMax(), defender.getIntelligenceLevel());
+        ParticipantView player = ParticipantViewMother.aParticipantBuilder().withParticipantType(ParticipantType.PLAYER).build();
+        ParticipantView monster = ParticipantViewMother.aParticipantBuilder().withParticipantType(ParticipantType.MONSTER).build();
 
         when(combatParticipantService.getCharacterByAccountId(new AccountId(player.id()))).thenReturn(attacker);
-        when(monsterClient.getMonsterById(monster.id())).thenThrow(MonsterNotFoundException.class);
+        when(monsterClient.getMonsterById(new MonsterId(monster.id()))).thenThrow(CombatParticipantNotAvailableException.class);
 
         assertThatThrownBy(() -> initialPVECombatUseCase.init(new InitPVECombatCommand(new AccountId(player.id()), new MonsterId(monster.id()))))
-                .isInstanceOf(ApiException.class);
+                .isInstanceOf(CombatParticipantNotAvailableException.class);
+
+        verify(combatSessionStore, never()).save(any(CombatSnapshot.class));
+    }
+
+    @Test
+    void should_return_OnlyOneActiveCombatAllowedException_when_participant_has_active_combat() {
+        Participant attacker = Participant.restore(ParticipantSnapshotMother.aParticipantBuilder().build());
+        Participant defender = Participant.restore(ParticipantSnapshotMother.aParticipantBuilder().build());
+
+        ParticipantView player = ParticipantViewMother.aParticipantBuilder().withId(attacker.getId().value()).withParticipantType(ParticipantType.PLAYER).build();
+        ParticipantView monster = ParticipantViewMother.aParticipantBuilder().withId(defender.getId().value()).withParticipantType(ParticipantType.MONSTER).build();
+
+        when(combatParticipantService.getCharacterByAccountId(new AccountId(player.id()))).thenReturn(attacker);
+        when(monsterClient.getMonsterById(new MonsterId(monster.id()))).thenReturn(monster);
+        when(combatEngine.initialCombat(attacker, defender, CombatType.PVE)).thenThrow(new OnlyOneActiveCombatAllowedException(attacker.getId()));
+
+        assertThatThrownBy(() -> initialPVECombatUseCase.init(new InitPVECombatCommand(new AccountId(player.id()), new MonsterId(monster.id()))))
+                .isInstanceOf(OnlyOneActiveCombatAllowedException.class)
+                .hasMessageContaining(attacker.getId().value().toString());
+
+        verify(combatSessionStore, never()).save(any(CombatSnapshot.class));
+        verify(combatParticipantService).getCharacterByAccountId(new AccountId(player.id()));
+        verify(monsterClient).getMonsterById(new MonsterId(monster.id()));
     }
 }

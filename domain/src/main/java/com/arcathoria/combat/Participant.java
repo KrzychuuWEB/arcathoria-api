@@ -1,8 +1,8 @@
 package com.arcathoria.combat;
 
-import com.arcathoria.character.vo.Health;
 import com.arcathoria.combat.vo.Attributes;
 import com.arcathoria.combat.vo.Damage;
+import com.arcathoria.combat.vo.Health;
 import com.arcathoria.combat.vo.ParticipantId;
 
 import java.util.Objects;
@@ -13,28 +13,32 @@ class Participant {
         return new Participant(
                 snapshot.participantId(),
                 snapshot.health(),
-                snapshot.attributes()
+                snapshot.attributes(),
+                snapshot.participantType()
         );
     }
 
     private final ParticipantId id;
     private Health health;
     private final Attributes attributes;
+    private final ParticipantType participantType;
 
-    private Participant(final ParticipantId id, final Health health, final Attributes attributes) {
+    private Participant(final ParticipantId id, final Health health, final Attributes attributes, final ParticipantType participantType) {
         this.id = id;
         this.health = health;
         this.attributes = attributes;
+        this.participantType = participantType;
     }
 
     ParticipantSnapshot getSnapshot() {
         return new ParticipantSnapshot(
                 id,
                 health,
-                attributes
+                attributes,
+                participantType
         );
     }
-    
+
     ParticipantId getId() {
         return id;
     }

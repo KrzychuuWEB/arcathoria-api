@@ -1,5 +1,6 @@
 package com.arcathoria.character.vo;
 
+import com.arcathoria.Level;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

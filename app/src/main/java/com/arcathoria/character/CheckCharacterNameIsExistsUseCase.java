@@ -17,7 +17,7 @@ class CheckCharacterNameIsExistsUseCase {
     void execute(final CharacterName characterName) {
         if (characterQueryRepository.existsByName(characterName)) {
             logger.warn("Character name already exists: {}", characterName.value());
-            throw new CharacterNameExistsException(characterName.value());
+            throw new CharacterNameExistsException(characterName);
         }
     }
 }

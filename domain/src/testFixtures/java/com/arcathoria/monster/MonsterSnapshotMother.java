@@ -1,0 +1,44 @@
+package com.arcathoria.monster;
+
+import com.arcathoria.Gauge;
+import com.arcathoria.Level;
+import com.arcathoria.monster.vo.*;
+
+final class MonsterSnapshotMother {
+    public static final MonsterId DEFAULT_MONSTER_ID = new MonsterId(null);
+    public static final MonsterName DEFAULT_MONSTER_NAME = new MonsterName("Wolf");
+    public static final Health DEFAULT_HEALTH = new Health(new Gauge(100, 100));
+
+    private MonsterId monsterId = DEFAULT_MONSTER_ID;
+    private MonsterName monsterName = DEFAULT_MONSTER_NAME;
+    private Health health = DEFAULT_HEALTH;
+    private final Attributes attributes = new Attributes(
+            new Intelligence(new Level(1))
+    );
+
+    private MonsterSnapshotMother() {
+    }
+
+    static MonsterSnapshotMother aMonsterSnapshot() {
+        return new MonsterSnapshotMother();
+    }
+
+    MonsterSnapshotMother withMonsterId(final MonsterId monsterId) {
+        this.monsterId = monsterId;
+        return this;
+    }
+
+    MonsterSnapshotMother withMonsterName(final MonsterName monsterName) {
+        this.monsterName = monsterName;
+        return this;
+    }
+
+    MonsterSnapshotMother withHealth(final Health health) {
+        this.health = health;
+        return this;
+    }
+
+    MonsterSnapshot build() {
+        return new MonsterSnapshot(monsterId, monsterName, health, attributes);
+    }
+}

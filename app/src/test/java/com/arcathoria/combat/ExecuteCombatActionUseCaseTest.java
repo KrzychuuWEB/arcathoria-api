@@ -1,10 +1,10 @@
 package com.arcathoria.combat;
 
-import com.arcathoria.account.vo.AccountId;
 import com.arcathoria.combat.command.ExecuteActionCommand;
 import com.arcathoria.combat.exception.CombatAlreadyFinishedException;
 import com.arcathoria.combat.exception.ParticipantNotFoundInCombatException;
 import com.arcathoria.combat.exception.WrongTurnException;
+import com.arcathoria.combat.vo.AccountId;
 import com.arcathoria.combat.vo.CombatId;
 import com.arcathoria.combat.vo.CombatTurn;
 import com.arcathoria.combat.vo.ParticipantId;

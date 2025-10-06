@@ -1,14 +1,18 @@
 package com.arcathoria.combat.exception;
 
-import com.arcathoria.DomainException;
 import com.arcathoria.combat.vo.CombatId;
 
-public class CombatAlreadyFinishedException extends DomainException {
+import java.util.Map;
+
+public class CombatAlreadyFinishedException extends CombatDomainException {
 
     private final CombatId combatId;
 
     public CombatAlreadyFinishedException(final CombatId combatId) {
-        super("The fight for id {} is already finished, this action cannot be performed", "ERR_COMBAT_ALREADY_FINISHED");
+        super("The fight for id " + combatId + " is already finished, this action cannot be performed",
+                CombatExceptionErrorCode.ERR_COMBAT_ALREADY_FINISHED,
+                Map.of("combatId", combatId.value())
+        );
         this.combatId = combatId;
     }
 

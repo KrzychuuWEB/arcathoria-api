@@ -1,17 +1,22 @@
 package com.arcathoria.account.exception;
 
-import com.arcathoria.ApiException;
+import com.arcathoria.account.vo.Email;
 
-public class EmailExistsException extends ApiException {
+import java.util.Map;
 
-    private final String email;
+public class EmailExistsException extends AccountApplicationException {
 
-    public EmailExistsException(final String email) {
-        super("Account with email " + email + " is exists", "ERR_ACCOUNT_EMAIL_EXISTS-409");
+    private final Email email;
+
+    public EmailExistsException(final Email email) {
+        super("Account with email " + email + " is exists",
+                AccountExceptionErrorCode.ERR_ACCOUNT_EMAIL_EXISTS,
+                Map.of("email", email.value())
+        );
         this.email = email;
     }
 
-    public String getEmail() {
+    public Email getEmail() {
         return email;
     }
 }

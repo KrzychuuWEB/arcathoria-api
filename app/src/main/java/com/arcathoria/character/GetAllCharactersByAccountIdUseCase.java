@@ -1,25 +1,24 @@
 package com.arcathoria.character;
 
-import com.arcathoria.account.AccountQueryFacade;
-import com.arcathoria.account.vo.AccountId;
+import com.arcathoria.character.vo.AccountId;
 
 import java.util.List;
 
 class GetAllCharactersByAccountIdUseCase {
 
     private final CharacterQueryRepository characterQueryRepository;
-    private final AccountQueryFacade accountQueryFacade;
+    private final AccountClient accountClient;
 
     GetAllCharactersByAccountIdUseCase(
             final CharacterQueryRepository characterQueryRepository,
-            final AccountQueryFacade accountQueryFacade
+            final AccountClient accountClient
     ) {
         this.characterQueryRepository = characterQueryRepository;
-        this.accountQueryFacade = accountQueryFacade;
+        this.accountClient = accountClient;
     }
 
     List<Character> execute(final AccountId accountId) {
-        accountQueryFacade.getById(accountId.value());
+        accountClient.getById(accountId);
 
         return characterQueryRepository.getAllByAccountId(accountId);
     }

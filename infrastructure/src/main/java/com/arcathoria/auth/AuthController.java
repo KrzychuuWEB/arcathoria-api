@@ -10,15 +10,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 class AuthController {
 
-    private final VerifyService verifyService;
- 
-    AuthController(final VerifyService verifyService) {
-        this.verifyService = verifyService;
+    private final AuthenticateAccount authenticateAccount;
+
+    AuthController(final AuthenticateAccount authenticateAccount) {
+        this.authenticateAccount = authenticateAccount;
     }
 
     @PostMapping("/authenticate")
     @ResponseStatus(HttpStatus.OK)
     TokenResponseDTO login(@Valid @RequestBody AuthRequestDTO authRequestDTO) {
-        return new TokenResponseDTO(verifyService.verify(authRequestDTO));
+        return new TokenResponseDTO(authenticateAccount.authenticate(authRequestDTO));
     }
 }

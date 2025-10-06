@@ -1,21 +1,24 @@
 package com.arcathoria.account;
 
-import com.arcathoria.IntegrationTestContainersConfig;
 import com.arcathoria.account.vo.AccountId;
 import com.arcathoria.account.vo.Email;
-import jakarta.transaction.Transactional;
+import com.arcathoria.testContainers.WithPostgres;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-@SpringBootTest
-@Transactional
-class AccountQueryRepositoryAdapterTest extends IntegrationTestContainersConfig {
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Import({AccountQueryRepositoryAdapter.class, AccountRepositoryAdapter.class})
+@WithPostgres
+class AccountQueryRepositoryAdapterTest {
 
     @Autowired
     private AccountQueryRepositoryAdapter accountQueryRepositoryAdapter;
@@ -45,7 +48,7 @@ class AccountQueryRepositoryAdapterTest extends IntegrationTestContainersConfig 
     @Test
     void should_return_true_if_email_exists() {
         Email usedEmail = new Email("used@email.com");
-        persistAccount(AccountSnapshotMother.create().withAccountId(null).withEmail(usedEmail.value()).build());
+        persistAccount(AccountSnapshotMother.create().withEmail(usedEmail.value()).build());
 
         boolean result = accountQueryRepositoryAdapter.existsByEmail(usedEmail);
 
@@ -55,7 +58,7 @@ class AccountQueryRepositoryAdapterTest extends IntegrationTestContainersConfig 
     @Test
     void should_return_account_by_id() {
         Email accountEmail = new Email("example@email.com");
-        Account account = persistAccount(AccountSnapshotMother.create().withEmail(accountEmail.value()).withAccountId(null).build());
+        Account account = persistAccount(AccountSnapshotMother.create().withEmail(accountEmail.value()).build());
 
         AccountId accountId = account.getSnapshot().getAccountId();
 
@@ -75,7 +78,7 @@ class AccountQueryRepositoryAdapterTest extends IntegrationTestContainersConfig 
         assertThat(result).isFalse();
     }
 
-    private Account persistAccount(AccountSnapshot snapshot) {
+    private Account persistAccount(final AccountSnapshot snapshot) {
         return accountRepositoryAdapter.save(
                 Account.restore(snapshot)
         );

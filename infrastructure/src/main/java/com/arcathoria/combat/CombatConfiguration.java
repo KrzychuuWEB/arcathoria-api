@@ -7,6 +7,19 @@ import org.springframework.context.annotation.Configuration;
 class CombatConfiguration {
 
     @Bean
+    CombatQueryFacade combatQueryFacade(final GetActiveCombatIdByParticipantId getActiveCombatIdByParticipantId,
+                                        final CombatParticipantService combatParticipantService,
+                                        final GetCombatFromStoreByIdAndParticipantId getCombatFromStoreByIdAndParticipantId
+    ) {
+        return new CombatQueryFacade(getActiveCombatIdByParticipantId, combatParticipantService, getCombatFromStoreByIdAndParticipantId);
+    }
+
+    @Bean
+    GetActiveCombatIdByParticipantId getActiveCombatByParticipantId(final CombatSessionStore combatSessionStore) {
+        return new GetActiveCombatIdByParticipantId(combatSessionStore);
+    }
+
+    @Bean
     CombatFacade combatFacade(
             final InitialPVECombatUseCase initialPVECombatUseCase,
             final ExecuteCombatActionUseCase executeCombatActionUseCase
@@ -27,6 +40,13 @@ class CombatConfiguration {
                 monsterClient,
                 sessionStore
         );
+    }
+
+    @Bean
+    GetCombatFromStoreByIdAndParticipantId getCombatFromStoreByIdAndParticipantId(
+            final GetCombatSnapshotFromStore getCombatSnapshotFromStore
+    ) {
+        return new GetCombatFromStoreByIdAndParticipantId(getCombatSnapshotFromStore);
     }
 
     @Bean
@@ -51,9 +71,15 @@ class CombatConfiguration {
     @Bean
     CombatEngine combatEngine(
             final CombatFactory combatFactory,
-            final CombatSideStrategyFactory combatSideStrategyFactory
+            final CombatSideStrategyFactory combatSideStrategyFactory,
+            final OnlyOneActiveCombatPolicy onlyOneActiveCombatPolicy
     ) {
-        return new CombatEngine(combatFactory, combatSideStrategyFactory);
+        return new CombatEngine(combatFactory, combatSideStrategyFactory, onlyOneActiveCombatPolicy);
+    }
+
+    @Bean
+    OnlyOneActiveCombatPolicy onlyOneActiveCombatPolicy(final CombatSessionStore combatSessionStore) {
+        return new OnlyOneActiveCombatPolicy(combatSessionStore);
     }
 
     @Bean

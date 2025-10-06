@@ -1,13 +1,8 @@
 package com.arcathoria.combat;
 
-import com.arcathoria.character.vo.Gauge;
-import com.arcathoria.character.vo.Health;
-import com.arcathoria.character.vo.Intelligence;
-import com.arcathoria.character.vo.Level;
-import com.arcathoria.combat.vo.Attributes;
-import com.arcathoria.combat.vo.CombatId;
-import com.arcathoria.combat.vo.CombatTurn;
-import com.arcathoria.combat.vo.ParticipantId;
+import com.arcathoria.Gauge;
+import com.arcathoria.Level;
+import com.arcathoria.combat.vo.*;
 
 final class CombatMapper {
 
@@ -26,14 +21,16 @@ final class CombatMapper {
                                 new Health(new Gauge(attacker.getCurrentHealth(), attacker.getMaxHealth())),
                                 new Attributes(
                                         new Intelligence(new Level(attacker.getIntelligence()))
-                                )
+                                ),
+                                attacker.getParticipantType()
                         ),
                         new ParticipantSnapshot(
                                 new ParticipantId(defender.getCharacterId()),
                                 new Health(new Gauge(defender.getCurrentHealth(), defender.getMaxHealth())),
                                 new Attributes(
                                         new Intelligence(new Level(defender.getIntelligence()))
-                                )
+                                ),
+                                defender.getParticipantType()
                         ),
                         new CombatTurn(entity.getSide()),
                         entity.getType(),
@@ -68,7 +65,8 @@ final class CombatMapper {
                 side,
                 snapshot.health().getCurrent(),
                 snapshot.health().getMax(),
-                snapshot.attributes().intelligence().level().value()
+                snapshot.attributes().intelligence().level().value(),
+                snapshot.participantType()
         );
     }
 

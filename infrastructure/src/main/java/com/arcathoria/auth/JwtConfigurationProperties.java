@@ -13,7 +13,7 @@ class JwtConfigurationProperties {
         return secret;
     }
 
-    void setSecret(String secret) {
+    void setSecret(final String secret) {
         this.secret = secret;
     }
 

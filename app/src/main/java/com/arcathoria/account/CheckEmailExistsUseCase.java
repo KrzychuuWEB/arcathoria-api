@@ -17,7 +17,7 @@ class CheckEmailExistsUseCase {
     boolean execute(final Email email) {
         if (accountQueryRepository.existsByEmail(email)) {
             log.warn("Email has been exists {}", email);
-            throw new EmailExistsException(email.value());
+            throw new EmailExistsException(email);
         }
 
         return false;

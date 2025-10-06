@@ -1,14 +1,18 @@
 package com.arcathoria.combat.exception;
 
-import com.arcathoria.DomainException;
 import com.arcathoria.combat.ActionType;
 
-public class UnsupportedActionTypeException extends DomainException {
+import java.util.Map;
+
+public class UnsupportedActionTypeException extends CombatDomainException {
 
     private final ActionType actionType;
 
     public UnsupportedActionTypeException(final ActionType actionType) {
-        super("This type of action is not supported: " + actionType, "ERR_COMBAT_ACTION_TYPE");
+        super("This type of action is not supported: " +
+                        actionType, CombatExceptionErrorCode.ERR_COMBAT_ACTION_TYPE,
+                Map.of("actionType", actionType.name())
+        );
         this.actionType = actionType;
     }
 

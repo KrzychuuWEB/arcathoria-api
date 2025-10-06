@@ -1,11 +1,9 @@
 package com.arcathoria.combat;
 
-import com.arcathoria.monster.dto.MonsterDTO;
-
-import java.util.Optional;
-import java.util.UUID;
+import com.arcathoria.combat.dto.ParticipantView;
+import com.arcathoria.combat.vo.MonsterId;
 
 interface MonsterClient {
 
-    Optional<MonsterDTO> getMonsterById(final UUID monsterId);
+    ParticipantView getMonsterById(final MonsterId monsterId);
 }

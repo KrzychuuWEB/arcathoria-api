@@ -1,6 +1,5 @@
 package com.arcathoria.character;
 
-import com.arcathoria.account.AccountQueryFacade;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -9,13 +8,13 @@ class CharacterConfiguration {
 
     @Bean
     CreateCharacterUseCase createCharacterUseCase(
-            final AccountQueryFacade accountQueryFacade,
+            final AccountClient accountClient,
             final CheckCharacterNameIsExistsUseCase checkCharacterNameIsExistsUseCase,
             final CharacterFactory characterFactory,
             final CharacterRepository characterRepository
     ) {
         return new CreateCharacterUseCase(
-                accountQueryFacade,
+                accountClient,
                 checkCharacterNameIsExistsUseCase,
                 characterFactory,
                 characterRepository
@@ -35,9 +34,9 @@ class CharacterConfiguration {
     @Bean
     GetAllCharactersByAccountIdUseCase getAllCharactersByAccountIdUseCase(
             final CharacterQueryRepository characterQueryRepository,
-            final AccountQueryFacade accountQueryFacade
+            final AccountClient accountClient
     ) {
-        return new GetAllCharactersByAccountIdUseCase(characterQueryRepository, accountQueryFacade);
+        return new GetAllCharactersByAccountIdUseCase(characterQueryRepository, accountClient);
     }
 
     @Bean

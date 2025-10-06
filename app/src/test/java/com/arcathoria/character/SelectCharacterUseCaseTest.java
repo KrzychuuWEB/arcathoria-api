@@ -1,10 +1,10 @@
 package com.arcathoria.character;
 
-import com.arcathoria.account.vo.AccountId;
 import com.arcathoria.character.command.SelectCharacterCommand;
+import com.arcathoria.character.exception.CharacterAccessDenied;
 import com.arcathoria.character.exception.CharacterNotFoundException;
+import com.arcathoria.character.vo.AccountId;
 import com.arcathoria.character.vo.CharacterId;
-import com.arcathoria.exception.AccessDeniedException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -60,10 +60,10 @@ class SelectCharacterUseCaseTest {
 
     @Test
     void should_return_AccessDeniedException_when_account_not_owned_character() {
-        when(getCharacterByIdUseCase.getOwned(any(CharacterId.class), any(AccountId.class))).thenThrow(AccessDeniedException.class);
+        when(getCharacterByIdUseCase.getOwned(any(CharacterId.class), any(AccountId.class))).thenThrow(CharacterAccessDenied.class);
 
         assertThatThrownBy(() -> selectCharacterUseCase.execute(
                 SelectCharacterCommandMother.aSelectCharacterCommand().build()
-        )).isInstanceOf(AccessDeniedException.class);
+        )).isInstanceOf(CharacterAccessDenied.class);
     }
 }

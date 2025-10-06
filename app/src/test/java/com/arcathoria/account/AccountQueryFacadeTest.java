@@ -1,9 +1,11 @@
 package com.arcathoria.account;
 
 import com.arcathoria.account.dto.AccountDTO;
+import com.arcathoria.account.dto.AuthenticatedAccountDTO;
 import com.arcathoria.account.exception.EmailExistsException;
 import com.arcathoria.account.vo.AccountId;
 import com.arcathoria.account.vo.Email;
+import com.arcathoria.account.vo.HashedPassword;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,6 +28,9 @@ class AccountQueryFacadeTest {
 
     @Mock
     private CheckEmailExistsUseCase checkEmailExistsUseCase;
+
+    @Mock
+    private ValidateAccountCredentials validateAccountCredentials;
 
     @InjectMocks
     private AccountQueryFacade accountQueryFacade;
@@ -53,5 +58,21 @@ class AccountQueryFacadeTest {
                 .isInstanceOf(EmailExistsException.class);
 
         verify(checkEmailExistsUseCase).execute(any(Email.class));
+    }
+
+    @Test
+    void should_return_validate_account_and_map_to_dto() {
+        UUID accountId = UUID.randomUUID();
+        String email = "account@arcathoria.com";
+        String rawPassword = "password123";
+        Account account = Account.restore(AccountSnapshotMother.create().withAccountId(accountId).withEmail(email).withHashedPassword("hashedPassword").build());
+
+        when(validateAccountCredentials.validate(new Email(email), new HashedPassword(rawPassword))).thenReturn(account);
+
+        AuthenticatedAccountDTO result = accountQueryFacade.authenticatedByEmailAndRawPassword(email, rawPassword);
+
+        assertThat(result).isInstanceOf(AuthenticatedAccountDTO.class);
+        assertThat(result.accountId()).isEqualTo(accountId);
+        assertThat(result.email()).isEqualTo(email);
     }
 }

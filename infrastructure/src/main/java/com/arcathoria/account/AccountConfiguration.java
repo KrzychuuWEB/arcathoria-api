@@ -26,11 +26,20 @@ class AccountConfiguration {
     }
 
     @Bean
+    ValidateAccountCredentials validateAccountCredentials(
+            final AccountQueryRepository accountQueryRepository,
+            final PasswordEncoder passwordEncoder
+    ) {
+        return new ValidateAccountCredentials(accountQueryRepository, passwordEncoder);
+    }
+
+    @Bean
     AccountQueryFacade accountQueryFacade(
             final GetAccountByIdUseCase getAccountByIdUseCase,
-            final CheckEmailExistsUseCase checkEmailExistsUseCase
+            final CheckEmailExistsUseCase checkEmailExistsUseCase,
+            final ValidateAccountCredentials validateAccountCredentials
     ) {
-        return new AccountQueryFacade(getAccountByIdUseCase, checkEmailExistsUseCase);
+        return new AccountQueryFacade(getAccountByIdUseCase, checkEmailExistsUseCase, validateAccountCredentials);
     }
 
     @Bean

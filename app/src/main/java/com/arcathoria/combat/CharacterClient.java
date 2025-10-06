@@ -1,11 +1,9 @@
 package com.arcathoria.combat;
 
-import com.arcathoria.character.dto.CharacterDTO;
-
-import java.util.Optional;
-import java.util.UUID;
+import com.arcathoria.combat.dto.ParticipantView;
+import com.arcathoria.combat.vo.AccountId;
 
 interface CharacterClient {
 
-    Optional<CharacterDTO> getSelectedCharacterByAccountId(final UUID accountId);
+    ParticipantView getSelectedCharacterByAccountId(final AccountId accountId);
 }

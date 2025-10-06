@@ -1,9 +1,9 @@
 package com.arcathoria.character;
 
-import com.arcathoria.account.vo.AccountId;
+import com.arcathoria.character.exception.CharacterAccessDenied;
 import com.arcathoria.character.exception.CharacterNotFoundException;
+import com.arcathoria.character.vo.AccountId;
 import com.arcathoria.character.vo.CharacterId;
-import com.arcathoria.exception.AccessDeniedException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -95,7 +95,7 @@ class GetCharacterByIdUseCaseTest {
 
         when(repository.getById(any(CharacterId.class))).thenReturn(Optional.of(character));
 
-        assertThatThrownBy(() -> getCharacterByIdUseCase.getOwned(characterId, badAccountId)).isInstanceOf(AccessDeniedException.class);
+        assertThatThrownBy(() -> getCharacterByIdUseCase.getOwned(characterId, badAccountId)).isInstanceOf(CharacterAccessDenied.class);
 
         verify(repository).getById(any(CharacterId.class));
     }

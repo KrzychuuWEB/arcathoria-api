@@ -1,7 +1,7 @@
 package com.arcathoria.character;
 
-import com.arcathoria.account.vo.AccountId;
-import com.arcathoria.exception.AccessDeniedException;
+import com.arcathoria.character.exception.CharacterAccessDenied;
+import com.arcathoria.character.vo.AccountId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,7 +29,7 @@ class CharacterOwnershipValidatorTest {
         Character result = ownershipValidator.validate(character, accountId);
 
         assertThat(result).isNotNull();
-        assertThat(result.getSnapshot().getCharacterId().value()).isEqualTo(CharacterSnapshotMother.DEFAULT_CHARACTER_ID);
+        assertThat(result.getSnapshot().getCharacterId()).isEqualTo(character.getSnapshot().getCharacterId());
         assertThat(result.getSnapshot().getAccountId()).isEqualTo(accountId);
     }
 
@@ -40,6 +40,6 @@ class CharacterOwnershipValidatorTest {
                 CharacterSnapshotMother.create().withAccountId(UUID.randomUUID()).build()
         );
 
-        assertThatThrownBy(() -> ownershipValidator.validate(character, accountId)).isInstanceOf(AccessDeniedException.class);
+        assertThatThrownBy(() -> ownershipValidator.validate(character, accountId)).isInstanceOf(CharacterAccessDenied.class);
     }
 }

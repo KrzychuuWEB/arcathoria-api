@@ -1,16 +1,19 @@
 package com.arcathoria.account;
 
-import com.arcathoria.IntegrationTestContainersConfig;
-import jakarta.transaction.Transactional;
+import com.arcathoria.testContainers.WithPostgres;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@Transactional
-class AccountRepositoryAdapterTest extends IntegrationTestContainersConfig {
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Import(AccountRepositoryAdapter.class)
+@WithPostgres
+class AccountRepositoryAdapterTest {
 
     @Autowired
     private AccountRepositoryAdapter accountRepositoryAdapter;

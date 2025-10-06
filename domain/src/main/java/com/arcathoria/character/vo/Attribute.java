@@ -1,5 +1,7 @@
 package com.arcathoria.character.vo;
 
+import com.arcathoria.Level;
+
 public sealed interface Attribute<T extends Attribute<T>> permits Intelligence {
     Level level();
 

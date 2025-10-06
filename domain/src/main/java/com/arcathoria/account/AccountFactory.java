@@ -4,11 +4,13 @@ import com.arcathoria.account.vo.AccountId;
 import com.arcathoria.account.vo.Email;
 import com.arcathoria.account.vo.HashedPassword;
 
+import java.util.UUID;
+
 class AccountFactory {
 
     Account from(final Email email, final HashedPassword hashedPassword) {
         return Account.restore(new AccountSnapshot(
-                new AccountId(null),
+                new AccountId(UUID.randomUUID()),
                 email,
                 hashedPassword
         ));

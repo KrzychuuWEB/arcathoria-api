@@ -1,9 +1,9 @@
 package com.arcathoria.character;
 
-import com.arcathoria.account.vo.AccountId;
+import com.arcathoria.Gauge;
+import com.arcathoria.Level;
 import com.arcathoria.character.vo.*;
 import com.arcathoria.character.vo.CharacterName;
-import com.arcathoria.combat.vo.Attributes;
 
 final class CharacterMapper {
 

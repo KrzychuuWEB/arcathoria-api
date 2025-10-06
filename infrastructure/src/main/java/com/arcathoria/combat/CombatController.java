@@ -1,10 +1,12 @@
 package com.arcathoria.combat;
 
-import com.arcathoria.account.MyUserDetails;
+import com.arcathoria.auth.AccountPrincipal;
+import com.arcathoria.combat.dto.CombatIdDTO;
 import com.arcathoria.combat.dto.CombatResultDTO;
 import com.arcathoria.combat.dto.ExecuteActionDTO;
 import com.arcathoria.combat.dto.InitPveDTO;
 import com.arcathoria.combat.exception.CombatNotFoundException;
+import com.arcathoria.combat.vo.CombatId;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,18 +19,20 @@ import java.util.UUID;
 class CombatController {
 
     private final CombatFacade combatFacade;
+    private final CombatQueryFacade combatQueryFacade;
 
-    CombatController(final CombatFacade combatFacade) {
+    CombatController(final CombatFacade combatFacade, final CombatQueryFacade combatQueryFacade) {
         this.combatFacade = combatFacade;
+        this.combatQueryFacade = combatQueryFacade;
     }
 
     @PostMapping("/init/pve")
     @ResponseStatus(HttpStatus.CREATED)
     CombatResultDTO initPveCombat(
             @Valid @RequestBody InitPveDTO dto,
-            @AuthenticationPrincipal MyUserDetails userDetails
+            @AuthenticationPrincipal AccountPrincipal principal
     ) {
-        return combatFacade.initPVECombat(userDetails.getId(), dto);
+        return combatFacade.initPVECombat(principal.id(), dto);
     }
 
     @PostMapping("/{id}/actions/execute")
@@ -36,12 +40,27 @@ class CombatController {
     CombatResultDTO performActionInCombat(
             @PathVariable final UUID id,
             @Valid @RequestBody ExecuteActionDTO dto,
-            @AuthenticationPrincipal MyUserDetails userDetails
+            @AuthenticationPrincipal AccountPrincipal principal
     ) {
         if (!id.equals(dto.combatId())) {
-            throw new CombatNotFoundException(id);
+            throw new CombatNotFoundException(new CombatId(id));
         }
 
-        return combatFacade.performActionInCombat(userDetails.getId(), dto);
+        return combatFacade.performActionInCombat(principal.id(), dto);
+    }
+
+    @GetMapping("/active")
+    @ResponseStatus(HttpStatus.OK)
+    CombatIdDTO getActiveCombatByParticipantId(@AuthenticationPrincipal AccountPrincipal principal) {
+        return combatQueryFacade.getActiveCombatForSelectedCharacterByAccountId(principal.id());
+    }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    CombatResultDTO getCombatById(
+            @PathVariable final UUID id,
+            @AuthenticationPrincipal AccountPrincipal principal
+    ) {
+        return combatQueryFacade.getCombatByIdAndParticipantId(id, principal.id());
     }
 }

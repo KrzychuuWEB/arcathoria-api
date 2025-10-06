@@ -1,19 +1,22 @@
 package com.arcathoria.combat.exception;
 
-import com.arcathoria.ApiException;
+import com.arcathoria.combat.vo.CombatId;
 
-import java.util.UUID;
+import java.util.Map;
 
-public class CombatNotFoundException extends ApiException {
+public class CombatNotFoundException extends CombatDomainException {
 
-    private final UUID combatId;
+    private final CombatId combatId;
 
-    public CombatNotFoundException(final UUID combatId) {
-        super("Combat not found with id: " + combatId, "ERR_COMBAT_NOT_FOUND-404");
+    public CombatNotFoundException(final CombatId combatId) {
+        super("Combat not found with id: " + combatId,
+                CombatExceptionErrorCode.ERR_COMBAT_NOT_FOUND,
+                Map.of("combatId", combatId.value())
+        );
         this.combatId = combatId;
     }
 
-    public UUID getCombatId() {
+    public CombatId getCombatId() {
         return combatId;
     }
 }

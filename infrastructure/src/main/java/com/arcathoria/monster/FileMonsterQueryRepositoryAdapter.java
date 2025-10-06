@@ -1,14 +1,10 @@
 package com.arcathoria.monster;
 
-import com.arcathoria.character.vo.Gauge;
-import com.arcathoria.character.vo.Health;
-import com.arcathoria.character.vo.Intelligence;
-import com.arcathoria.character.vo.Level;
-import com.arcathoria.combat.vo.Attributes;
+import com.arcathoria.Gauge;
+import com.arcathoria.Level;
 import com.arcathoria.monster.dto.FileMonsterDTO;
 import com.arcathoria.monster.exception.MonsterLoadingException;
-import com.arcathoria.monster.vo.MonsterId;
-import com.arcathoria.monster.vo.MonsterName;
+import com.arcathoria.monster.vo.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;

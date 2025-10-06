@@ -1,8 +1,8 @@
 package com.arcathoria.character;
 
-import com.arcathoria.account.vo.AccountId;
+import com.arcathoria.character.exception.CharacterAccessDenied;
 import com.arcathoria.character.exception.CharacterNotFoundException;
-import com.arcathoria.exception.AccessDeniedException;
+import com.arcathoria.character.vo.AccountId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -51,9 +51,9 @@ class RemoveSelectedCharacterUseCaseTest {
 
     @Test
     void should_remove_selected_character_return_AccessDeniedException() {
-        when(getSelectedCharacterFromCacheUseCase.execute(any(AccountId.class))).thenThrow(AccessDeniedException.class);
+        when(getSelectedCharacterFromCacheUseCase.execute(any(AccountId.class))).thenThrow(CharacterAccessDenied.class);
 
-        assertThatThrownBy(() -> removeSelectedCharacterUseCase.execute(new AccountId(UUID.randomUUID()))).isInstanceOf(AccessDeniedException.class);
+        assertThatThrownBy(() -> removeSelectedCharacterUseCase.execute(new AccountId(UUID.randomUUID()))).isInstanceOf(CharacterAccessDenied.class);
 
         verify(getSelectedCharacterFromCacheUseCase).execute(any(AccountId.class));
         verify(selectCharacterCachePort, never()).remove(any(AccountId.class));

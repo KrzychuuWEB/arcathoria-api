@@ -1,5 +1,7 @@
 package com.arcathoria.character.vo;
 
+import com.arcathoria.Gauge;
+
 import java.util.Objects;
 
 public record Health(Gauge gauge) {
