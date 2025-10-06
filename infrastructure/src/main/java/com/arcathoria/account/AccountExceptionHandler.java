@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Locale;
 
-@RestControllerAdvice
+@RestControllerAdvice(basePackageClasses = AccountController.class)
 @Order(1)
 class AccountExceptionHandler {
 

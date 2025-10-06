@@ -1,17 +1,16 @@
 package com.arcathoria.combat;
 
 import com.arcathoria.SetLocaleHelper;
-import com.arcathoria.WithPostgres;
-import com.arcathoria.WithRedis;
 import com.arcathoria.auth.AccountWithAuthenticated;
-import com.arcathoria.auth.TestJwtTokenGenerator;
+import com.arcathoria.auth.FakeJwtTokenConfig;
 import com.arcathoria.combat.dto.*;
 import com.arcathoria.combat.exception.CombatExceptionErrorCode;
 import com.arcathoria.combat.vo.AccountId;
 import com.arcathoria.combat.vo.CombatId;
 import com.arcathoria.combat.vo.MonsterId;
+import com.arcathoria.testContainers.WithPostgres;
+import com.arcathoria.testContainers.WithRedis;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @WithRedis
 @WithPostgres
-@Import({FakeCharacterClient.class, FakeMonsterClient.class})
+@Import({FakeJwtTokenConfig.class, CombatModuleTestConfig.class})
 class CombatControllerModuleTest {
 
     private final String baseUrl = "/combats";
@@ -48,16 +47,10 @@ class CombatControllerModuleTest {
     private FakeMonsterClient fakeMonsterClient;
 
     @Autowired
-    private TestJwtTokenGenerator tokenGenerator;
-
     private CreateCombatE2EHelper createCombatE2EHelper;
-    private AccountWithAuthenticated accountWithAuthenticated;
 
-    @BeforeEach
-    void setup() {
-        this.createCombatE2EHelper = new CreateCombatE2EHelper(restTemplate);
-        this.accountWithAuthenticated = new AccountWithAuthenticated(tokenGenerator);
-    }
+    @Autowired
+    private AccountWithAuthenticated accountWithAuthenticated;
 
     @AfterEach
     void tearDown() {
@@ -72,8 +65,8 @@ class CombatControllerModuleTest {
 
         HttpHeaders headers = accountWithAuthenticated.authenticatedUser(accountId.value());
 
-        ParticipantView monster = fakeMonsterClient.withDefaultMonster(exampleMonsterId).getMonsterById(exampleMonsterId);
-        ParticipantView player = fakeCharacterClient.withDefaultCharacter(accountId).getSelectedCharacterByAccountId(accountId);
+        ParticipantView monster = fakeMonsterClient.withDefaultMonster(exampleMonsterId.value()).getMonsterById(exampleMonsterId);
+        ParticipantView player = fakeCharacterClient.withDefaultCharacter(accountId.value()).getSelectedCharacterByAccountId(accountId);
 
         ResponseEntity<CombatResultDTO> response = createCombatE2EHelper.initPveCombat(initPveDTO, headers);
         CombatResultDTO result = response.getBody();
@@ -108,8 +101,8 @@ class CombatControllerModuleTest {
 
         HttpHeaders headers = accountWithAuthenticated.authenticatedWithLangPL(accountId.value());
 
-        fakeMonsterClient.withDefaultMonster(exampleMonsterId);
-        fakeCharacterClient.withDefaultCharacter(accountId).throwCharacterNotSelectedException();
+        fakeMonsterClient.withDefaultMonster(exampleMonsterId.value());
+        fakeCharacterClient.withDefaultCharacter(accountId.value()).throwCharacterNotSelectedException();
 
         ResponseEntity<ProblemDetail> response = restTemplate.postForEntity(baseUrl + "/init/pve", new HttpEntity<>(initPveDTO, headers), ProblemDetail.class);
         ProblemDetail problem = response.getBody();
@@ -134,8 +127,8 @@ class CombatControllerModuleTest {
 
         HttpHeaders headers = accountWithAuthenticated.authenticatedWithLangPL(accountId.value());
 
-        fakeMonsterClient.withDefaultMonster(exampleMonsterId);
-        fakeCharacterClient.withDefaultCharacter(accountId);
+        fakeMonsterClient.withDefaultMonster(exampleMonsterId.value());
+        fakeCharacterClient.withDefaultCharacter(accountId.value());
 
         createCombatE2EHelper.initPveCombat(initPveDTO, headers);
 
@@ -156,8 +149,8 @@ class CombatControllerModuleTest {
 
         HttpHeaders headers = accountWithAuthenticated.authenticatedWithLangPL(accountId.value());
 
-        fakeMonsterClient.withDefaultMonster(exampleMonsterId).withNotFoundException();
-        fakeCharacterClient.withDefaultCharacter(accountId);
+        fakeMonsterClient.withDefaultMonster(exampleMonsterId.value()).withNotFoundException();
+        fakeCharacterClient.withDefaultCharacter(accountId.value());
 
         ResponseEntity<ProblemDetail> response = restTemplate.postForEntity(baseUrl + "/init/pve", new HttpEntity<>(initPveDTO, headers), ProblemDetail.class);
         ProblemDetail problem = response.getBody();
@@ -182,8 +175,8 @@ class CombatControllerModuleTest {
 
         HttpHeaders headers = accountWithAuthenticated.authenticatedWithLangPL(accountId.value());
 
-        fakeMonsterClient.withDefaultMonster(exampleMonsterId);
-        fakeCharacterClient.withDefaultCharacter(accountId).throwCharacterNotSelectedException();
+        fakeMonsterClient.withDefaultMonster(exampleMonsterId.value());
+        fakeCharacterClient.withDefaultCharacter(accountId.value()).throwCharacterNotSelectedException();
 
         ResponseEntity<ProblemDetail> response = restTemplate.postForEntity(baseUrl + "/init/pve", new HttpEntity<>(initPveDTO, headers), ProblemDetail.class);
         ProblemDetail problem = response.getBody();
@@ -210,8 +203,8 @@ class CombatControllerModuleTest {
 
         HttpHeaders headers = accountWithAuthenticated.authenticatedUser(accountId.value());
 
-        fakeMonsterClient.withDefaultMonster(exampleMonsterId);
-        fakeCharacterClient.withDefaultCharacter(accountId);
+        fakeMonsterClient.withDefaultMonster(exampleMonsterId.value());
+        fakeCharacterClient.withDefaultCharacter(accountId.value());
 
         CombatResultDTO resultInitCombat = createCombatE2EHelper.initPveCombat(initPveDTO, headers).getBody();
 
@@ -245,8 +238,8 @@ class CombatControllerModuleTest {
 
         HttpHeaders headers = accountWithAuthenticated.authenticatedUser(accountId.value());
 
-        fakeMonsterClient.withCustomMonster(exampleMonsterId, ParticipantViewMother.aParticipant().withHealth(1));
-        fakeCharacterClient.withCustomCharacter(accountId, ParticipantViewMother.aParticipant().withHealth(1));
+        fakeMonsterClient.withCustomMonster(exampleMonsterId.value(), ParticipantViewMother.aParticipant().withHealth(1));
+        fakeCharacterClient.withCustomCharacter(accountId.value(), ParticipantViewMother.aParticipant().withHealth(1));
 
         CombatResultDTO resultInitCombat = createCombatE2EHelper.initPveCombat(initPveDTO, headers).getBody();
 
@@ -271,8 +264,8 @@ class CombatControllerModuleTest {
 
         HttpHeaders headers = accountWithAuthenticated.authenticatedUser(accountId.value());
 
-        fakeMonsterClient.withDefaultMonster(exampleMonsterId);
-        fakeCharacterClient.withDefaultCharacter(accountId);
+        fakeMonsterClient.withDefaultMonster(exampleMonsterId.value());
+        fakeCharacterClient.withDefaultCharacter(accountId.value());
 
         CombatResultDTO resultInitCombat = createCombatE2EHelper.initPveCombat(initPveDTO, headers).getBody();
 
@@ -296,7 +289,7 @@ class CombatControllerModuleTest {
 
         HttpHeaders headers = accountWithAuthenticated.authenticatedWithLangPL(accountId.value());
 
-        fakeCharacterClient.withDefaultCharacter(accountId);
+        fakeCharacterClient.withDefaultCharacter(accountId.value());
 
         ResponseEntity<ProblemDetail> response = restTemplate.exchange(
                 baseUrl + "/active",
@@ -321,8 +314,8 @@ class CombatControllerModuleTest {
 
         HttpHeaders headers = accountWithAuthenticated.authenticatedUser(accountId.value());
 
-        fakeMonsterClient.withDefaultMonster(exampleMonsterId);
-        fakeCharacterClient.withDefaultCharacter(accountId);
+        fakeMonsterClient.withDefaultMonster(exampleMonsterId.value());
+        fakeCharacterClient.withDefaultCharacter(accountId.value());
 
         CombatResultDTO saveCombat = createCombatE2EHelper.initPveCombat(initPveDTO, headers).getBody();
 
@@ -347,8 +340,8 @@ class CombatControllerModuleTest {
 
         HttpHeaders headers = accountWithAuthenticated.authenticatedWithLangPL(accountId.value());
 
-        fakeMonsterClient.withDefaultMonster(exampleMonsterId);
-        fakeCharacterClient.withDefaultCharacter(accountId);
+        fakeMonsterClient.withDefaultMonster(exampleMonsterId.value());
+        fakeCharacterClient.withDefaultCharacter(accountId.value());
 
         ResponseEntity<ProblemDetail> response = restTemplate.exchange(
                 baseUrl + "/" + UUID.randomUUID(),
@@ -372,8 +365,8 @@ class CombatControllerModuleTest {
         AccountId firstAccId = new AccountId(UUID.randomUUID());
         HttpHeaders firstAcc = accountWithAuthenticated.authenticatedUser(firstAccId.value());
 
-        fakeMonsterClient.withDefaultMonster(exampleMonsterId);
-        fakeCharacterClient.withDefaultCharacter(firstAccId);
+        fakeMonsterClient.withDefaultMonster(exampleMonsterId.value());
+        fakeCharacterClient.withDefaultCharacter(firstAccId.value());
 
         CombatResultDTO saveCombat = createCombatE2EHelper.initPveCombat(initPveDTO, firstAcc).getBody();
 
@@ -381,7 +374,7 @@ class CombatControllerModuleTest {
         HttpHeaders secondAcc = accountWithAuthenticated.authenticatedUser(secondAccId.value());
         SetLocaleHelper.withLocale(secondAcc, "pl");
 
-        fakeCharacterClient.withDefaultCharacter(secondAccId);
+        fakeCharacterClient.withDefaultCharacter(secondAccId.value());
 
         assertThat(saveCombat).isNotNull();
         ResponseEntity<ProblemDetail> response = restTemplate.exchange(

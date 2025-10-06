@@ -1,6 +1,5 @@
 package com.arcathoria.auth;
 
-import com.arcathoria.account.AccountAuthenticationService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,15 +10,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 class AuthController {
 
-    private final AccountAuthenticationService accountAuthenticationService;
+    private final AuthenticateAccount authenticateAccount;
 
-    AuthController(final AccountAuthenticationService accountAuthenticationService) {
-        this.accountAuthenticationService = accountAuthenticationService;
+    AuthController(final AuthenticateAccount authenticateAccount) {
+        this.authenticateAccount = authenticateAccount;
     }
 
     @PostMapping("/authenticate")
     @ResponseStatus(HttpStatus.OK)
     TokenResponseDTO login(@Valid @RequestBody AuthRequestDTO authRequestDTO) {
-        return new TokenResponseDTO(accountAuthenticationService.authenticate(authRequestDTO));
+        return new TokenResponseDTO(authenticateAccount.authenticate(authRequestDTO));
     }
 }

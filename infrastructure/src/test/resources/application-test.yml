@@ -1,6 +1,8 @@
 spring:
   datasource:
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    hikari:
+      maximum-pool-size: 2
   jpa:
     hibernate:
       ddl-auto: create-drop

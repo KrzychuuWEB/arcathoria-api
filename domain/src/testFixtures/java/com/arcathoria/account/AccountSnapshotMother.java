@@ -7,16 +7,15 @@ import com.arcathoria.account.vo.HashedPassword;
 import java.util.UUID;
 
 class AccountSnapshotMother {
-    static final UUID DEFAULT_ACCOUNT_ID = UUID.randomUUID();
     static final String DEFAULT_EMAIL = "default@email.com";
     static final String DEFAULT_HASHED_PASSWORD = "secret";
 
-    private AccountId accountId = new AccountId(DEFAULT_ACCOUNT_ID);
+    private AccountId accountId = new AccountId(UUID.randomUUID());
     private Email email = new Email(DEFAULT_EMAIL);
     private HashedPassword hashedPassword = new HashedPassword(DEFAULT_HASHED_PASSWORD);
 
     static AccountSnapshotMother create() {
-        return new AccountSnapshotMother();
+        return new AccountSnapshotMother().withAccountId(UUID.randomUUID());
     }
 
     AccountSnapshotMother withAccountId(UUID id) {

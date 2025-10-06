@@ -1,4 +1,4 @@
-package com.arcathoria;
+package com.arcathoria.testContainers;
 
 import com.redis.testcontainers.RedisContainer;
 import org.testcontainers.containers.PostgreSQLContainer;

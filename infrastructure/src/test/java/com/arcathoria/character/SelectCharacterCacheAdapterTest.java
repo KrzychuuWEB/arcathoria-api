@@ -1,9 +1,9 @@
 package com.arcathoria.character;
 
-import com.arcathoria.WithRedis;
 import com.arcathoria.character.exception.CharacterNotSelectedException;
 import com.arcathoria.character.vo.AccountId;
 import com.arcathoria.character.vo.CharacterId;
+import com.arcathoria.testContainers.WithRedis;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

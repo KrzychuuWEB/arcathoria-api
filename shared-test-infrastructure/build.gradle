@@ -14,4 +14,5 @@ dependencies {
     testFixturesImplementation "org.testcontainers:postgresql"
     testFixturesImplementation "org.testcontainers:testcontainers"
     testFixturesImplementation "com.redis:testcontainers-redis:2.2.2"
+    testFixturesImplementation project(":shared-kernel")
 }

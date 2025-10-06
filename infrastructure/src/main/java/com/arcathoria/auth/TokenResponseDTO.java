@@ -1,6 +1,6 @@
 package com.arcathoria.auth;
 
-public record TokenResponseDTO(
+record TokenResponseDTO(
         String token
 ) {
 }

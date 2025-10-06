@@ -1,81 +1,68 @@
 package com.arcathoria.character;
 
+import com.arcathoria.BaseFakeClient;
 import com.arcathoria.character.dto.AccountView;
 import com.arcathoria.character.exception.CharacterOwnerNotFound;
 import com.arcathoria.character.vo.AccountId;
 import com.arcathoria.combat.exception.ExternalServiceUnavailableException;
 import com.arcathoria.exception.UpstreamInfo;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.UUID;
 
-@TestConfiguration
-@Profile("test")
+@Component
 @Primary
-class FakeAccountClient implements AccountClient {
-
-    private final Map<AccountId, AccountView> accounts = new HashMap<>();
-    private boolean shouldThrowException = false;
-    private String exceptionType = null;
+@Profile("test")
+class FakeAccountClient extends BaseFakeClient<UUID, AccountView> implements AccountClient {
 
     @Override
     public AccountView getById(final AccountId accountId) {
-        if (shouldThrowException) {
-            throwConfiguredException(accountId);
-        }
-
-        AccountView accountView = accounts.get(accountId);
-        if (accountView == null) {
-            throw new CharacterOwnerNotFound(
-                    accountId,
-                    new UpstreamInfo("account", "ERR_ACCOUNT_NOT_FOUND")
-            );
-        }
-        return accountView;
+        return get(accountId.value(), (id, errorCode) -> new CharacterOwnerNotFound(
+                new AccountId(id),
+                new UpstreamInfo("account", errorCode)
+        ));
     }
 
-    public FakeAccountClient withAccount(final AccountId account, final AccountView accountView) {
-        accounts.put(account, accountView);
+    public FakeAccountClient withAccount(final UUID account, final AccountView accountView) {
+        data.put(account, accountView);
         return this;
     }
 
-    public FakeAccountClient withDefaultAccount(final AccountId accountId) {
-        accounts.put(accountId, new AccountView(accountId.value()));
+    public FakeAccountClient withDefaultAccount(final UUID accountId) {
+        data.put(accountId, new AccountView(accountId));
         return this;
     }
 
-    public FakeAccountClient throwCharacterNotFoundException() {
-        this.shouldThrowException = true;
-        this.exceptionType = "NOT_FOUND";
+    public FakeAccountClient throwCharacterOwnerNotFoundException() {
+        configureException("NOT_FOUND");
         return this;
     }
 
     public FakeAccountClient throwExternalServiceException() {
         this.shouldThrowException = true;
-        this.exceptionType = "EXTERNAL_SERVICE";
+        configureException("EXTERNAL_SERVICE");
         return this;
     }
 
-    public void reset() {
-        accounts.clear();
-        shouldThrowException = false;
-        exceptionType = null;
-    }
-
-    private void throwConfiguredException(final AccountId accountId) {
+    @Override
+    protected void throwConfiguredException(final UUID key) {
         switch (exceptionType) {
             case "NOT_FOUND":
                 throw new CharacterOwnerNotFound(
-                        accountId,
-                        new UpstreamInfo("account", "ERR_ACCOUNT_NOT_FOUND")
+                        new AccountId(key),
+                        new UpstreamInfo("account", getDefaultNotFoundErrorCode())
                 );
             case "EXTERNAL_SERVICE":
                 throw new ExternalServiceUnavailableException("account");
             default:
                 throw new RuntimeException("Unknown exception type");
         }
+    }
+
+    @Override
+    protected String getDefaultNotFoundErrorCode() {
+        return "ERR_ACCOUNT_NOT_FOUND";
     }
 }

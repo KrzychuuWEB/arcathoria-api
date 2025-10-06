@@ -1,4 +1,4 @@
-package com.arcathoria;
+package com.arcathoria.testContainers;
 
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
@@ -11,6 +11,6 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @ActiveProfiles("test")
-@Import(PostgresTestConfig.class)
-public @interface WithPostgres {
+@Import(RedisTestConfig.class)
+public @interface WithRedis {
 }

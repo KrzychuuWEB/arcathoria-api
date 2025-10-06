@@ -4,5 +4,6 @@ public enum DomainExceptionCodeCategory {
     NOT_FOUND,
     CONFLICT,
     FORBIDDEN,
+    UNAUTHORIZED,
     SERVICE_UNAVAILABLE
 }

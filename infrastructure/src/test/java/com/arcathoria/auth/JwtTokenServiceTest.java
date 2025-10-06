@@ -1,6 +1,6 @@
 package com.arcathoria.auth;
 
-import com.arcathoria.WithPostgres;
+import com.arcathoria.testContainers.WithPostgres;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @WithPostgres
-class JwtTokenConfigIT {
+class JwtTokenServiceTest {
 
     @Autowired
     private JwtTokenService jwtTokenService;

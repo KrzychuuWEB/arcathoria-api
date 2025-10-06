@@ -9,7 +9,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Service
-public class JwtTokenService {
+class JwtTokenService {
 
     private final JwtConfigurationProperties properties;
     private final JwtEncoder jwtEncoder;
@@ -23,7 +23,7 @@ public class JwtTokenService {
         this.jwtDecoder = jwtDecoder;
     }
 
-    public String generateToken(final String email, final UUID id) {
+    String generateToken(final String email, final UUID id) {
         Instant now = Instant.now();
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuedAt(now)

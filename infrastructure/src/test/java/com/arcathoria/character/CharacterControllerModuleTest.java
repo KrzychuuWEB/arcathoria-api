@@ -1,15 +1,15 @@
 package com.arcathoria.character;
 
 import com.arcathoria.UUIDGenerator;
-import com.arcathoria.WithPostgres;
-import com.arcathoria.WithRedis;
 import com.arcathoria.auth.AccountWithAuthenticated;
-import com.arcathoria.auth.TestJwtTokenGenerator;
+import com.arcathoria.auth.FakeJwtTokenConfig;
 import com.arcathoria.character.dto.CharacterDTO;
 import com.arcathoria.character.dto.CreateCharacterDTO;
 import com.arcathoria.character.dto.SelectCharacterDTO;
 import com.arcathoria.character.exception.CharacterExceptionErrorCode;
 import com.arcathoria.character.vo.AccountId;
+import com.arcathoria.testContainers.WithPostgres;
+import com.arcathoria.testContainers.WithRedis;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +21,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,7 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @WithPostgres
 @WithRedis
-@Import({FakeAccountClient.class})
+@Import({FakeJwtTokenConfig.class, CharacterModuleTestConfig.class})
 class CharacterControllerModuleTest {
 
     private String randomCharacterName;
@@ -42,16 +43,14 @@ class CharacterControllerModuleTest {
     private FakeAccountClient fakeAccountClient;
 
     @Autowired
-    private TestJwtTokenGenerator tokenGenerator;
-
-    private CreateCharacterE2EHelper createCharacterE2EHelper;
     private AccountWithAuthenticated accountWithAuthenticated;
+
+    @Autowired
+    private CreateCharacterE2EHelper createCharacterE2EHelper;
 
     @BeforeEach
     void setup() {
         this.randomCharacterName = "charName_" + UUIDGenerator.generate(5);
-        this.accountWithAuthenticated = new AccountWithAuthenticated(tokenGenerator);
-        this.createCharacterE2EHelper = new CreateCharacterE2EHelper(restTemplate);
     }
 
     @AfterEach
@@ -65,7 +64,7 @@ class CharacterControllerModuleTest {
 
         AccountId accountId = new AccountId(UUID.randomUUID());
         HttpHeaders headers = accountWithAuthenticated.authenticatedUser(accountId.value());
-        fakeAccountClient.withDefaultAccount(accountId);
+        fakeAccountClient.withDefaultAccount(accountId.value());
 
         ResponseEntity<CharacterDTO> response = createCharacterE2EHelper.create(createCharacterDTO, headers);
 
@@ -81,7 +80,7 @@ class CharacterControllerModuleTest {
         AccountId accountId = new AccountId(UUID.randomUUID());
         HttpHeaders headers = accountWithAuthenticated.authenticatedWithLangPL(accountId.value());
 
-        fakeAccountClient.withDefaultAccount(accountId);
+        fakeAccountClient.withDefaultAccount(accountId.value());
 
         createCharacterE2EHelper.create(createCharacterDTO, headers);
 
@@ -102,8 +101,8 @@ class CharacterControllerModuleTest {
         HttpHeaders otherAccount = accountWithAuthenticated.authenticatedUser(otherAccountId.value());
         HttpHeaders headers = accountWithAuthenticated.authenticatedUser(accountId.value());
 
-        fakeAccountClient.withDefaultAccount(otherAccountId);
-        fakeAccountClient.withDefaultAccount(accountId);
+        fakeAccountClient.withDefaultAccount(otherAccountId.value());
+        fakeAccountClient.withDefaultAccount(accountId.value());
 
         ResponseEntity<CharacterDTO> createCharacterForOtherAccount = createCharacterE2EHelper.create(
                 CreateCharacterDTOMother.aCreateCharacterDTO().withCharacterName(randomCharacterName + UUIDGenerator.generate(5)).build(), otherAccount);
@@ -140,8 +139,8 @@ class CharacterControllerModuleTest {
         AccountId accountId = new AccountId(UUID.randomUUID());
         HttpHeaders otherAccount = accountWithAuthenticated.authenticatedUser(otherAccountId.value());
 
-        fakeAccountClient.withDefaultAccount(otherAccountId);
-        fakeAccountClient.withDefaultAccount(accountId);
+        fakeAccountClient.withDefaultAccount(otherAccountId.value());
+        fakeAccountClient.withDefaultAccount(accountId.value());
 
         createCharacterE2EHelper.create(CreateCharacterDTOMother.aCreateCharacterDTO().withCharacterName(randomCharacterName).build(), otherAccount);
 
@@ -164,7 +163,7 @@ class CharacterControllerModuleTest {
         AccountId accountId = new AccountId(UUID.randomUUID());
         HttpHeaders headers = accountWithAuthenticated.authenticatedUser(accountId.value());
 
-        fakeAccountClient.withDefaultAccount(accountId);
+        fakeAccountClient.withDefaultAccount(accountId.value());
 
         CharacterDTO character = createCharacterE2EHelper.create(CreateCharacterDTOMother.aCreateCharacterDTO().withCharacterName(randomCharacterName).build(), headers).getBody();
 
@@ -183,7 +182,7 @@ class CharacterControllerModuleTest {
         HttpHeaders headers = accountWithAuthenticated.authenticatedWithLangPL(accountId.value());
         SelectCharacterDTO selectCharacterDTO = new SelectCharacterDTO(UUID.randomUUID());
 
-        fakeAccountClient.withDefaultAccount(accountId);
+        fakeAccountClient.withDefaultAccount(accountId.value());
 
         ResponseEntity<ProblemDetail> response = restTemplate.postForEntity(baseSelectCharacterUrl, new HttpEntity<>(selectCharacterDTO, headers), ProblemDetail.class);
         ProblemDetail result = response.getBody();
@@ -202,8 +201,8 @@ class CharacterControllerModuleTest {
         HttpHeaders account1 = accountWithAuthenticated.authenticatedUser(acc1Id.value());
         HttpHeaders account2 = accountWithAuthenticated.authenticatedWithLangPL(acc2Id.value());
 
-        fakeAccountClient.withDefaultAccount(acc1Id);
-        fakeAccountClient.withDefaultAccount(acc2Id);
+        fakeAccountClient.withDefaultAccount(acc1Id.value());
+        fakeAccountClient.withDefaultAccount(acc2Id.value());
 
         CharacterDTO responseForAccount1 = createCharacterE2EHelper.create(
                 CreateCharacterDTOMother.aCreateCharacterDTO().withCharacterName(randomCharacterName).build(),
@@ -227,7 +226,7 @@ class CharacterControllerModuleTest {
         AccountId accountId = new AccountId(UUID.randomUUID());
         HttpHeaders headers = accountWithAuthenticated.authenticatedUser(accountId.value());
 
-        fakeAccountClient.withDefaultAccount(accountId);
+        fakeAccountClient.withDefaultAccount(accountId.value());
 
         CharacterDTO character = createCharacterE2EHelper.create(CreateCharacterDTOMother.aCreateCharacterDTO().withCharacterName(randomCharacterName).build(), headers).getBody();
 
@@ -253,7 +252,7 @@ class CharacterControllerModuleTest {
         AccountId accountId = new AccountId(UUID.randomUUID());
         HttpHeaders headers = accountWithAuthenticated.authenticatedWithLangPL(accountId.value());
 
-        fakeAccountClient.withDefaultAccount(accountId);
+        fakeAccountClient.withDefaultAccount(accountId.value());
 
         HttpEntity<Void> request = new HttpEntity<>(headers);
         ResponseEntity<ProblemDetail> response = restTemplate.exchange(
@@ -276,7 +275,7 @@ class CharacterControllerModuleTest {
         AccountId accountId = new AccountId(UUID.randomUUID());
         HttpHeaders headers = accountWithAuthenticated.authenticatedUser(accountId.value());
 
-        fakeAccountClient.withDefaultAccount(accountId);
+        fakeAccountClient.withDefaultAccount(accountId.value());
 
         CharacterDTO character = createCharacterE2EHelper.create(CreateCharacterDTOMother.aCreateCharacterDTO().withCharacterName(randomCharacterName).build(), headers).getBody();
         assertThat(character).isNotNull();
@@ -298,7 +297,7 @@ class CharacterControllerModuleTest {
         AccountId accountId = new AccountId(UUID.randomUUID());
         HttpHeaders headers = accountWithAuthenticated.authenticatedWithLangPL(accountId.value());
 
-        fakeAccountClient.withDefaultAccount(accountId);
+        fakeAccountClient.withDefaultAccount(accountId.value());
 
         HttpEntity<Void> request = new HttpEntity<>(headers);
         ResponseEntity<ProblemDetail> response = restTemplate.exchange(baseSelectCharacterUrl, HttpMethod.DELETE, request, ProblemDetail.class);
@@ -309,5 +308,28 @@ class CharacterControllerModuleTest {
         assertThat(result.getDetail()).contains("Postać nie została wybrana");
         assertThat(result.getProperties())
                 .containsEntry("errorCode", CharacterExceptionErrorCode.ERR_CHARACTER_NOT_SELECTED.getCodeName());
+    }
+
+    @Test
+    void should_return_CharacterNotOwned_when_account_not_own_character() {
+        AccountId accountId = new AccountId(UUID.randomUUID());
+        HttpHeaders headers = accountWithAuthenticated.authenticatedWithLangPL(accountId.value());
+
+        fakeAccountClient.withDefaultAccount(accountId.value()).throwCharacterOwnerNotFoundException();
+
+        CreateCharacterDTO createCharacterDTO = CreateCharacterDTOMother.aCreateCharacterDTO().withCharacterName(randomCharacterName).build();
+        ResponseEntity<ProblemDetail> response = createCharacterE2EHelper.createResponseProblemDetail(createCharacterDTO, headers);
+        ProblemDetail result = response.getBody();
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(result).isNotNull();
+        assertThat(result.getTitle()).isEqualTo("ERR CHARACTER OWNER NOT FOUND");
+        assertThat(result.getDetail()).contains("nie istnieje");
+        assertThat(result.getProperties())
+                .containsEntry("errorCode", CharacterExceptionErrorCode.ERR_CHARACTER_OWNER_NOT_FOUND.getCodeName());
+        assertThat(result.getProperties().get("upstream")).isNotNull();
+        @SuppressWarnings("unchecked")
+        Map<String, Object> upstream = (Map<String, Object>) result.getProperties().get("upstream");
+        assertThat(upstream).containsEntry("type", "account").containsEntry("code", "ERR_ACCOUNT_NOT_FOUND");
     }
 }

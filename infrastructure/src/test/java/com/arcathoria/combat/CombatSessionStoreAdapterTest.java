@@ -1,8 +1,8 @@
 package com.arcathoria.combat;
 
-import com.arcathoria.WithRedis;
 import com.arcathoria.combat.vo.CombatId;
 import com.arcathoria.combat.vo.ParticipantId;
+import com.arcathoria.testContainers.WithRedis;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;

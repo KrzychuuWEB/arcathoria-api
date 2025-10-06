@@ -1,11 +1,10 @@
 package com.arcathoria.monster;
 
-import com.arcathoria.WithPostgres;
 import com.arcathoria.auth.AccountWithAuthenticated;
-import com.arcathoria.auth.TestJwtTokenGenerator;
+import com.arcathoria.auth.FakeJwtTokenConfig;
 import com.arcathoria.monster.dto.MonsterDTO;
 import com.arcathoria.monster.exception.MonsterExceptionErrorCode;
-import org.junit.jupiter.api.BeforeEach;
+import com.arcathoria.testContainers.WithPostgres;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @WithPostgres
-@Import({TestJwtTokenGenerator.class})
+@Import(FakeJwtTokenConfig.class)
 class MonsterControllerModuleTest {
 
     private final String baseUrl = "/monsters";
@@ -28,14 +27,7 @@ class MonsterControllerModuleTest {
     private TestRestTemplate restTemplate;
 
     @Autowired
-    private TestJwtTokenGenerator tokenGenerator;
-
     private AccountWithAuthenticated accountWithAuthenticated;
-
-    @BeforeEach
-    void setup() {
-        this.accountWithAuthenticated = new AccountWithAuthenticated(tokenGenerator);
-    }
 
     @Test
     void should_return_monster_by_id() {

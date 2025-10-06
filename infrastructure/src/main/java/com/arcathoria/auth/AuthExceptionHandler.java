@@ -1,5 +1,7 @@
 package com.arcathoria.auth;
 
+import com.arcathoria.ProblemDetailsFactory;
+import com.arcathoria.exception.DomainException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,16 +18,23 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.net.URI;
 import java.util.Locale;
 
-@RestControllerAdvice
-@Order(2)
+@RestControllerAdvice(basePackageClasses = AuthController.class)
+@Order(1)
 class AuthExceptionHandler {
 
     private static final Logger log = LogManager.getLogger(AuthExceptionHandler.class);
     private static final String CODE_FIELD = "errorCode";
     private final MessageSource messageSource;
+    private final ProblemDetailsFactory problemDetailsFactory;
 
-    AuthExceptionHandler(final MessageSource messageSource) {
+    AuthExceptionHandler(final MessageSource messageSource, final ProblemDetailsFactory problemDetailsFactory) {
         this.messageSource = messageSource;
+        this.problemDetailsFactory = problemDetailsFactory;
+    }
+
+    @ExceptionHandler({ExternalServiceUnavailableException.class, AuthBadCredentialsException.class})
+    ProblemDetail handleAuthExceptions(final DomainException ex, final HttpServletRequest request, final Locale locale) {
+        return problemDetailsFactory.build(ex, request.getRequestURI(), locale, log);
     }
 
     @ExceptionHandler(BadCredentialsException.class)

@@ -1,6 +1,6 @@
 package com.arcathoria.account;
 
-import com.arcathoria.WithPostgres;
+import com.arcathoria.testContainers.WithPostgres;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;

@@ -6,7 +6,9 @@ import com.arcathoria.exception.DomainExceptionCodeCategory;
 public enum AccountExceptionErrorCode implements DomainErrorCode {
 
     ERR_ACCOUNT_EMAIL_EXISTS(DomainExceptionCodeCategory.CONFLICT),
-    ERR_ACCOUNT_NOT_FOUND(DomainExceptionCodeCategory.NOT_FOUND);
+    ERR_ACCOUNT_NOT_FOUND(DomainExceptionCodeCategory.NOT_FOUND),
+    ERR_ACCOUNT_BAD_CREDENTIALS(DomainExceptionCodeCategory.UNAUTHORIZED),
+    ;
 
     private final DomainExceptionCodeCategory category;
 
