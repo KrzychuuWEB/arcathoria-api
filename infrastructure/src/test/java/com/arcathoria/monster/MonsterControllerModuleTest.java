@@ -1,8 +1,8 @@
 package com.arcathoria.monster;
 
-import com.arcathoria.SetLocaleHelper;
 import com.arcathoria.WithPostgres;
-import com.arcathoria.account.AccountManagerE2EHelper;
+import com.arcathoria.auth.AccountWithAuthenticated;
+import com.arcathoria.auth.TestJwtTokenGenerator;
 import com.arcathoria.monster.dto.MonsterDTO;
 import com.arcathoria.monster.exception.MonsterExceptionErrorCode;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,29 +10,36 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.*;
+
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @WithPostgres
-class MonsterControllerE2ETest {
+@Import({TestJwtTokenGenerator.class})
+class MonsterControllerModuleTest {
 
     private final String baseUrl = "/monsters";
 
     @Autowired
     private TestRestTemplate restTemplate;
 
-    private AccountManagerE2EHelper accountManagerE2EHelper;
+    @Autowired
+    private TestJwtTokenGenerator tokenGenerator;
+
+    private AccountWithAuthenticated accountWithAuthenticated;
 
     @BeforeEach
     void setup() {
-        this.accountManagerE2EHelper = new AccountManagerE2EHelper(restTemplate);
+        this.accountWithAuthenticated = new AccountWithAuthenticated(tokenGenerator);
     }
 
     @Test
     void should_return_monster_by_id() {
-        HttpHeaders headers = accountManagerE2EHelper.registerAndGetAuthHeaders("getmonsterbyid@email.com");
+        HttpHeaders headers = accountWithAuthenticated.authenticatedUser(UUID.randomUUID());
         HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
 
         ResponseEntity<MonsterDTO> response = restTemplate.exchange(
@@ -49,8 +56,7 @@ class MonsterControllerE2ETest {
 
     @Test
     void should_return_monster_not_found_exception_when_get_monster_by_id() {
-        HttpHeaders headers = accountManagerE2EHelper.registerAndGetAuthHeaders("notfoundmonsterbyid@email.com");
-        SetLocaleHelper.withLocale(headers, "pl");
+        HttpHeaders headers = accountWithAuthenticated.authenticatedWithLangPL(UUID.randomUUID());
         HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
 
         ResponseEntity<ProblemDetail> response = restTemplate.exchange(

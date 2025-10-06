@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @WithPostgres
-class AccountControllerE2ETest {
+class AccountControllerModuleTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
