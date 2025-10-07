@@ -11,7 +11,7 @@ class DefaultCombatSideStrategyFactory implements CombatSideStrategyFactory {
     @Override
     public CombatSideStrategy getStrategy(final CombatType combatType) {
         switch (combatType) {
-            case CombatType.PVE:
+            case PVE:
                 return selectPVEStrategy();
             default:
                 return lowestHealthStartsStrategy;

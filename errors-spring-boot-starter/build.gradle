@@ -1,20 +1,11 @@
 plugins {
+    id 'java-library'
     id 'io.spring.dependency-management' version '1.1.7'
 }
 
 dependencyManagement {
     imports {
         mavenBom "org.springframework.boot:spring-boot-dependencies:3.4.1"
-    }
-}
-
-jar {
-    enabled = true
-}
-
-plugins.withId('org.springframework.boot') {
-    tasks.named('bootJar') {
-        enabled = false
     }
 }
 
@@ -26,8 +17,4 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.mockito:mockito-inline:5.2.0'
     testImplementation 'org.mockito:mockito-junit-jupiter:5.15.2'
-}
-
-test {
-    jvmArgs "-javaagent:${configurations.testRuntimeClasspath.find { it.name.contains('mockito-core') }}", '-Xshare:off'
 }

@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/arcathoria
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  data:
+    redis:
+      host: redis
+      port: 6379
+      password: secret
+
+environment:
+  LOG_DIR: ./logs
+
+jwt:
+  secret: RUoYVGoUm4t+zRhg9fMlKLG35iKvcoQJo8ts6D/oo1c=
+  validity: 3600

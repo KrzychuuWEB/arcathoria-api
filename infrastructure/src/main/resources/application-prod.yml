@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  data:
+    redis:
+      host: ${SPRING_DATA_REDIS_HOST:redis}
+      port: ${SPRING_DATA_REDIS_PORT:6379}
+      password: ${SPRING_DATA_REDIS_PASSWORD}
+
+environment:
+  LOG_DIR: /app/logs
+
+logging:
+  level:
+    org.springframework: WARN
+    com.arcathoria: INFO
+
+jwt:
+  secret: ${JWT_SECRET}
+  validity: ${JWT_EXPIRATION}

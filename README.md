@@ -21,6 +21,18 @@ refining character and account system and I want focus on the new features.
 - **Combat System:** Init new PvE combat. Perform melee attack. Turn system. Choose combat side by strategy.
 - **Monster System:** Loading monster from monster.json.
 
+## Coming soon features
+
+- **Level system**
+- **Skills system**
+- **Reward system**
+- **Equipment system**
+- **Expedition system**
+- **Spells creation system**
+- **PvP system**
+- **Resistance, buff, debuff system**
+- **and more...**
+
 ## Project Structure
 
 ```
@@ -35,6 +47,42 @@ arcathoria-api/
 ├── shared-test-helpers/        # Shared utilities for testing
 └── shared-test-infrastucture/  # Shared infrastucture utilities for testing
 ```
+
+## Stack
+
+**Backend:**
+
+- Java 17
+- Spring Boot 3
+- Spring Security
+- Hibernate / Spring Data JPA
+- REST API
+
+**Architecture & Design:**
+
+- Domain-Driven Design (DDD)
+- Hexagonal Architecture (Ports & Adapters)
+
+**Design Patterns & Principles:**
+
+- SOLID, Clean Code
+- Dependency Injection, Strategy, Factory, Facade and more...
+- CQRS (basic usage)
+- Separation of Concerns, DRY, KISS, YAGNI
+
+**Database & Storage:**
+
+- PostgreSQL
+- Redis (cache/session storage)
+
+**Testing & Infrastructure:**
+
+- JUnit 5
+- Testcontainers (integration testing)
+- Docker / Docker Compose
+- Mockito
+- E2E module test with separated bounded context
+- Tests helpers (fake implementation, tests config)
 
 ## Requirements
 
@@ -52,24 +100,12 @@ arcathoria-api/
 
 2. **Start supporting services**:
    ```bash
-   docker-compose -f compose.yml up -d
+   docker-compose -f compose-prod.yml up -d --build
    ```
 
-3. **Configure application properties** (`src/main/resources/application-dev.yml`):
+3. **Configure application properties** (`.env`):
    ```yaml
-   spring:
-     datasource:
-       url: jdbc:postgresql://localhost:5432/arcathoria
-       username: postgres
-       password: postgres
-     redis:
-       host: localhost
-       port: 6379
-   ```
-
-4. **Build and run the API**:
-   ```bash
-   ./gradlew clean bootRun --projects bootstrap
+    Create file and complete environment (copy from .env-example)
    ```
 
 ## Testing

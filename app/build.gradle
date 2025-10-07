@@ -1,5 +1,5 @@
 plugins {
-    id 'java'
+    id 'java-library'
     id 'java-test-fixtures'
 }
 
@@ -14,8 +14,4 @@ dependencies {
     testFixturesImplementation project(':shared-test-helpers')
     testFixturesImplementation project(':domain')
     testImplementation testFixtures(project(':domain'))
-}
-
-test {
-    jvmArgs "-javaagent:${configurations.testRuntimeClasspath.find { it.name.contains('mockito-core') }}", '-Xshare:off'
 }

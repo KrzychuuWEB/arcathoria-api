@@ -1,10 +1,8 @@
 Configuration:
-  name: Default
-
   Properties:
     Property:
-      name: log-path
-      value: "logs"
+      name: log-dir
+      value: "${sys:LOG_DIR:-/tmp/logs}"
 
   Appenders:
     Console:
@@ -15,7 +13,8 @@ Configuration:
 
     File:
       name: File_Appender
-      fileName: ${log-path}/logfile.log
+      fileName: ${log-dir}/app.log
+      immediateFlush: true
       PatternLayout:
         pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"
 
@@ -26,15 +25,9 @@ Configuration:
         - ref: Console_Appender
 
     Logger:
-      - name: org.springframework
-        level: error
-        additivity: false
-        AppenderRef:
-          - ref: Console_Appender
-
       - name: com.arcathoria
         level: debug
         additivity: false
         AppenderRef:
-          - ref: File_Appender
           - ref: Console_Appender
+          - ref: File_Appender

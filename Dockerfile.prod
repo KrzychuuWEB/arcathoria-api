@@ -1,0 +1,23 @@
+ FROM gradle:8.7-jdk17-alpine AS build
+ WORKDIR /workspace
+
+COPY gradle gradle
+COPY gradlew gradlew
+COPY gradlew.bat gradlew.bat
+COPY settings.gradle settings.gradle
+COPY build.gradle build.gradle
+
+RUN --mount=type=bind,source=.,target=/tmp/src \
+  modules="$(awk -F"'" '/^include/ {print $2}' settings.gradle)" \
+  && for module in $modules; do \
+       cp -R /tmp/src/$module ./; \
+     done
+
+RUN ./gradlew --no-daemon :bootstrap:bootJar -x test
+
+FROM eclipse-temurin:17-jre-alpine
+WORKDIR /app
+COPY --from=build /workspace/bootstrap/build/libs/bootstrap-*.jar app.jar
+EXPOSE 8080
+USER 1000:1000
+ENTRYPOINT ["java","-jar","/app/app.jar"]
