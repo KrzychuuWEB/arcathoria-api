@@ -1,31 +1,39 @@
 # Arcathoria API
 
-> Backend REST API for the Arcathoria game
+> Backend REST API for the Arcathoria game | Frontend: https://github.com/KrzychuuWEB/arcathoria-client
 
 ---
 
 ## Description
 
-**Arcathoria API** is a multi-module backend application implemented with Java 17 and Spring Boot, following a Domain-Driven Design (DDD) and Hexagonal Architecture. It provides HTTP endpoints to manage players, characters, items, and to simulate battles between characters and monsters.
+Web browser game which player takes on the role of the wizzard. At this point the player can login can create a
+character and
+start PvE combat. I want to develop a new system like equipment, shop, guild, rewards, level, skill, create
+custom spells, buffs, debuffs and more... I solo develop game and I want to learn new technologies and get more
+experience. Actual version is very basic I focused on combat PvE system. After added combat PvE system I want to finish
+refining character and account system and I want focus on the new features.
 
 ## Features
 
-- **Account Managment:** Login and register with JWT Token.
-- **Character Management:** Create player.
-- **Battle System:** Initiate and resolve battles between characters and monsters using `BattleService`.
+- **Account System:** Register account.
+- **Auth System:** Login and generate jwt token. Valid jwt token.
+- **Character System:** Creation character and select character.
+- **Combat System:** Init new PvE combat. Perform melee attack. Turn system. Choose combat side by strategy.
+- **Monster System:** Loading monster from monster.json.
 
 ## Project Structure
 
 ```
 arcathoria-api/
-├── build.gradle            # Root Gradle configuration for all modules
-├── settings.gradle         # Subproject definitions
-├── compose.yml             # Docker Compose definitions (Postgres, Redis, pgAdmin)
-├── bootstrap/              # Bootstrapping module (Spring Boot application)
-├── domain/                 # Core business logic (entities, value objects, ports, services)
-├── infrastructure/         # Infrastructure adapters (JPA, Redis, messaging)
-├── app/                    # Application layer (REST controllers, use cases, DTOs)
-└── shared-test-helpers/    # Shared utilities for testing
+├── compose.yml                 # Docker Compose definitions (Postgres, Redis, pgAdmin)
+├── bootstrap/                  # Start Spring Boot application
+├── domain/                     # Core business logic (aggregate, value objects, ports, services) clean java
+├── infrastructure/             # Infrastructure adapters (REST controllers, JPA, Redis, clients adapters)
+├── app/                        # Application layer (Usecase, DTO, Exceptions, ports)
+├── errors-srping-boot-starter/ # Starter for global exception handling and problem detail factory with messaging
+├── shared-kerenl/              # Shared utilities for kernel
+├── shared-test-helpers/        # Shared utilities for testing
+└── shared-test-infrastucture/  # Shared infrastucture utilities for testing
 ```
 
 ## Requirements
@@ -42,7 +50,7 @@ arcathoria-api/
    cd arcathoria-api
    ```
 
-2. **Start supporting services** (PostgreSQL and Redis):
+2. **Start supporting services**:
    ```bash
    docker-compose -f compose.yml up -d
    ```
@@ -63,14 +71,11 @@ arcathoria-api/
    ```bash
    ./gradlew clean bootRun --projects bootstrap
    ```
-   
+
 ## Testing
 
 Run unit and integration tests:
+
 ```bash
 ./gradlew test
 ```
-
-## License
-
-This project is licensed under the MIT License. See the `LICENSE` file for details.
