@@ -1,6 +1,7 @@
 # Arcathoria API
 
-> Backend REST API for the Arcathoria game | Frontend: https://github.com/KrzychuuWEB/arcathoria-client
+> Backend REST API for the Arcathoria game |
+> Frontend: [Arcathoria CLIENT](https://github.com/KrzychuuWEB/arcathoria-client)
 
 ---
 
