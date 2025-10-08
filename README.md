@@ -99,20 +99,12 @@ arcathoria-api/
    cd arcathoria-api
    ```
 
-2. **Start supporting services**:
-   ```bash
-   docker-compose -f compose-prod.yml up -d --build
+2. **Configure application properties** (`.env`):
    ```
-
-3. **Configure application properties** (`.env`):
-   ```yaml
     Create file and complete environment (copy from .env-example)
    ```
 
-## Testing
-
-Run unit and integration tests:
-
-```bash
-./gradlew test
-```
+3. **Start supporting services**:
+   ```bash
+   docker-compose -f compose-prod.yml up -d --build
+   ```
