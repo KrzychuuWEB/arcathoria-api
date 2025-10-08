@@ -108,11 +108,3 @@ arcathoria-api/
    ```yaml
     Create file and complete environment (copy from .env-example)
    ```
-
-## Testing
-
-Run unit and integration tests:
-
-```bash
-./gradlew test
-```
