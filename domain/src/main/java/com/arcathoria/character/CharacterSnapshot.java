@@ -1,10 +1,7 @@
 package com.arcathoria.character;
 
-import com.arcathoria.account.vo.AccountId;
-import com.arcathoria.character.vo.CharacterId;
+import com.arcathoria.character.vo.*;
 import com.arcathoria.character.vo.CharacterName;
-import com.arcathoria.character.vo.Health;
-import com.arcathoria.combat.vo.Attributes;
 
 class CharacterSnapshot {
 
@@ -18,7 +15,8 @@ class CharacterSnapshot {
             final CharacterId characterId,
             final AccountId accountId,
             final CharacterName characterName,
-            final Health health, final Attributes attributes
+            final Health health,
+            final Attributes attributes
     ) {
         this.characterId = characterId;
         this.accountId = accountId;

@@ -1,17 +1,22 @@
 package com.arcathoria.character.exception;
 
-import com.arcathoria.ApiException;
+import com.arcathoria.character.vo.CharacterName;
 
-public class CharacterNameExistsException extends ApiException {
+import java.util.Map;
 
-    private final String characterName;
+public class CharacterNameExistsException extends CharacterApplicationException {
 
-    public CharacterNameExistsException(String characterName) {
-        super("Character name " + characterName + " is exists", "ERR_CHARACTER_NAME_EXISTS-409");
+    private final CharacterName characterName;
+
+    public CharacterNameExistsException(final CharacterName characterName) {
+        super("Character name " + characterName.value() + " is exists",
+                CharacterExceptionErrorCode.ERR_CHARACTER_NAME_EXISTS,
+                Map.of("characterName", characterName.value())
+        );
         this.characterName = characterName;
     }
 
-    public String getCharacterName() {
+    public CharacterName getCharacterName() {
         return characterName;
     }
 }

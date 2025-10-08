@@ -1,0 +1,23 @@
+plugins {
+    id 'java-library'
+    id 'java-test-fixtures'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:3.4.1"
+    }
+}
+
+dependencies {
+    testFixturesImplementation 'org.springframework.boot:spring-boot-starter-web'
+    testFixturesImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testFixturesImplementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    testFixturesImplementation "org.springframework.boot:spring-boot-testcontainers"
+    testFixturesImplementation "org.testcontainers:junit-jupiter"
+    testFixturesImplementation "org.testcontainers:postgresql"
+    testFixturesImplementation "org.testcontainers:testcontainers"
+    testFixturesImplementation "com.redis:testcontainers-redis:2.2.2"
+    testFixturesImplementation project(":shared-kernel")
+}

@@ -18,7 +18,7 @@ class GetAccountByIdUseCase {
         return accountQueryRepository.findById(accountId).orElseThrow(
                 () -> {
                     logger.warn("Account not found for ID: {}", accountId.value());
-                    return new AccountNotFoundException(accountId.value());
+                    return new AccountNotFoundException(accountId);
                 }
         );
     }

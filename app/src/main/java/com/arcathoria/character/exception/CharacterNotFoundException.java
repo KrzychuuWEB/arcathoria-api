@@ -1,17 +1,22 @@
 package com.arcathoria.character.exception;
 
-import com.arcathoria.ApiException;
+import com.arcathoria.character.vo.CharacterId;
 
-public class CharacterNotFoundException extends ApiException {
+import java.util.Map;
 
-    private final String value;
+public class CharacterNotFoundException extends CharacterApplicationException {
 
-    public CharacterNotFoundException(String value) {
-        super("Character not found for value: " + value, "ERR_CHARACTER_NOT_FOUND-404");
-        this.value = value;
+    private final CharacterId characterId;
+
+    public CharacterNotFoundException(final CharacterId characterId) {
+        super("Character with id " + characterId.value() + " not found!",
+                CharacterExceptionErrorCode.ERR_CHARACTER_NOT_FOUND,
+                Map.of("characterId", characterId.value())
+        );
+        this.characterId = characterId;
     }
 
-    public String getValue() {
-        return value;
+    public CharacterId getCharacterId() {
+        return characterId;
     }
 }

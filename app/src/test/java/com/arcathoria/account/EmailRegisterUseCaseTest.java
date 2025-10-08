@@ -56,7 +56,7 @@ class EmailRegisterUseCaseTest {
     void should_throw_exception_when_email_already_exists() {
         CreateAccountCommand command = CreateAccountCommandMother.aCreateAccountCommand().build();
 
-        doThrow(new EmailExistsException("email@email.com")).when(accountQueryFacade).checkWhetherEmailIsExists(anyString());
+        doThrow(new EmailExistsException(new Email("email@email.com"))).when(accountQueryFacade).checkWhetherEmailIsExists(anyString());
 
         assertThatThrownBy(() -> registerUseCase.register(command)).isInstanceOf(EmailExistsException.class);
 

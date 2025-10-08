@@ -1,11 +1,11 @@
 package com.arcathoria.character;
 
-import com.arcathoria.account.vo.AccountId;
 import com.arcathoria.character.command.CreateCharacterCommand;
 import com.arcathoria.character.command.SelectCharacterCommand;
 import com.arcathoria.character.dto.CharacterDTO;
 import com.arcathoria.character.dto.CreateCharacterDTO;
 import com.arcathoria.character.dto.SelectCharacterDTO;
+import com.arcathoria.character.vo.AccountId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

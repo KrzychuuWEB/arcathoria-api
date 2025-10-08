@@ -1,9 +1,9 @@
 package com.arcathoria.character;
 
-import com.arcathoria.account.vo.AccountId;
+import com.arcathoria.character.exception.CharacterAccessDenied;
 import com.arcathoria.character.exception.CharacterNotFoundException;
+import com.arcathoria.character.vo.AccountId;
 import com.arcathoria.character.vo.CharacterId;
-import com.arcathoria.exception.AccessDeniedException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -63,9 +63,9 @@ class GetSelectedCharacterFromCacheUseCaseTest {
     @Test
     void should_return_AccessDeniedException_when_character_not_owned_for_account() {
         when(selectCharacterCachePort.getAndSetNewExpiredTime(any(AccountId.class))).thenReturn(characterId);
-        when(getCharacterByIdUseCase.getOwned(any(CharacterId.class), any(AccountId.class))).thenThrow(AccessDeniedException.class);
+        when(getCharacterByIdUseCase.getOwned(any(CharacterId.class), any(AccountId.class))).thenThrow(CharacterAccessDenied.class);
 
-        assertThatThrownBy(() -> getSelectedCharacterFromCacheUseCase.execute(accountId)).isInstanceOf(AccessDeniedException.class);
+        assertThatThrownBy(() -> getSelectedCharacterFromCacheUseCase.execute(accountId)).isInstanceOf(CharacterAccessDenied.class);
 
         verify(selectCharacterCachePort).getAndSetNewExpiredTime(accountId);
         verify(getCharacterByIdUseCase).getOwned(characterId, accountId);

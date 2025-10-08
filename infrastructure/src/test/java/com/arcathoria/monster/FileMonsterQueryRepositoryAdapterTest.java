@@ -1,18 +1,20 @@
 package com.arcathoria.monster;
 
-import com.arcathoria.IntegrationTestContainersConfig;
 import com.arcathoria.monster.vo.MonsterId;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-class FileMonsterQueryRepositoryAdapterTest extends IntegrationTestContainersConfig {
+@SpringJUnitConfig
+@ContextConfiguration(classes = {FileMonsterQueryRepositoryAdapter.class, JacksonAutoConfiguration.class})
+class FileMonsterQueryRepositoryAdapterTest {
 
     @Autowired
     private FileMonsterQueryRepositoryAdapter adapter;

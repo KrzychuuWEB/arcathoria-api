@@ -1,6 +1,9 @@
 package com.arcathoria.character;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 import java.util.UUID;
 
@@ -9,7 +12,6 @@ import java.util.UUID;
 class CharacterEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(name = "account_id", nullable = false)

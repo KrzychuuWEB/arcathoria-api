@@ -1,5 +1,6 @@
 package com.arcathoria.combat;
 
+import com.arcathoria.combat.exception.OnlyOneActiveCombatAllowedException;
 import com.arcathoria.combat.vo.ParticipantId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -7,20 +8,23 @@ import org.junit.jupiter.api.Test;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class CombatEngineTest {
 
     private CombatEngine combatEngine;
     private CombatAction meleeCombatActionStrategy;
+    private final FakeCombatSessionPort fakeCombatSessionPort = new FakeCombatSessionPort();
 
     @BeforeEach
     void setup() {
         final CombatFactory combatFactory = new CombatFactory();
         final CombatSideStrategyFactory combatSideStrategyFactory = new DefaultCombatSideStrategyFactory();
         final DamageCalculator meleeMagicDamageStrategy = new MeleeMagicDamageStrategy();
+        final OnlyOneActiveCombatPolicy onlyOneActiveCombatPolicy = new OnlyOneActiveCombatPolicy(fakeCombatSessionPort);
 
         meleeCombatActionStrategy = new MeleeCombatActionStrategy(meleeMagicDamageStrategy);
-        combatEngine = new CombatEngine(combatFactory, combatSideStrategyFactory);
+        combatEngine = new CombatEngine(combatFactory, combatSideStrategyFactory, onlyOneActiveCombatPolicy);
     }
 
     @Test
@@ -74,5 +78,17 @@ class CombatEngineTest {
         assertThat(combat.getCurrentTurn()).isEqualTo(CombatSide.DEFENDER);
         assertThat(combat.getCombatStatus()).isEqualTo(CombatStatus.FINISHED);
         assertThat(combat.getSnapshot().attacker().health().getCurrent()).isZero();
+    }
+
+    @Test
+    void should_return_OnlyOneActiveCombatAllowedException_for_init_combat_when_attacker_has_active_combat() {
+        Participant attacker = Participant.restore(ParticipantSnapshotMother.aParticipantBuilder().withId(new ParticipantId(UUID.randomUUID())).withHealth(2, 100).build());
+        Participant defender = Participant.restore(ParticipantSnapshotMother.aParticipantBuilder().withHealth(80, 80).build());
+
+        fakeCombatSessionPort.save(CombatSnapshotMother.aCombat().withAttacker(attacker.getSnapshot()).build());
+
+        assertThatThrownBy(() -> combatEngine.initialCombat(attacker, defender, CombatType.PVE))
+                .isInstanceOf(OnlyOneActiveCombatAllowedException.class)
+                .hasMessageContaining(attacker.getId().value().toString());
     }
 }

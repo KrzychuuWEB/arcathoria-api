@@ -1,7 +1,7 @@
 package com.arcathoria.character;
 
-import com.arcathoria.account.vo.AccountId;
 import com.arcathoria.character.exception.CharacterNotFoundException;
+import com.arcathoria.character.vo.AccountId;
 import com.arcathoria.character.vo.CharacterId;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,7 +25,7 @@ class GetCharacterByIdUseCase {
         return characterQueryRepository.getById(characterId)
                 .orElseThrow(() -> {
                     log.warn("Character with id not found, id: {}", characterId.value());
-                    return new CharacterNotFoundException(characterId.value().toString());
+                    return new CharacterNotFoundException(characterId);
                 });
     }
 

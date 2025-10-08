@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -41,7 +42,7 @@ class GetMonsterByIdUseCaseTest {
     void should_return_MonsterNotFoundException_when_id_is_not_correct() {
         when(monsterQueryRepository.getById(any(MonsterId.class))).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> getMonsterByIdUseCase.execute(new MonsterId(null)))
+        assertThatThrownBy(() -> getMonsterByIdUseCase.execute(new MonsterId(UUID.randomUUID())))
                 .isInstanceOf(MonsterNotFoundException.class)
                 .message().contains("Monster with id");
     }

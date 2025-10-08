@@ -1,35 +1,29 @@
 package com.arcathoria.auth;
 
-import com.arcathoria.account.MyUserDetailsService;
-import jakarta.servlet.http.HttpServletResponse;
+import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.util.Base64;
 
 @Configuration
 @EnableWebSecurity
 class SecurityConfiguration {
-
-    private final MyUserDetailsService myUserDetailsService;
-
-    private final JwtFilter jwtFilter;
-
-    SecurityConfiguration(final MyUserDetailsService myUserDetailsService, final JwtFilter jwtFilter) {
-        this.myUserDetailsService = myUserDetailsService;
-        this.jwtFilter = jwtFilter;
-    }
 
     @Bean
     BCryptPasswordEncoder passwordEncoder() {
@@ -37,7 +31,10 @@ class SecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(
+            final HttpSecurity http,
+            final AccountJwtAuthenticationConverter accountJwtAuthenticationConverter
+    ) throws Exception {
         return http
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
@@ -49,22 +46,34 @@ class SecurityConfiguration {
                 .sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(jwt -> jwt.jwtAuthenticationConverter(accountJwtAuthenticationConverter))
+                )
                 .build();
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setPasswordEncoder(passwordEncoder());
-        provider.setUserDetailsService(myUserDetailsService);
-
-        return provider;
+    AccountJwtAuthenticationConverter accountJwtAuthenticationConverter() {
+        return new AccountJwtAuthenticationConverter();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
+    JwtDecoder jwtDecoder(final JwtConfigurationProperties jwtConfigurationProperties) {
+        byte[] keyBytes = Base64.getDecoder().decode(jwtConfigurationProperties.getSecret());
+        SecretKey secretKey = new SecretKeySpec(keyBytes, "HmacSHA256");
+        return NimbusJwtDecoder.withSecretKey(secretKey)
+                .macAlgorithm(MacAlgorithm.HS256)
+                .build();
+    }
 
+    @Bean
+    JwtEncoder jwtEncoder(final JwtConfigurationProperties properties) {
+        SecretKey secretKey = secretKey(properties);
+        return new NimbusJwtEncoder(new ImmutableSecret<>(secretKey));
+    }
+
+    private SecretKey secretKey(final JwtConfigurationProperties properties) {
+        byte[] keyBytes = Base64.getDecoder().decode(properties.getSecret());
+        return new SecretKeySpec(keyBytes, "HmacSHA256");
     }
 }

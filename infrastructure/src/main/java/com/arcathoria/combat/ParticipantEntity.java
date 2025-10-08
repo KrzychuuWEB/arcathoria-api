@@ -27,11 +27,14 @@ class ParticipantEntity {
 
     private int intelligence;
 
+    @Enumerated(EnumType.STRING)
+    private ParticipantType participantType;
+
     protected ParticipantEntity() {
     }
 
     ParticipantEntity(final UUID id, final CombatEntity combat, final UUID characterId,
-                      final CombatSide side, final int currentHealth, final int maxHealth, final int intelligence
+                      final CombatSide side, final int currentHealth, final int maxHealth, final int intelligence, final ParticipantType participantType
     ) {
         this.id = id;
         this.combat = combat;
@@ -40,6 +43,7 @@ class ParticipantEntity {
         this.currentHealth = currentHealth;
         this.maxHealth = maxHealth;
         this.intelligence = intelligence;
+        this.participantType = participantType;
     }
 
     UUID getId() {
@@ -68,6 +72,10 @@ class ParticipantEntity {
 
     int getIntelligence() {
         return intelligence;
+    }
+
+    ParticipantType getParticipantType() {
+        return participantType;
     }
 
     void setCombat(final CombatEntity combat) {

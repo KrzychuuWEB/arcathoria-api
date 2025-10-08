@@ -121,6 +121,7 @@ class Combat {
     }
 
     private void requireTurnOf(final ParticipantId participantId) {
-        if (!getCurrentTurnParticipant().getId().equals(participantId)) throw new WrongTurnException(getCurrentTurn());
+        if (!getCurrentTurnParticipant().getId().equals(participantId))
+            throw new WrongTurnException(getCurrentTurn());
     }
 }

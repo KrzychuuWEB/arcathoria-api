@@ -1,17 +1,22 @@
 package com.arcathoria.combat;
 
-import com.arcathoria.IntegrationTestContainersConfig;
 import com.arcathoria.combat.vo.ParticipantId;
+import com.arcathoria.testContainers.WithPostgres;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class CombatRepositoryAdapterTest extends IntegrationTestContainersConfig {
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@WithPostgres
+@Import({CombatRepositoryAdapter.class})
+class CombatRepositoryAdapterTest {
 
     @Autowired
     private CombatRepositoryAdapter repository;

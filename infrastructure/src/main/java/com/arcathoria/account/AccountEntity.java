@@ -1,6 +1,8 @@
 package com.arcathoria.account;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 import java.util.UUID;
 
@@ -9,7 +11,6 @@ import java.util.UUID;
 class AccountEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     private String email;
