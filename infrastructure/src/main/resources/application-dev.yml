@@ -11,8 +11,8 @@ spring:
       port: 6379
       password: secret
 
-environment:
-  LOG_DIR: ./logs
+log:
+  path: ./logs
 
 jwt:
   secret: RUoYVGoUm4t+zRhg9fMlKLG35iKvcoQJo8ts6D/oo1c=

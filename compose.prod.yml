@@ -11,14 +11,13 @@ services:
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_DATA_REDIS_HOST: redis
-      LOG_DIR: /app/logs
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRATION: ${JWT_EXPIRATION}
     depends_on:
       - postgres
       - redis
     volumes:
-      - app-logs:/app/logs
+      - /var/log/arcathoria:/var/log/arcathoria
     restart: unless-stopped
     networks:
       - backend
@@ -47,7 +46,7 @@ services:
 volumes:
   pgdata:
   redisdata:
-  app-logs:
+  /var/log/arcathoria:
 
 networks:
   backend:

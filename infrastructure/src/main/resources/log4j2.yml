@@ -1,8 +1,10 @@
 Configuration:
   Properties:
     Property:
-      name: log-dir
-      value: "${sys:LOG_DIR:-/tmp/logs}"
+      - name: log-dir
+        value: "${sys:log.path:-./logs}"
+      - name: log-filename
+        value: "app-${date:yyyy-MM-dd_HH-mm-ss}"
 
   Appenders:
     Console:
@@ -13,7 +15,7 @@ Configuration:
 
     File:
       name: File_Appender
-      fileName: ${log-dir}/app.log
+      fileName: ${log-dir}/${log-filename}.log
       immediateFlush: true
       PatternLayout:
         pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"

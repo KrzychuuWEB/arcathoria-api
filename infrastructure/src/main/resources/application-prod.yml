@@ -5,19 +5,22 @@ spring:
     password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
+  main:
+    banner-mode: "off"
+
   data:
     redis:
       host: ${SPRING_DATA_REDIS_HOST:redis}
       port: ${SPRING_DATA_REDIS_PORT:6379}
       password: ${SPRING_DATA_REDIS_PASSWORD}
 
-environment:
-  LOG_DIR: /app/logs
-
 logging:
   level:
     org.springframework: WARN
     com.arcathoria: INFO
+
+log:
+  path: /var/log/arcathoria
 
 jwt:
   secret: ${JWT_SECRET}
