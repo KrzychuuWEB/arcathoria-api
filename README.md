@@ -108,3 +108,13 @@ arcathoria-api/
    ```bash
    docker-compose -f compose-prod.yml up -d --build
    ```
+
+## Screenshots
+
+![Login Page](gh_img/login.png)
+
+![Expeditions](gh_img/expedition.png)
+
+![Choose Expedition](gh_img/choose_expedition.png)
+
+![PvE Combat](gh_img/combat.png)
