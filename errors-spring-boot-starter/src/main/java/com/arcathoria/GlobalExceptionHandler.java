@@ -42,16 +42,12 @@ class GlobalExceptionHandler {
         var violations = ex.getBindingResult().getFieldErrors().stream()
                 .map(err -> {
                     assert err.getRejectedValue() != null;
+
+                    assert err.getDefaultMessage() != null;
                     return Map.of(
                             "field", err.getField(),
-                            "message",
-                            Objects.requireNonNull(messageSource.getMessage(
-                                    Objects.requireNonNull(err.getCode()),
-                                    err.getArguments(),
-                                    err.getDefaultMessage(),
-                                    locale
-                            )),
-                            "code", err.getCode(),
+                            "message", Objects.requireNonNull(messageSource.getMessage(err.getDefaultMessage(), new Object[]{}, err.getDefaultMessage(), locale)),
+                            "code", Objects.requireNonNull(err.getCode()),
                             "rejectedValue", err.getRejectedValue()
                     );
                 })
