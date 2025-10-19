@@ -35,19 +35,23 @@ class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    ProblemDetail handleValidation(final MethodArgumentNotValidException ex,
-                                   final HttpServletRequest req,
-                                   final Locale locale) {
+    public ProblemDetail handleValidation(final MethodArgumentNotValidException ex,
+                                          final HttpServletRequest req,
+                                          final Locale locale) {
 
         var violations = ex.getBindingResult().getFieldErrors().stream()
                 .map(err -> {
-                    assert err.getRejectedValue() != null;
+                    Object[] arguments = err.getArguments();
+                    String message = messageSource.getMessage(
+                            err.getDefaultMessage(),
+                            arguments,
+                            locale
+                    );
 
-                    assert err.getDefaultMessage() != null;
                     return Map.of(
                             "field", err.getField(),
-                            "message", Objects.requireNonNull(messageSource.getMessage(err.getDefaultMessage(), new Object[]{}, err.getDefaultMessage(), locale)),
-                            "code", Objects.requireNonNull(err.getCode()),
+                            "message", message,
+                            "code", err.getCode(),
                             "rejectedValue", err.getRejectedValue()
                     );
                 })
