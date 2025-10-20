@@ -46,7 +46,7 @@ class AuthExceptionHandler {
         String detail = messageSource.getMessage("auth.bad.credentials", null, ex.getMessage(), locale);
         ProblemDetail pd = problem(HttpStatus.UNAUTHORIZED,
                 "urn:arcathoria:auth:bad-credentials",
-                "BAD_CREDENTIALS",
+                "ERR AUTH BAD CREDENTIALS",
                 detail,
                 req);
         pd.setProperty(CODE_FIELD, "ERR_AUTH_BAD_CREDENTIALS");
@@ -61,7 +61,7 @@ class AuthExceptionHandler {
         String detail = messageSource.getMessage("auth.access.denied", null, ex.getMessage(), locale);
         ProblemDetail pd = problem(HttpStatus.FORBIDDEN,
                 "urn:arcathoria:auth:forbidden",
-                "FORBIDDEN",
+                "ERR AUTH FORBIDDEN",
                 detail,
                 req);
         pd.setProperty(CODE_FIELD, "ERR_AUTH_FORBIDDEN");
@@ -77,7 +77,7 @@ class AuthExceptionHandler {
         String detail = messageSource.getMessage("auth.jwt.token.expired", null, ex.getMessage(), locale);
         ProblemDetail pd = problem(HttpStatus.UNAUTHORIZED,
                 "urn:arcathoria:auth:token-expired",
-                "TOKEN_EXPIRED",
+                "ERR AUTH EXPIRED TOKEN",
                 detail,
                 req);
         pd.setProperty(CODE_FIELD, "ERR_AUTH_EXPIRED_TOKEN");

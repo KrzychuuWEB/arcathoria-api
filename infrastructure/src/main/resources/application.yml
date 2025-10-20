@@ -14,5 +14,13 @@ spring:
     redis:
       timeout: 60000
 
+server:
+  servlet:
+    context-path: /v1
+
+springdoc:
+  default-produces-media-type: application/json
+  default-consumes-media-type: application/json
+
 logging:
   config: classpath:log4j2.yml

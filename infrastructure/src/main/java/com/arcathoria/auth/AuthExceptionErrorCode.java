@@ -5,6 +5,7 @@ import com.arcathoria.exception.DomainExceptionCodeCategory;
 
 enum AuthExceptionErrorCode implements DomainErrorCode {
     ERR_AUTH_BAD_CREDENTIALS(DomainExceptionCodeCategory.UNAUTHORIZED),
+    ERR_AUTH_EXPIRED_TOKEN(DomainExceptionCodeCategory.UNAUTHORIZED),
     ERR_EXTERNAL_SERVICE_UNAVAILABLE(DomainExceptionCodeCategory.SERVICE_UNAVAILABLE);
 
     private DomainExceptionCodeCategory category;

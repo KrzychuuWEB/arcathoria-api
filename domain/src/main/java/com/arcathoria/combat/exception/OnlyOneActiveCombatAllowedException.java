@@ -10,7 +10,7 @@ public class OnlyOneActiveCombatAllowedException extends CombatDomainException {
 
     public OnlyOneActiveCombatAllowedException(final ParticipantId participantId) {
         super("Participant " + participantId.value() + " already has an active combat",
-                CombatExceptionErrorCode.ERR_COMBAT_ONLY_ONE_ACTIVE_COMBAT,
+                CombatExceptionErrorCode.ERR_ONLY_ONE_ACTIVE_COMBAT,
                 Map.of("participantId", participantId.value())
         );
         this.participantId = participantId;

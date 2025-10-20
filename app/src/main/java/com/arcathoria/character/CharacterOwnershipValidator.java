@@ -1,12 +1,11 @@
 package com.arcathoria.character;
 
-import com.arcathoria.character.exception.CharacterAccessDenied;
+import com.arcathoria.character.exception.CharacterNotOwnedException;
 import com.arcathoria.character.vo.AccountId;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 class CharacterOwnershipValidator {
-
 
     private static final Logger log = LogManager.getLogger(CharacterOwnershipValidator.class);
 
@@ -16,7 +15,7 @@ class CharacterOwnershipValidator {
                     character.getSnapshot().getCharacterId().value(),
                     accountId.value()
             );
-            throw new CharacterAccessDenied(character.getSnapshot().getCharacterId());
+            throw new CharacterNotOwnedException(character.getSnapshot().getCharacterId());
         }
 
         return character;

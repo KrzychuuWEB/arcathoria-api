@@ -4,7 +4,7 @@ import com.arcathoria.account.AccountQueryFacade;
 import com.arcathoria.account.dto.AccountDTO;
 import com.arcathoria.account.exception.AccountNotFoundException;
 import com.arcathoria.character.dto.AccountView;
-import com.arcathoria.character.exception.CharacterOwnerNotFound;
+import com.arcathoria.character.exception.CharacterOwnerNotFoundException;
 import com.arcathoria.character.exception.ExternalServiceUnavailableException;
 import com.arcathoria.character.vo.AccountId;
 import org.junit.jupiter.api.Test;
@@ -49,11 +49,11 @@ class AuthAccountClientAdapterTest {
 
 
         assertThatThrownBy(() -> accountClientAdapter.getById(accountId))
-                .isInstanceOf(CharacterOwnerNotFound.class)
+                .isInstanceOf(CharacterOwnerNotFoundException.class)
                 .satisfies(e -> {
-                    CharacterOwnerNotFound ex = (CharacterOwnerNotFound) e;
+                    CharacterOwnerNotFoundException ex = (CharacterOwnerNotFoundException) e;
                     assertThat(ex.getUpstreamInfo()).isPresent();
-                    assertThat(ex.getUpstreamInfo().get().type()).isEqualTo("account");
+                    assertThat(ex.getUpstreamInfo().get().service()).isEqualTo("account");
                     assertThat(ex.getUpstreamInfo().get().code()).isEqualTo("ERR_ACCOUNT_NOT_FOUND");
                     assertThat(ex.getContext()).containsEntry("accountId", accountId.value());
                 });

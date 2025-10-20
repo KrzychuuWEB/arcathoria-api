@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,10 +25,9 @@ class AccountController {
     @ApiResponse(
             responseCode = "409",
             content = @Content(
-                    schema = @Schema(implementation = ProblemDetail.class),
-                    examples = @ExampleObject(
-                            value = "{\"detail\": \"Email already exists\", \"errorCode\": \"ERR_ACCOUNT_EMAIL_EXISTS\"}"
-                    )
+                    mediaType = "application/problem+json",
+                    schema = @Schema(implementation = AccountOpenApiProblemDetail.class),
+                    examples = @ExampleObject(value = AccountOpenApiExamples.EMAIL_EXISTS)
             )
     )
     AccountDTO registerRequest(@Valid @RequestBody RegisterDTO registerDTO) {

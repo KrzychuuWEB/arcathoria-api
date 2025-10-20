@@ -214,8 +214,8 @@ class CharacterControllerModuleTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
         assertThat(result).isNotNull();
-        assertThat(result.getDetail()).contains("nie ma dostepu");
-        assertThat(result.getErrorCode()).isEqualTo(CharacterExceptionErrorCode.ERR_CHARACTER_ACCESS_DENIED.getCodeName());
+        assertThat(result.getDetail()).contains("nie należy");
+        assertThat(result.getErrorCode()).isEqualTo(CharacterExceptionErrorCode.ERR_CHARACTER_NOT_OWNED.getCodeName());
     }
 
     @Test
@@ -321,7 +321,7 @@ class CharacterControllerModuleTest {
         assertThat(result.getTitle()).isEqualTo("ERR CHARACTER OWNER NOT FOUND");
         assertThat(result.getDetail()).contains("nie istnieje");
         assertThat(result.getErrorCode()).isEqualTo(CharacterExceptionErrorCode.ERR_CHARACTER_OWNER_NOT_FOUND.getCodeName());
-        assertThat(result.getUpstream().type()).isEqualTo("account");
+        assertThat(result.getUpstream().service()).isEqualTo("account");
         assertThat(result.getUpstream().code()).isEqualTo("ERR_ACCOUNT_NOT_FOUND");
     }
 }

@@ -83,7 +83,7 @@ class AuthControllerModuleTest {
         assertThat(result).isNotNull();
         assertThat(result.getTitle()).isEqualTo("ERR AUTH BAD CREDENTIALS");
         assertThat(result.getDetail()).isEqualTo("Bad credentials");
-        assertThat(result.getErrorCode()).isEqualTo("ERR_AUTH_BAD_CREDENTIALS");
+        assertThat(result.getErrorCode()).isEqualTo(AuthExceptionErrorCode.ERR_AUTH_BAD_CREDENTIALS.getCodeName());
     }
 
     @Test

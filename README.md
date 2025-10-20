@@ -74,22 +74,27 @@ arcathoria-api/
 **Database & Storage:**
 
 - PostgreSQL
-- Redis (cache/session storage)
+- Redis
 
-**Testing & Infrastructure:**
+**Testing:**
 
 - JUnit 5
 - Testcontainers (integration testing)
-- Docker / Docker Compose
 - Mockito
 - E2E module test with separated bounded context
 - Tests helpers (fake implementation, tests config)
+
+**Infrastructure:**
+
+- Docker and Docker Compose
+- Swagger / OpenApi
+- Problem Detail
 
 ## Requirements
 
 - Java 17 or higher
 - Gradle 7 or higher
-- Docker & Docker Compose (for local development environment)
+- Docker & Docker Compose
 
 ## Installation & Running
 
@@ -111,10 +116,4 @@ arcathoria-api/
 
 ## Screenshots
 
-![Login Page](gh_img/login.png)
-
-![Expeditions](gh_img/expedition.png)
-
-![Choose Expedition](gh_img/choose_expedition.png)
-
-![PvE Combat](gh_img/combat.png)
+[click me to see screenshots](https://github.com/krzychuuWEB/arcathoria-client?tab=readme-ov-file#screenshots)

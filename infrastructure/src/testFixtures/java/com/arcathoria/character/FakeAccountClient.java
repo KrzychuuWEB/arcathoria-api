@@ -2,7 +2,7 @@ package com.arcathoria.character;
 
 import com.arcathoria.BaseFakeClient;
 import com.arcathoria.character.dto.AccountView;
-import com.arcathoria.character.exception.CharacterOwnerNotFound;
+import com.arcathoria.character.exception.CharacterOwnerNotFoundException;
 import com.arcathoria.character.exception.ExternalServiceUnavailableException;
 import com.arcathoria.character.vo.AccountId;
 import com.arcathoria.exception.UpstreamInfo;
@@ -19,7 +19,7 @@ class FakeAccountClient extends BaseFakeClient<UUID, AccountView> implements Acc
 
     @Override
     public AccountView getById(final AccountId accountId) {
-        return get(accountId.value(), (id, errorCode) -> new CharacterOwnerNotFound(
+        return get(accountId.value(), (id, errorCode) -> new CharacterOwnerNotFoundException(
                 new AccountId(id),
                 new UpstreamInfo("account", errorCode)
         ));
@@ -50,7 +50,7 @@ class FakeAccountClient extends BaseFakeClient<UUID, AccountView> implements Acc
     protected void throwConfiguredException(final UUID key) {
         switch (exceptionType) {
             case "NOT_FOUND":
-                throw new CharacterOwnerNotFound(
+                throw new CharacterOwnerNotFoundException(
                         new AccountId(key),
                         new UpstreamInfo("account", getDefaultNotFoundErrorCode())
                 );

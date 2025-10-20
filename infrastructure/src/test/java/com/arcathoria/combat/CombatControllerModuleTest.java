@@ -111,7 +111,7 @@ class CombatControllerModuleTest {
         assertThat(problem).isNotNull();
         assertThat(problem.getDetail()).contains("dostępny");
         assertThat(problem.getErrorCode()).isEqualTo(CombatExceptionErrorCode.ERR_COMBAT_PARTICIPANT_NOT_AVAILABLE.getCodeName());
-        assertThat(problem.getUpstream().type()).isEqualTo("character");
+        assertThat(problem.getUpstream().service()).isEqualTo("character");
         assertThat(problem.getUpstream().code()).isEqualTo("ERR_CHARACTER_NOT_SELECTED");
     }
 
@@ -133,7 +133,7 @@ class CombatControllerModuleTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
         assertThat(problem).isNotNull();
         assertThat(problem.getDetail()).contains("tylko jedną aktywną walkę");
-        assertThat(problem.getErrorCode()).isEqualTo(CombatExceptionErrorCode.ERR_COMBAT_ONLY_ONE_ACTIVE_COMBAT.getCodeName());
+        assertThat(problem.getErrorCode()).isEqualTo(CombatExceptionErrorCode.ERR_ONLY_ONE_ACTIVE_COMBAT.getCodeName());
     }
 
     @Test
@@ -153,7 +153,7 @@ class CombatControllerModuleTest {
         assertThat(problem).isNotNull();
         assertThat(problem.getDetail()).contains("dostępny");
         assertThat(problem.getErrorCode()).isEqualTo(CombatExceptionErrorCode.ERR_COMBAT_PARTICIPANT_NOT_AVAILABLE.getCodeName());
-        assertThat(problem.getUpstream().type()).isEqualTo("monster");
+        assertThat(problem.getUpstream().service()).isEqualTo("monster");
         assertThat(problem.getUpstream().code()).isEqualTo("ERR_MONSTER_NOT_FOUND");
     }
 
@@ -174,7 +174,7 @@ class CombatControllerModuleTest {
         assertThat(problem).isNotNull();
         assertThat(problem.getDetail()).contains("dostępny");
         assertThat(problem.getErrorCode()).isEqualTo(CombatExceptionErrorCode.ERR_COMBAT_PARTICIPANT_NOT_AVAILABLE.getCodeName());
-        assertThat(problem.getUpstream().type()).isEqualTo("character");
+        assertThat(problem.getUpstream().service()).isEqualTo("character");
         assertThat(problem.getUpstream().code()).isEqualTo("ERR_CHARACTER_NOT_SELECTED");
     }
 

@@ -17,7 +17,7 @@ import java.util.UUID;
 @Primary
 @Profile("test")
 class FakeCharacterClient extends BaseFakeClient<UUID, ParticipantView> implements CharacterClient {
-    
+
     @Override
     public ParticipantView getSelectedCharacterByAccountId(final AccountId accountId) {
         return get(accountId.value(), (id, errorCode) -> new CombatParticipantNotAvailableException(

@@ -46,7 +46,7 @@ public class ProblemDetailsFactory {
 
         if (ex instanceof UpstreamAware ua && ua.getUpstreamInfo().isPresent()) {
             var up = ua.getUpstreamInfo().get();
-            pd.setUpstream(new UpstreamInfo(up.type(), up.code()));
+            pd.setUpstream(new UpstreamInfo(up.service(), up.code()));
         }
 
         ExceptionLogger.log(log, ex, HttpStatus.valueOf(pd.getStatus()));
