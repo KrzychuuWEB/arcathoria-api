@@ -1,5 +1,6 @@
 package com.arcathoria.auth;
 
+import com.arcathoria.ApiProblemDetail;
 import com.arcathoria.ProblemDetailsFactory;
 import com.arcathoria.exception.DomainException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,7 +34,7 @@ class AuthExceptionHandler {
     }
 
     @ExceptionHandler({ExternalServiceUnavailableException.class, AuthBadCredentialsException.class})
-    ProblemDetail handleAuthExceptions(final DomainException ex, final HttpServletRequest request, final Locale locale) {
+    ApiProblemDetail handleAuthExceptions(final DomainException ex, final HttpServletRequest request, final Locale locale) {
         return problemDetailsFactory.build(ex, request.getRequestURI(), locale, log);
     }
 

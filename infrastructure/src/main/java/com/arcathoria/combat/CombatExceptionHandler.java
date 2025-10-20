@@ -1,5 +1,6 @@
 package com.arcathoria.combat;
 
+import com.arcathoria.ApiProblemDetail;
 import com.arcathoria.ProblemDetailsFactory;
 import com.arcathoria.combat.exception.CombatApplicationException;
 import com.arcathoria.combat.exception.CombatDomainException;
@@ -8,7 +9,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -26,7 +26,7 @@ class CombatExceptionHandler {
     }
 
     @ExceptionHandler({CombatDomainException.class, CombatApplicationException.class})
-    ProblemDetail handleCombatExceptions(final DomainExceptionContract ex, final HttpServletRequest request, final Locale locale) {
+    ApiProblemDetail handleCombatExceptions(final DomainExceptionContract ex, final HttpServletRequest request, final Locale locale) {
         return problemDetailsFactory.build(ex, request.getRequestURI(), locale, logger);
     }
 }

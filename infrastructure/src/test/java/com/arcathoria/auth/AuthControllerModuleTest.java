@@ -1,5 +1,6 @@
 package com.arcathoria.auth;
 
+import com.arcathoria.ApiProblemDetail;
 import com.arcathoria.testContainers.WithPostgres;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -75,14 +76,14 @@ class AuthControllerModuleTest {
 
         fakeAuthAccountClient.withAccount(email, new AccountView(UUID.randomUUID(), rawPassword)).throwBadCredentialsException();
 
-        ResponseEntity<ProblemDetail> response = restTemplate.postForEntity(authenticateUrl, new HttpEntity<>(authRequestDTO), ProblemDetail.class);
-        ProblemDetail result = response.getBody();
+        ResponseEntity<ApiProblemDetail> response = restTemplate.postForEntity(authenticateUrl, new HttpEntity<>(authRequestDTO), ApiProblemDetail.class);
+        ApiProblemDetail result = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
         assertThat(result).isNotNull();
         assertThat(result.getTitle()).isEqualTo("ERR AUTH BAD CREDENTIALS");
         assertThat(result.getDetail()).isEqualTo("Bad credentials");
-        assertThat(result.getProperties()).containsEntry("errorCode", "ERR_AUTH_BAD_CREDENTIALS");
+        assertThat(result.getErrorCode()).isEqualTo("ERR_AUTH_BAD_CREDENTIALS");
     }
 
     @Test
@@ -93,8 +94,8 @@ class AuthControllerModuleTest {
 
         fakeAuthAccountClient.withAccount(email, new AccountView(UUID.randomUUID(), rawPassword)).throwExternalServiceException();
 
-        ResponseEntity<ProblemDetail> response = restTemplate.postForEntity(authenticateUrl, new HttpEntity<>(authRequestDTO), ProblemDetail.class);
-        ProblemDetail result = response.getBody();
+        ResponseEntity<ApiProblemDetail> response = restTemplate.postForEntity(authenticateUrl, new HttpEntity<>(authRequestDTO), ApiProblemDetail.class);
+        ApiProblemDetail result = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
         assertThat(result).isNotNull();

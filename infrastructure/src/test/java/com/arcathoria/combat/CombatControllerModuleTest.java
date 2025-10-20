@@ -1,5 +1,6 @@
 package com.arcathoria.combat;
 
+import com.arcathoria.ApiProblemDetail;
 import com.arcathoria.SetLocaleHelper;
 import com.arcathoria.auth.AccountWithAuthenticated;
 import com.arcathoria.auth.FakeJwtTokenConfig;
@@ -19,7 +20,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -104,20 +104,15 @@ class CombatControllerModuleTest {
         fakeMonsterClient.withDefaultMonster(exampleMonsterId.value());
         fakeCharacterClient.withDefaultCharacter(accountId.value()).throwCharacterNotSelectedException();
 
-        ResponseEntity<ProblemDetail> response = restTemplate.postForEntity(baseUrl + "/init/pve", new HttpEntity<>(initPveDTO, headers), ProblemDetail.class);
-        ProblemDetail problem = response.getBody();
+        ResponseEntity<ApiProblemDetail> response = restTemplate.postForEntity(baseUrl + "/init/pve", new HttpEntity<>(initPveDTO, headers), ApiProblemDetail.class);
+        ApiProblemDetail problem = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(problem).isNotNull();
-        assertThat(problem.getProperties())
-                .containsEntry("errorCode", CombatExceptionErrorCode.ERR_COMBAT_PARTICIPANT_NOT_AVAILABLE.getCodeName());
         assertThat(problem.getDetail()).contains("dostępny");
-
-        assertThat(problem.getProperties()).isNotNull();
-        assertThat(problem.getProperties().get("upstream")).isNotNull();
-        @SuppressWarnings("unchecked")
-        Map<String, Object> upstream = (Map<String, Object>) problem.getProperties().get("upstream");
-        assertThat(upstream).containsEntry("type", "character").containsEntry("code", "ERR_CHARACTER_NOT_SELECTED");
+        assertThat(problem.getErrorCode()).isEqualTo(CombatExceptionErrorCode.ERR_COMBAT_PARTICIPANT_NOT_AVAILABLE.getCodeName());
+        assertThat(problem.getUpstream().type()).isEqualTo("character");
+        assertThat(problem.getUpstream().code()).isEqualTo("ERR_CHARACTER_NOT_SELECTED");
     }
 
     @Test
@@ -132,14 +127,13 @@ class CombatControllerModuleTest {
 
         createCombatE2EHelper.initPveCombat(initPveDTO, headers);
 
-        ResponseEntity<ProblemDetail> response = restTemplate.postForEntity(baseUrl + "/init/pve", new HttpEntity<>(initPveDTO, headers), ProblemDetail.class);
-        ProblemDetail problem = response.getBody();
+        ResponseEntity<ApiProblemDetail> response = restTemplate.postForEntity(baseUrl + "/init/pve", new HttpEntity<>(initPveDTO, headers), ApiProblemDetail.class);
+        ApiProblemDetail problem = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
         assertThat(problem).isNotNull();
-        assertThat(problem.getProperties())
-                .containsEntry("errorCode", CombatExceptionErrorCode.ERR_COMBAT_ONLY_ONE_ACTIVE_COMBAT.getCodeName());
         assertThat(problem.getDetail()).contains("tylko jedną aktywną walkę");
+        assertThat(problem.getErrorCode()).isEqualTo(CombatExceptionErrorCode.ERR_COMBAT_ONLY_ONE_ACTIVE_COMBAT.getCodeName());
     }
 
     @Test
@@ -152,20 +146,15 @@ class CombatControllerModuleTest {
         fakeMonsterClient.withDefaultMonster(exampleMonsterId.value()).withNotFoundException();
         fakeCharacterClient.withDefaultCharacter(accountId.value());
 
-        ResponseEntity<ProblemDetail> response = restTemplate.postForEntity(baseUrl + "/init/pve", new HttpEntity<>(initPveDTO, headers), ProblemDetail.class);
-        ProblemDetail problem = response.getBody();
+        ResponseEntity<ApiProblemDetail> response = restTemplate.postForEntity(baseUrl + "/init/pve", new HttpEntity<>(initPveDTO, headers), ApiProblemDetail.class);
+        ApiProblemDetail problem = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(problem).isNotNull();
-        assertThat(problem.getProperties())
-                .containsEntry("errorCode", CombatExceptionErrorCode.ERR_COMBAT_PARTICIPANT_NOT_AVAILABLE.getCodeName());
         assertThat(problem.getDetail()).contains("dostępny");
-
-        assertThat(problem.getProperties()).isNotNull();
-        assertThat(problem.getProperties().get("upstream")).isNotNull();
-        @SuppressWarnings("unchecked")
-        Map<String, Object> upstream = (Map<String, Object>) problem.getProperties().get("upstream");
-        assertThat(upstream).containsEntry("type", "monster").containsEntry("code", "ERR_MONSTER_NOT_FOUND");
+        assertThat(problem.getErrorCode()).isEqualTo(CombatExceptionErrorCode.ERR_COMBAT_PARTICIPANT_NOT_AVAILABLE.getCodeName());
+        assertThat(problem.getUpstream().type()).isEqualTo("monster");
+        assertThat(problem.getUpstream().code()).isEqualTo("ERR_MONSTER_NOT_FOUND");
     }
 
     @Test
@@ -178,22 +167,15 @@ class CombatControllerModuleTest {
         fakeMonsterClient.withDefaultMonster(exampleMonsterId.value());
         fakeCharacterClient.withDefaultCharacter(accountId.value()).throwCharacterNotSelectedException();
 
-        ResponseEntity<ProblemDetail> response = restTemplate.postForEntity(baseUrl + "/init/pve", new HttpEntity<>(initPveDTO, headers), ProblemDetail.class);
-        ProblemDetail problem = response.getBody();
+        ResponseEntity<ApiProblemDetail> response = restTemplate.postForEntity(baseUrl + "/init/pve", new HttpEntity<>(initPveDTO, headers), ApiProblemDetail.class);
+        ApiProblemDetail problem = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(problem).isNotNull();
-        assertThat(problem.getProperties())
-                .containsEntry("errorCode", CombatExceptionErrorCode.ERR_COMBAT_PARTICIPANT_NOT_AVAILABLE.getCodeName());
-
-        assertThat(problem.getProperties()).isNotNull();
         assertThat(problem.getDetail()).contains("dostępny");
-
-        assertThat(problem.getProperties()).isNotNull();
-        assertThat(problem.getProperties().get("upstream")).isNotNull();
-        @SuppressWarnings("unchecked")
-        Map<String, Object> upstream = (Map<String, Object>) problem.getProperties().get("upstream");
-        assertThat(upstream).containsEntry("type", "character").containsEntry("code", "ERR_CHARACTER_NOT_SELECTED");
+        assertThat(problem.getErrorCode()).isEqualTo(CombatExceptionErrorCode.ERR_COMBAT_PARTICIPANT_NOT_AVAILABLE.getCodeName());
+        assertThat(problem.getUpstream().type()).isEqualTo("character");
+        assertThat(problem.getUpstream().code()).isEqualTo("ERR_CHARACTER_NOT_SELECTED");
     }
 
     @Test
@@ -291,20 +273,19 @@ class CombatControllerModuleTest {
 
         fakeCharacterClient.withDefaultCharacter(accountId.value());
 
-        ResponseEntity<ProblemDetail> response = restTemplate.exchange(
+        ResponseEntity<ApiProblemDetail> response = restTemplate.exchange(
                 baseUrl + "/active",
                 HttpMethod.GET,
                 new HttpEntity<>(headers),
                 new ParameterizedTypeReference<>() {
                 }
         );
-        ProblemDetail problem = response.getBody();
+        ApiProblemDetail problem = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(problem).isNotNull();
-        assertThat(problem.getProperties())
-                .containsEntry("errorCode", CombatExceptionErrorCode.ERR_PARTICIPANT_NOT_HAS_ACTIVE_COMBAT.getCodeName());
         assertThat(problem.getDetail()).contains("nie ma aktywnych walk");
+        assertThat(problem.getErrorCode()).isEqualTo(CombatExceptionErrorCode.ERR_PARTICIPANT_NOT_HAS_ACTIVE_COMBAT.getCodeName());
     }
 
     @Test
@@ -343,20 +324,19 @@ class CombatControllerModuleTest {
         fakeMonsterClient.withDefaultMonster(exampleMonsterId.value());
         fakeCharacterClient.withDefaultCharacter(accountId.value());
 
-        ResponseEntity<ProblemDetail> response = restTemplate.exchange(
+        ResponseEntity<ApiProblemDetail> response = restTemplate.exchange(
                 baseUrl + "/" + UUID.randomUUID(),
                 HttpMethod.GET,
                 new HttpEntity<>(headers),
                 new ParameterizedTypeReference<>() {
                 }
         );
-        ProblemDetail problem = response.getBody();
+        ApiProblemDetail problem = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(problem).isNotNull();
-        assertThat(problem.getProperties())
-                .containsEntry("errorCode", CombatExceptionErrorCode.ERR_COMBAT_NOT_FOUND.getCodeName());
         assertThat(problem.getDetail()).contains("Walka o");
+        assertThat(problem.getErrorCode()).isEqualTo(CombatExceptionErrorCode.ERR_COMBAT_NOT_FOUND.getCodeName());
     }
 
     @Test
@@ -377,19 +357,18 @@ class CombatControllerModuleTest {
         fakeCharacterClient.withDefaultCharacter(secondAccId.value());
 
         assertThat(saveCombat).isNotNull();
-        ResponseEntity<ProblemDetail> response = restTemplate.exchange(
+        ResponseEntity<ApiProblemDetail> response = restTemplate.exchange(
                 baseUrl + "/" + saveCombat.combatId(),
                 HttpMethod.GET,
                 new HttpEntity<>(secondAcc),
                 new ParameterizedTypeReference<>() {
                 }
         );
-        ProblemDetail problem = response.getBody();
+        ApiProblemDetail problem = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(problem).isNotNull();
-        assertThat(problem.getProperties())
-                .containsEntry("errorCode", CombatExceptionErrorCode.ERR_COMBAT_PARTICIPANT_NOT_FOUND_IN_COMBAT.getCodeName());
         assertThat(problem.getDetail()).contains("nie został znaleziony");
+        assertThat(problem.getErrorCode()).isEqualTo(CombatExceptionErrorCode.ERR_COMBAT_PARTICIPANT_NOT_FOUND_IN_COMBAT.getCodeName());
     }
 }

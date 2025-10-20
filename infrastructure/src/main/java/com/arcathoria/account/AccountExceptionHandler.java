@@ -1,5 +1,6 @@
 package com.arcathoria.account;
 
+import com.arcathoria.ApiProblemDetail;
 import com.arcathoria.ProblemDetailsFactory;
 import com.arcathoria.account.exception.AccountApplicationException;
 import com.arcathoria.account.exception.AccountDomainException;
@@ -7,7 +8,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -25,7 +25,7 @@ class AccountExceptionHandler {
     }
 
     @ExceptionHandler({AccountDomainException.class, AccountApplicationException.class})
-    ProblemDetail handleAccountExceptions(final AccountDomainException ex, final HttpServletRequest request, final Locale locale) {
+    ApiProblemDetail handleAccountExceptions(final AccountDomainException ex, final HttpServletRequest request, final Locale locale) {
         return problemDetailsFactory.build(ex, request.getRequestURI(), locale, logger);
     }
 }

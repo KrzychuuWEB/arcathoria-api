@@ -1,5 +1,6 @@
 package com.arcathoria.account;
 
+import com.arcathoria.ApiProblemDetail;
 import com.arcathoria.SetLocaleHelper;
 import com.arcathoria.account.dto.AccountDTO;
 import com.arcathoria.account.dto.RegisterDTO;
@@ -9,7 +10,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -42,13 +46,13 @@ class AccountControllerModuleTest {
         HttpHeaders headers = new HttpHeaders();
         SetLocaleHelper.withLocale(headers, "pl");
 
-        ResponseEntity<ProblemDetail> response = restTemplate.postForEntity(registerUrl, new HttpEntity<>(registerDTO, headers), ProblemDetail.class);
-        ProblemDetail result = response.getBody();
+        ResponseEntity<ApiProblemDetail> response = restTemplate.postForEntity(registerUrl, new HttpEntity<>(registerDTO, headers), ApiProblemDetail.class);
+        ApiProblemDetail result = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
         assertThat(result).isNotNull();
         assertThat(result.getDetail()).contains("już istnieje");
-        assertThat(result.getProperties())
-                .containsEntry("errorCode", AccountExceptionErrorCode.ERR_ACCOUNT_EMAIL_EXISTS.getCodeName());
+        assertThat(result.getContext()).containsEntry("email", registerDTO.email());
+        assertThat(result.getErrorCode()).isEqualTo(AccountExceptionErrorCode.ERR_ACCOUNT_EMAIL_EXISTS.getCodeName());
     }
 }
