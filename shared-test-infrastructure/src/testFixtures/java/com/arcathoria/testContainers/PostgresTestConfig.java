@@ -11,6 +11,6 @@ public class PostgresTestConfig {
     @Bean
     @ServiceConnection
     PostgreSQLContainer<?> postgresContainer() {
-        return TestContainerManager.POSTGRES_CONTAINER;
+        return TestContainerManager.postgresContainer();
     }
 }

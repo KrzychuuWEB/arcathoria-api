@@ -11,6 +11,6 @@ public class RedisTestConfig {
     @Bean
     @ServiceConnection(name = "redis")
     RedisContainer redisContainer() {
-        return TestContainerManager.REDIS_CONTAINER;
+        return TestContainerManager.redisContainer();
     }
 }
