@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 
 @SpringJUnitConfig
 @ContextConfiguration(classes = {AccountClientAdapter.class})
-class AuthAccountClientAdapterTest {
+class AccountClientAdapterTest {
 
     @MockitoBean
     private AccountQueryFacade accountQueryFacade;

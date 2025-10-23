@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ProblemDetail;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 
 import java.util.UUID;
 
@@ -39,24 +36,20 @@ class AuthControllerModuleTest {
     }
 
     @Test
-    void should_authenticate_success_and_return_token() {
+    void should_authenticate_success_and_set_session_cookie() {
         String email = "email@arcathori.com";
         String rawPassword = "rawPassword123";
         AuthRequestDTO authRequestDTO = new AuthRequestDTO(email, rawPassword);
 
         fakeAuthAccountClient.withAccount(email, new AccountView(UUID.randomUUID(), rawPassword));
+        
+        ResponseEntity<Void> response = restTemplate.postForEntity(authenticateUrl, new HttpEntity<>(authRequestDTO), Void.class);
 
-        ResponseEntity<TokenResponseDTO> response = restTemplate.postForEntity(authenticateUrl, new HttpEntity<>(authRequestDTO), TokenResponseDTO.class);
-
+        String sessionCookie = response.getHeaders().getFirst(HttpHeaders.SET_COOKIE);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-        String token = response.getBody().token();
-        assertThat(token).isNotNull().isNotEmpty();
-        String[] tokenParts = token.split("\\.");
-        assertThat(tokenParts)
-                .hasSize(3)
-                .allMatch(part -> !part.isEmpty())
-                .allMatch(part -> part.matches("^[A-Za-z0-9-_]+$"));
+        assertThat(sessionCookie).isNotNull();
+        assertThat(sessionCookie).contains("session=");
+        assertThat(sessionCookie).containsIgnoringCase("HttpOnly");
     }
 
     @Test
