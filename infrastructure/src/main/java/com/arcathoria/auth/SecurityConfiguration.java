@@ -45,7 +45,7 @@ class SecurityConfiguration {
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                        .ignoringRequestMatchers("/authenticate")
+                        .ignoringRequestMatchers("/authenticate", "/accounts/register")
                 )
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/authenticate", "/csrf", "/accounts/register", "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
@@ -75,7 +75,6 @@ class SecurityConfiguration {
         source.registerCorsConfiguration("/**", config);
         return source;
     }
-
 
     @Bean
     AccountJwtAuthenticationConverter accountJwtAuthenticationConverter() {

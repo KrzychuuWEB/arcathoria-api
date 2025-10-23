@@ -9,7 +9,6 @@ import org.springframework.util.StringUtils;
 import java.util.Arrays;
 
 class CookieAndHeaderBearerTokenResolver implements BearerTokenResolver {
-
     static final String SESSION_COOKIE_NAME = "session";
 
     private final DefaultBearerTokenResolver defaultBearerTokenResolver;
@@ -21,26 +20,26 @@ class CookieAndHeaderBearerTokenResolver implements BearerTokenResolver {
 
     CookieAndHeaderBearerTokenResolver(final String cookieName) {
         this.cookieName = cookieName;
-        this.defaultBearerTokenResolver = new DefaultBearerTokenResolver();
+        DefaultBearerTokenResolver d = new DefaultBearerTokenResolver();
+        d.setAllowUriQueryParameter(false);
+        d.setAllowFormEncodedBodyParameter(false);
+        this.defaultBearerTokenResolver = d;
     }
 
     @Override
     public String resolve(final HttpServletRequest request) {
-        final String bearerToken = defaultBearerTokenResolver.resolve(request);
-        if (StringUtils.hasText(bearerToken)) {
-            return bearerToken;
-        }
+        String bearer = defaultBearerTokenResolver.resolve(request);
+        if (StringUtils.hasText(bearer)) return bearer;
 
-        final Cookie[] cookies = request.getCookies();
-        if (cookies == null) {
-            return null;
-        }
+        Cookie[] cookies = request.getCookies();
+        if (cookies == null) return null;
 
         return Arrays.stream(cookies)
-                .filter(cookie -> cookieName.equals(cookie.getName()))
+                .filter(c -> cookieName.equals(c.getName()))
                 .map(Cookie::getValue)
                 .filter(StringUtils::hasText)
                 .findFirst()
                 .orElse(null);
     }
 }
+

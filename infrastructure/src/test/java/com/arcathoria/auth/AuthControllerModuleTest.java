@@ -10,6 +10,8 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.*;
 
+import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -42,7 +44,7 @@ class AuthControllerModuleTest {
         AuthRequestDTO authRequestDTO = new AuthRequestDTO(email, rawPassword);
 
         fakeAuthAccountClient.withAccount(email, new AccountView(UUID.randomUUID(), rawPassword));
-        
+
         ResponseEntity<Void> response = restTemplate.postForEntity(authenticateUrl, new HttpEntity<>(authRequestDTO), Void.class);
 
         String sessionCookie = response.getHeaders().getFirst(HttpHeaders.SET_COOKIE);
@@ -87,7 +89,11 @@ class AuthControllerModuleTest {
 
         fakeAuthAccountClient.withAccount(email, new AccountView(UUID.randomUUID(), rawPassword)).throwExternalServiceException();
 
-        ResponseEntity<ApiProblemDetail> response = restTemplate.postForEntity(authenticateUrl, new HttpEntity<>(authRequestDTO), ApiProblemDetail.class);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAcceptLanguageAsLocales(List.of(Locale.ENGLISH));
+
+        ResponseEntity<ApiProblemDetail> response =
+                restTemplate.postForEntity(authenticateUrl, new HttpEntity<>(authRequestDTO, headers), ApiProblemDetail.class);
         ApiProblemDetail result = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);

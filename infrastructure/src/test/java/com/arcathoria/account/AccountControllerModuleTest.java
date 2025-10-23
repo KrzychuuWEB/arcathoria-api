@@ -29,7 +29,7 @@ class AccountControllerModuleTest {
     @Test
     void should_register_account_and_return_201_status() {
         RegisterDTO registerDTO = RegisterDTOMother.aRegisterDTO().withEmail("accountRegister@email.com").build();
-
+        
         ResponseEntity<AccountDTO> response = restTemplate.postForEntity(registerUrl, new HttpEntity<>(registerDTO), AccountDTO.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
