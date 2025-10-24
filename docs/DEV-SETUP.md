@@ -59,11 +59,13 @@ scripts\run-mkcert-setup.bat
 ./scripts/mkcert-setup.sh
 ```
 
-## 4) Run backend locally in IntelliJ
+## 4) Run docker
+
+## 5) Run backend locally in IntelliJ
 
 Open the module with **@SpringBootApplication** *(/bootstrap/src/main/java/com/arcathoria/Application)* and click *Run*.
 
-## 5) Access API via Caddy reverse proxy
+## 6) Access API via Caddy reverse proxy
 
 Open browser and navigate to:
 ``
