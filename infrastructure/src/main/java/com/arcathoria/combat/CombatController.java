@@ -7,10 +7,12 @@ import com.arcathoria.combat.dto.ExecuteActionDTO;
 import com.arcathoria.combat.dto.InitPveDTO;
 import com.arcathoria.combat.exception.CombatNotFoundException;
 import com.arcathoria.combat.vo.CombatId;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,6 +22,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/combats")
+@Tag(name = "Combats")
 class CombatController {
 
     private final CombatFacade combatFacade;
@@ -32,6 +35,7 @@ class CombatController {
 
     @PostMapping("/init/pve")
     @ResponseStatus(HttpStatus.CREATED)
+    @Operation(operationId = "initPveCombat", summary = "Initial PVE combat")
     @ApiResponse(responseCode = "404",
             content = @Content(
                     mediaType = "application/problem+json",
@@ -69,6 +73,7 @@ class CombatController {
 
     @PostMapping("/{id}/actions/execute")
     @ResponseStatus(HttpStatus.OK)
+    @Operation(operationId = "performActionInCombat", summary = "Perform action in combat")
     @ApiResponse(responseCode = "404",
             content = @Content(
                     mediaType = "application/problem+json",
@@ -111,6 +116,7 @@ class CombatController {
 
     @GetMapping("/active")
     @ResponseStatus(HttpStatus.OK)
+    @Operation(operationId = "getActiveCombatByParticipantId", summary = "Get active combat by participant id")
     @ApiResponse(responseCode = "404",
             content = @Content(
                     mediaType = "application/problem+json",
@@ -134,6 +140,7 @@ class CombatController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @Operation(operationId = "getCombat", summary = "Get combat by id")
     @ApiResponse(responseCode = "404",
             content = @Content(
                     mediaType = "application/problem+json",
@@ -151,7 +158,7 @@ class CombatController {
                     examples = @ExampleObject(name = "CHARACTER_SERVICE", value = CombatOpenApiExamples.CHARACTER_SERVICE_UNAVAILABLE)
             )
     )
-    CombatResultDTO getCombatById(
+    CombatResultDTO getCombat(
             @PathVariable final UUID id,
             @AuthenticationPrincipal AccountPrincipal principal
     ) {

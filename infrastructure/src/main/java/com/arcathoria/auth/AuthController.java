@@ -1,9 +1,11 @@
 package com.arcathoria.auth;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,7 @@ import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Tag(name = "Auth")
 class AuthController {
 
     private final AuthenticateAccount authenticateAccount;
@@ -25,6 +28,7 @@ class AuthController {
 
     @PostMapping("/authenticate")
     @ResponseStatus(HttpStatus.OK)
+    @Operation(operationId = "login", summary = "Login")
     @ApiResponse(responseCode = "503",
             content = @Content(
                     mediaType = "application/problem+json",
