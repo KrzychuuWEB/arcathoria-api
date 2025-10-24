@@ -17,7 +17,7 @@ refining character and account system and I want focus on the new features.
 ## Features
 
 - **Account System:** Register account.
-- **Auth System:** Login and generate jwt token. Valid jwt token.
+- **Auth System:** Login and generate jwt token. Validate jwt token. HttpOnly JWT Token with CRSF
 - **Character System:** Creation character and select character.
 - **Combat System:** Init new PvE combat. Perform melee attack. Turn system. Choose combat side by strategy.
 - **Monster System:** Loading monster from monster.json.
@@ -54,10 +54,9 @@ arcathoria-api/
 **Backend:**
 
 - Java 17
-- Spring Boot 3
+- Spring Boot
 - Spring Security
 - Hibernate / Spring Data JPA
-- REST API
 
 **Architecture & Design:**
 
@@ -89,6 +88,7 @@ arcathoria-api/
 - Docker and Docker Compose
 - Swagger / OpenApi
 - Problem Detail
+- REST API
 
 ## Requirements
 
@@ -113,6 +113,11 @@ arcathoria-api/
    ```bash
    docker-compose -f compose-prod.yml up -d --build
    ```
+
+## Run dev with caddy for local domain (*api.arcathoria.dev* and *game.arcathoria.dev*)
+
+[DEV-SETUP.md](https://github.com/KrzychuuWEB/arcathoria-api/docs/DEV-SETUP.md) - Step by step guide for dev with caddy
+and local
 
 ## Screenshots
 

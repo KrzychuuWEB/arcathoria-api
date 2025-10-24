@@ -62,6 +62,7 @@ class AuthController {
                 .from(CookieAndHeaderBearerTokenResolver.SESSION_COOKIE_NAME, token)
                 .httpOnly(true)
                 .secure(true)
+                .sameSite("None")
                 .path("/")
                 .maxAge(jwtConfigurationProperties.getValidity())
                 .build();
