@@ -39,7 +39,8 @@ class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(
             final HttpSecurity http,
             final AccountJwtAuthenticationConverter accountJwtAuthenticationConverter,
-            final BearerTokenResolver bearerTokenResolver
+            final BearerTokenResolver bearerTokenResolver,
+            final SecurityProblemHandlers problems
     ) throws Exception {
         return http
                 .cors(Customizer.withDefaults())
@@ -55,9 +56,14 @@ class SecurityConfiguration {
                 .sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
+                .exceptionHandling(e -> e
+                        .authenticationEntryPoint(problems)
+                        .accessDeniedHandler(problems)
+                )
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(accountJwtAuthenticationConverter))
                         .bearerTokenResolver(bearerTokenResolver)
+                        .authenticationEntryPoint(problems)
                 )
                 .build();
     }
