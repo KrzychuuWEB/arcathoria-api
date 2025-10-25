@@ -60,16 +60,8 @@ class AuthController {
             )
     )
     ResponseEntity<Void> login(@Valid @RequestBody AuthRequestDTO authRequestDTO) {
-        final String token = authenticateAccount.authenticate(authRequestDTO);
-
-        final ResponseCookie sessionCookie = ResponseCookie
-                .from(CookieAndHeaderBearerTokenResolver.SESSION_COOKIE_NAME, token)
-                .httpOnly(true)
-                .secure(true)
-                .sameSite("None")
-                .path("/")
-                .maxAge(jwtConfigurationProperties.getValidity())
-                .build();
+        String token = authenticateAccount.authenticate(authRequestDTO);
+        ResponseCookie sessionCookie = setHttpOnlyJwtToken(token, jwtConfigurationProperties.getValidity());
 
         return ResponseEntity
                 .ok()
@@ -77,8 +69,31 @@ class AuthController {
                 .build();
     }
 
+    @DeleteMapping("/logout")
+    @Operation(operationId = "logout", summary = "Logout")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    ResponseEntity<Void> logout() {
+        ResponseCookie deleteCookie = setHttpOnlyJwtToken("", 0);
+
+        return ResponseEntity
+                .noContent()
+                .header(HttpHeaders.SET_COOKIE, deleteCookie.toString())
+                .build();
+    }
+
     @GetMapping("/csrf")
-    public CsrfToken csrf(final CsrfToken token) {
+    @Operation(operationId = "csrf", summary = "Get csrf token")
+    CsrfToken csrf(final CsrfToken token) {
         return token;
+    }
+
+    private ResponseCookie setHttpOnlyJwtToken(final String token, final long maxAge) {
+        return ResponseCookie.from(CookieAndHeaderBearerTokenResolver.SESSION_COOKIE_NAME, token)
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
+                .path("/")
+                .maxAge(maxAge)
+                .build();
     }
 }

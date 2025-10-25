@@ -50,7 +50,7 @@ class AuthControllerModuleTest {
         String sessionCookie = response.getHeaders().getFirst(HttpHeaders.SET_COOKIE);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(sessionCookie).isNotNull();
-        assertThat(sessionCookie).contains("session=");
+        assertThat(sessionCookie).contains("session=" + getTokenFromCookie(sessionCookie));
         assertThat(sessionCookie).containsIgnoringCase("HttpOnly");
     }
 
@@ -100,5 +100,39 @@ class AuthControllerModuleTest {
         assertThat(result).isNotNull();
         assertThat(result.getTitle()).isEqualTo("INTERNAL_SERVER_ERROR");
         assertThat(result.getDetail()).isEqualTo("Internal server error.");
+    }
+
+    @Test
+    void should_set_empty_token_and_max_age_to_0() {
+        String email = "email@arcathori.com";
+        String rawPassword = "rawPassword123";
+        AuthRequestDTO authRequestDTO = new AuthRequestDTO(email, rawPassword);
+
+        fakeAuthAccountClient.withAccount(email, new AccountView(UUID.randomUUID(), rawPassword));
+        ResponseEntity<Void> responseLogin = restTemplate.postForEntity(authenticateUrl, new HttpEntity<>(authRequestDTO), Void.class);
+        String sessionCookieLogin = responseLogin.getHeaders().getFirst(HttpHeaders.SET_COOKIE);
+        assertThat(sessionCookieLogin).isNotNull();
+        String loginToken = getTokenFromCookie(sessionCookieLogin);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.COOKIE, "session=" + loginToken);
+        ResponseEntity<Void> responseLogout = restTemplate.exchange(
+                "/logout", HttpMethod.DELETE, new HttpEntity<>(headers), Void.class);
+
+        assertThat(responseLogin.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(sessionCookieLogin).contains("session=" + loginToken);
+        assertThat(sessionCookieLogin).containsIgnoringCase("HttpOnly");
+
+        String sessionCookieLogout = responseLogout.getHeaders().getFirst(HttpHeaders.SET_COOKIE);
+        assertThat(responseLogout.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(sessionCookieLogout).isNotNull();
+        assertThat(sessionCookieLogout).contains("session=");
+        assertThat(sessionCookieLogout).contains("session=" + "");
+        assertThat(sessionCookieLogout).containsIgnoringCase("HttpOnly");
+        assertThat(sessionCookieLogout).contains("Max-Age=0");
+    }
+
+    private String getTokenFromCookie(String cookie) {
+        return cookie.split(";")[0].split("=")[1];
     }
 }
