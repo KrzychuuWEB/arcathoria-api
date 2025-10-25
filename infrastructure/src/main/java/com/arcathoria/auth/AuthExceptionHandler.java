@@ -9,7 +9,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.context.MessageSource;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ProblemDetail;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.oauth2.jwt.JwtException;
@@ -24,7 +23,6 @@ import java.util.Locale;
 class AuthExceptionHandler {
 
     private static final Logger log = LogManager.getLogger(AuthExceptionHandler.class);
-    private static final String CODE_FIELD = "errorCode";
     private final MessageSource messageSource;
     private final ProblemDetailsFactory problemDetailsFactory;
 
@@ -39,60 +37,62 @@ class AuthExceptionHandler {
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    ProblemDetail handleBadCredentials(final BadCredentialsException ex,
-                                       final HttpServletRequest req,
-                                       final Locale locale) {
+    ApiProblemDetail handleBadCredentials(final BadCredentialsException ex,
+                                          final HttpServletRequest req,
+                                          final Locale locale) {
 
         String detail = messageSource.getMessage("auth.bad.credentials", null, ex.getMessage(), locale);
-        ProblemDetail pd = problem(HttpStatus.UNAUTHORIZED,
+        return problem(HttpStatus.UNAUTHORIZED,
                 "urn:arcathoria:auth:bad-credentials",
                 "ERR AUTH BAD CREDENTIALS",
                 detail,
+                "ERR_AUTH_BAD_CREDENTIALS",
                 req);
-        pd.setProperty(CODE_FIELD, "ERR_AUTH_BAD_CREDENTIALS");
-        return pd;
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    ProblemDetail handleAccessDenied(final AccessDeniedException ex,
-                                     final HttpServletRequest req,
-                                     final Locale locale) {
+    ApiProblemDetail handleAccessDenied(final AccessDeniedException ex,
+                                        final HttpServletRequest req,
+                                        final Locale locale) {
 
         String detail = messageSource.getMessage("auth.access.denied", null, ex.getMessage(), locale);
-        ProblemDetail pd = problem(HttpStatus.FORBIDDEN,
+        ApiProblemDetail pd = problem(HttpStatus.FORBIDDEN,
                 "urn:arcathoria:auth:forbidden",
                 "ERR AUTH FORBIDDEN",
                 detail,
+                "ERR_AUTH_FORBIDDEN",
                 req);
-        pd.setProperty(CODE_FIELD, "ERR_AUTH_FORBIDDEN");
         log.warn("Auth access denied: {}", pd);
         return pd;
     }
 
     @ExceptionHandler(JwtException.class)
-    ProblemDetail handleExpiredJwt(final JwtException ex,
-                                   final HttpServletRequest req,
-                                   final Locale locale) {
+    ApiProblemDetail handleExpiredJwt(final JwtException ex,
+                                      final HttpServletRequest req,
+                                      final Locale locale) {
 
         String detail = messageSource.getMessage("auth.jwt.token.expired", null, ex.getMessage(), locale);
-        ProblemDetail pd = problem(HttpStatus.UNAUTHORIZED,
+        return problem(HttpStatus.UNAUTHORIZED,
                 "urn:arcathoria:auth:token-expired",
                 "ERR AUTH EXPIRED TOKEN",
                 detail,
+                "ERR_AUTH_EXPIRED_TOKEN",
                 req);
-        pd.setProperty(CODE_FIELD, "ERR_AUTH_EXPIRED_TOKEN");
-        return pd;
     }
 
-    private ProblemDetail problem(final HttpStatus status,
-                                  final String type,
-                                  final String title,
-                                  final String detail,
-                                  final HttpServletRequest req) {
-        ProblemDetail pd = ProblemDetail.forStatusAndDetail(status, detail);
+    private ApiProblemDetail problem(final HttpStatus status,
+                                     final String type,
+                                     final String title,
+                                     final String detail,
+                                     final String errorCode,
+                                     final HttpServletRequest req) {
+        ApiProblemDetail pd = new ApiProblemDetail();
+        pd.setDetail(detail);
+        pd.setStatus(status.value());
         pd.setType(URI.create(type));
         pd.setTitle(title);
         pd.setInstance(URI.create(req.getRequestURI()));
+        pd.setErrorCode(errorCode);
         return pd;
     }
 }
