@@ -118,7 +118,7 @@ class CharacterControllerModuleTest {
         HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
 
         ResponseEntity<List<CharacterDTO>> response = restTemplate.exchange(
-                baseSelectCharacterUrl,
+                baseUrl,
                 HttpMethod.GET,
                 requestEntity,
                 new ParameterizedTypeReference<>() {
@@ -147,7 +147,7 @@ class CharacterControllerModuleTest {
         HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
 
         ResponseEntity<List<CharacterDTO>> response = restTemplate.exchange(
-                baseSelectCharacterUrl,
+                baseUrl,
                 HttpMethod.GET,
                 requestEntity,
                 new ParameterizedTypeReference<>() {

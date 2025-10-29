@@ -18,6 +18,20 @@ final class AccountOpenApiExamples {
                }
             }
             """;
+
+    public static final String NOT_FOUND = """
+            {
+               "type":"urn:arcathoria:account:err-account-not-found",
+               "title":"ERR ACCOUNT NOT FOUND",
+               "status":404,
+               "detail":"Account wit this id {id} not found.",
+               "instance":"/v1/accounts/me",
+               "errorCode":"ERR_ACCOUNT_NOT_FOUND",
+               "context":{
+                  "accountId":"UUID"
+               }
+            }
+            """;
 }
 
 
