@@ -94,6 +94,7 @@ class AuthController {
                 .sameSite("None")
                 .path("/")
                 .maxAge(maxAge)
+                .partitioned(true)
                 .build();
     }
 }
