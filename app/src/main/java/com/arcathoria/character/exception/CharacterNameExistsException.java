@@ -9,7 +9,7 @@ public class CharacterNameExistsException extends CharacterApplicationException 
     private final CharacterName characterName;
 
     public CharacterNameExistsException(final CharacterName characterName) {
-        super("Character name " + characterName.value() + " is exists",
+        super("Character name " + characterName.value() + " already exists",
                 CharacterExceptionErrorCode.ERR_CHARACTER_NAME_EXISTS,
                 Map.of("characterName", characterName.value())
         );

@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public record InitPveDTO(
 
-        @NotNull
+        @NotNull(message = "validation.constraints.NotNull")
         UUID monsterId
 ) {
 }

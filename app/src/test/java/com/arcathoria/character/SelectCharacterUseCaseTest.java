@@ -1,8 +1,8 @@
 package com.arcathoria.character;
 
 import com.arcathoria.character.command.SelectCharacterCommand;
-import com.arcathoria.character.exception.CharacterAccessDenied;
 import com.arcathoria.character.exception.CharacterNotFoundException;
+import com.arcathoria.character.exception.CharacterNotOwnedException;
 import com.arcathoria.character.vo.AccountId;
 import com.arcathoria.character.vo.CharacterId;
 import org.junit.jupiter.api.Test;
@@ -60,10 +60,10 @@ class SelectCharacterUseCaseTest {
 
     @Test
     void should_return_AccessDeniedException_when_account_not_owned_character() {
-        when(getCharacterByIdUseCase.getOwned(any(CharacterId.class), any(AccountId.class))).thenThrow(CharacterAccessDenied.class);
+        when(getCharacterByIdUseCase.getOwned(any(CharacterId.class), any(AccountId.class))).thenThrow(CharacterNotOwnedException.class);
 
         assertThatThrownBy(() -> selectCharacterUseCase.execute(
                 SelectCharacterCommandMother.aSelectCharacterCommand().build()
-        )).isInstanceOf(CharacterAccessDenied.class);
+        )).isInstanceOf(CharacterNotOwnedException.class);
     }
 }

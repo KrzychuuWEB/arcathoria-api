@@ -1,5 +1,6 @@
 package com.arcathoria.auth;
 
+import com.arcathoria.ApiProblemDetail;
 import com.arcathoria.testContainers.WithPostgres;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -7,11 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ProblemDetail;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 
+import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,24 +38,20 @@ class AuthControllerModuleTest {
     }
 
     @Test
-    void should_authenticate_success_and_return_token() {
+    void should_authenticate_success_and_set_session_cookie() {
         String email = "email@arcathori.com";
         String rawPassword = "rawPassword123";
         AuthRequestDTO authRequestDTO = new AuthRequestDTO(email, rawPassword);
 
         fakeAuthAccountClient.withAccount(email, new AccountView(UUID.randomUUID(), rawPassword));
 
-        ResponseEntity<TokenResponseDTO> response = restTemplate.postForEntity(authenticateUrl, new HttpEntity<>(authRequestDTO), TokenResponseDTO.class);
+        ResponseEntity<Void> response = restTemplate.postForEntity(authenticateUrl, new HttpEntity<>(authRequestDTO), Void.class);
 
+        String sessionCookie = response.getHeaders().getFirst(HttpHeaders.SET_COOKIE);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-        String token = response.getBody().token();
-        assertThat(token).isNotNull().isNotEmpty();
-        String[] tokenParts = token.split("\\.");
-        assertThat(tokenParts)
-                .hasSize(3)
-                .allMatch(part -> !part.isEmpty())
-                .allMatch(part -> part.matches("^[A-Za-z0-9-_]+$"));
+        assertThat(sessionCookie).isNotNull();
+        assertThat(sessionCookie).contains("session=" + getTokenFromCookie(sessionCookie));
+        assertThat(sessionCookie).containsIgnoringCase("HttpOnly");
     }
 
     @Test
@@ -75,14 +71,14 @@ class AuthControllerModuleTest {
 
         fakeAuthAccountClient.withAccount(email, new AccountView(UUID.randomUUID(), rawPassword)).throwBadCredentialsException();
 
-        ResponseEntity<ProblemDetail> response = restTemplate.postForEntity(authenticateUrl, new HttpEntity<>(authRequestDTO), ProblemDetail.class);
-        ProblemDetail result = response.getBody();
+        ResponseEntity<ApiProblemDetail> response = restTemplate.postForEntity(authenticateUrl, new HttpEntity<>(authRequestDTO), ApiProblemDetail.class);
+        ApiProblemDetail result = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
         assertThat(result).isNotNull();
         assertThat(result.getTitle()).isEqualTo("ERR AUTH BAD CREDENTIALS");
         assertThat(result.getDetail()).isEqualTo("Bad credentials");
-        assertThat(result.getProperties()).containsEntry("errorCode", "ERR_AUTH_BAD_CREDENTIALS");
+        assertThat(result.getErrorCode()).isEqualTo(AuthExceptionErrorCode.ERR_AUTH_BAD_CREDENTIALS.getCodeName());
     }
 
     @Test
@@ -93,12 +89,50 @@ class AuthControllerModuleTest {
 
         fakeAuthAccountClient.withAccount(email, new AccountView(UUID.randomUUID(), rawPassword)).throwExternalServiceException();
 
-        ResponseEntity<ProblemDetail> response = restTemplate.postForEntity(authenticateUrl, new HttpEntity<>(authRequestDTO), ProblemDetail.class);
-        ProblemDetail result = response.getBody();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAcceptLanguageAsLocales(List.of(Locale.ENGLISH));
+
+        ResponseEntity<ApiProblemDetail> response =
+                restTemplate.postForEntity(authenticateUrl, new HttpEntity<>(authRequestDTO, headers), ApiProblemDetail.class);
+        ApiProblemDetail result = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
         assertThat(result).isNotNull();
         assertThat(result.getTitle()).isEqualTo("INTERNAL_SERVER_ERROR");
         assertThat(result.getDetail()).isEqualTo("Internal server error.");
+    }
+
+    @Test
+    void should_set_empty_token_and_max_age_to_0() {
+        String email = "email@arcathori.com";
+        String rawPassword = "rawPassword123";
+        AuthRequestDTO authRequestDTO = new AuthRequestDTO(email, rawPassword);
+
+        fakeAuthAccountClient.withAccount(email, new AccountView(UUID.randomUUID(), rawPassword));
+        ResponseEntity<Void> responseLogin = restTemplate.postForEntity(authenticateUrl, new HttpEntity<>(authRequestDTO), Void.class);
+        String sessionCookieLogin = responseLogin.getHeaders().getFirst(HttpHeaders.SET_COOKIE);
+        assertThat(sessionCookieLogin).isNotNull();
+        String loginToken = getTokenFromCookie(sessionCookieLogin);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.COOKIE, "session=" + loginToken);
+        ResponseEntity<Void> responseLogout = restTemplate.exchange(
+                "/logout", HttpMethod.DELETE, new HttpEntity<>(headers), Void.class);
+
+        assertThat(responseLogin.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(sessionCookieLogin).contains("session=" + loginToken);
+        assertThat(sessionCookieLogin).containsIgnoringCase("HttpOnly");
+
+        String sessionCookieLogout = responseLogout.getHeaders().getFirst(HttpHeaders.SET_COOKIE);
+        assertThat(responseLogout.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(sessionCookieLogout).isNotNull();
+        assertThat(sessionCookieLogout).contains("session=");
+        assertThat(sessionCookieLogout).contains("session=" + "");
+        assertThat(sessionCookieLogout).containsIgnoringCase("HttpOnly");
+        assertThat(sessionCookieLogout).contains("Max-Age=0");
+    }
+
+    private String getTokenFromCookie(String cookie) {
+        return cookie.split(";")[0].split("=")[1];
     }
 }

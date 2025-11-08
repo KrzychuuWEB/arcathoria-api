@@ -1,11 +1,11 @@
 package com.arcathoria.character;
 
+import com.arcathoria.ApiProblemDetail;
 import com.arcathoria.character.dto.CharacterDTO;
 import com.arcathoria.character.dto.CreateCharacterDTO;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 
 class CreateCharacterE2EHelper {
@@ -27,8 +27,8 @@ class CreateCharacterE2EHelper {
         return response;
     }
 
-    ResponseEntity<ProblemDetail> createResponseProblemDetail(final CreateCharacterDTO dto, final HttpHeaders headers) {
-        ResponseEntity<ProblemDetail> response = restTemplate.postForEntity(baseUrl, new HttpEntity<>(dto, headers), ProblemDetail.class);
+    ResponseEntity<ApiProblemDetail> createResponseProblemDetail(final CreateCharacterDTO dto, final HttpHeaders headers) {
+        ResponseEntity<ApiProblemDetail> response = restTemplate.postForEntity(baseUrl, new HttpEntity<>(dto, headers), ApiProblemDetail.class);
 
         if (response.getBody() == null) {
             throw new IllegalStateException("Create character response body is null");

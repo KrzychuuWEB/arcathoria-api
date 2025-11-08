@@ -4,13 +4,13 @@ import com.arcathoria.character.vo.CharacterId;
 
 import java.util.Map;
 
-public class CharacterAccessDenied extends CharacterApplicationException {
+public class CharacterNotOwnedException extends CharacterApplicationException {
 
     private CharacterId characterId;
 
-    public CharacterAccessDenied(final CharacterId characterId) {
-        super("Character with id " + characterId.value() + " is not have access to this operation",
-                CharacterExceptionErrorCode.ERR_CHARACTER_ACCESS_DENIED,
+    public CharacterNotOwnedException(final CharacterId characterId) {
+        super("Character with id " + characterId + " is not owned by the authenticated account",
+                CharacterExceptionErrorCode.ERR_CHARACTER_NOT_OWNED,
                 Map.of("characterId", characterId.value())
         );
 

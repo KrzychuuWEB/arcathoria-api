@@ -66,7 +66,7 @@ class CharacterClientAdapterTest {
                 .satisfies(e -> {
                     CombatParticipantNotAvailableException ex = (CombatParticipantNotAvailableException) e;
                     assertThat(ex.getUpstreamInfo()).isPresent();
-                    assertThat(ex.getUpstreamInfo().get().type()).isEqualTo("character");
+                    assertThat(ex.getUpstreamInfo().get().service()).isEqualTo("character");
                     assertThat(ex.getUpstreamInfo().get().code()).isEqualTo("ERR_CHARACTER_NOT_FOUND");
                     assertThat(ex.getContext()).containsEntry("participantId", characterId.value());
                 });
@@ -83,7 +83,7 @@ class CharacterClientAdapterTest {
                 .satisfies(e -> {
                     CombatParticipantNotAvailableException ex = (CombatParticipantNotAvailableException) e;
                     assertThat(ex.getUpstreamInfo()).isPresent();
-                    assertThat(ex.getUpstreamInfo().get().type()).isEqualTo("character");
+                    assertThat(ex.getUpstreamInfo().get().service()).isEqualTo("character");
                     assertThat(ex.getUpstreamInfo().get().code()).isEqualTo("ERR_CHARACTER_NOT_SELECTED");
                     assertThat(ex.getContext()).containsEntry("participantId", accountId.value());
                 });

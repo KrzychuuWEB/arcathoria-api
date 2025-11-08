@@ -17,7 +17,7 @@ refining character and account system and I want focus on the new features.
 ## Features
 
 - **Account System:** Register account.
-- **Auth System:** Login and generate jwt token. Valid jwt token.
+- **Auth System:** Login and generate jwt token. Validate jwt token. HttpOnly JWT Token with CRSF
 - **Character System:** Creation character and select character.
 - **Combat System:** Init new PvE combat. Perform melee attack. Turn system. Choose combat side by strategy.
 - **Monster System:** Loading monster from monster.json.
@@ -54,10 +54,9 @@ arcathoria-api/
 **Backend:**
 
 - Java 17
-- Spring Boot 3
+- Spring Boot
 - Spring Security
 - Hibernate / Spring Data JPA
-- REST API
 
 **Architecture & Design:**
 
@@ -74,22 +73,28 @@ arcathoria-api/
 **Database & Storage:**
 
 - PostgreSQL
-- Redis (cache/session storage)
+- Redis
 
-**Testing & Infrastructure:**
+**Testing:**
 
 - JUnit 5
 - Testcontainers (integration testing)
-- Docker / Docker Compose
 - Mockito
 - E2E module test with separated bounded context
 - Tests helpers (fake implementation, tests config)
+
+**Infrastructure:**
+
+- Docker and Docker Compose
+- Swagger / OpenApi
+- Problem Detail
+- REST API
 
 ## Requirements
 
 - Java 17 or higher
 - Gradle 7 or higher
-- Docker & Docker Compose (for local development environment)
+- Docker & Docker Compose
 
 ## Installation & Running
 
@@ -109,12 +114,11 @@ arcathoria-api/
    docker-compose -f compose-prod.yml up -d --build
    ```
 
+## Run dev with caddy for local domain (*api.arcathoria.dev* and *game.arcathoria.dev*)
+
+[DEV-SETUP.md](https://github.com/KrzychuuWEB/arcathoria-api/docs/DEV-SETUP.md) - Step by step guide for dev with caddy
+and local
+
 ## Screenshots
 
-![Login Page](gh_img/login.png)
-
-![Expeditions](gh_img/expedition.png)
-
-![Choose Expedition](gh_img/choose_expedition.png)
-
-![PvE Combat](gh_img/combat.png)
+[click me to see screenshots](https://github.com/krzychuuWEB/arcathoria-client?tab=readme-ov-file#screenshots)

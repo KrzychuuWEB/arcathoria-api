@@ -42,6 +42,17 @@ services:
     volumes:
       - pgadmin-data:/var/lib/pgadmin
 
+  caddy:
+    image: caddy:2-alpine
+    ports:
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./certs/dev-cert.pem:/certs/dev-cert.pem:ro
+      - ./certs/dev-key.pem:/certs/dev-key.pem:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
 volumes:
   local_pgdata:
   pgadmin-data:

@@ -46,7 +46,7 @@ class GlobalExceptionHandlerTest {
                 .andExpect(jsonPath("$.violations[0].message").value("size must be between 2 and 5"))
                 .andExpect(jsonPath("$.instance").value("/test-validation-body"));
     }
-    
+
     @Test
     void should_return_bad_request_for_malformed_json() throws Exception {
         String malformed = "{ not-a-json }";

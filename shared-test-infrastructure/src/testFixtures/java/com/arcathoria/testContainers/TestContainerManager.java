@@ -6,19 +6,19 @@ import org.testcontainers.utility.DockerImageName;
 
 public class TestContainerManager {
 
-    public static final PostgreSQLContainer<?> POSTGRES_CONTAINER;
-    public static final RedisContainer REDIS_CONTAINER;
+    private static final String POSTGRES_IMAGE = "postgres:16-alpine";
+    private static final DockerImageName REDIS_IMAGE = DockerImageName.parse("redis:7-alpine");
 
     private TestContainerManager() {
     }
 
-    static {
-        POSTGRES_CONTAINER = new PostgreSQLContainer<>("postgres:16-alpine")
+    public static PostgreSQLContainer<?> postgresContainer() {
+        return new PostgreSQLContainer<>(POSTGRES_IMAGE)
                 .withReuse(true);
-        POSTGRES_CONTAINER.start();
+    }
 
-        REDIS_CONTAINER = new RedisContainer(DockerImageName.parse("redis:7-alpine"))
+    public static RedisContainer redisContainer() {
+        return new RedisContainer(REDIS_IMAGE)
                 .withReuse(true);
-        REDIS_CONTAINER.start();
     }
 }

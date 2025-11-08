@@ -1,5 +1,6 @@
 package com.arcathoria.monster;
 
+import com.arcathoria.ApiProblemDetail;
 import com.arcathoria.auth.AccountWithAuthenticated;
 import com.arcathoria.auth.FakeJwtTokenConfig;
 import com.arcathoria.monster.dto.MonsterDTO;
@@ -51,18 +52,17 @@ class MonsterControllerModuleTest {
         HttpHeaders headers = accountWithAuthenticated.authenticatedWithLangPL(UUID.randomUUID());
         HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
 
-        ResponseEntity<ProblemDetail> response = restTemplate.exchange(
+        ResponseEntity<ApiProblemDetail> response = restTemplate.exchange(
                 baseUrl + "/00000000-0000-0000-0000-000000000000",
                 HttpMethod.GET,
                 requestEntity,
-                ProblemDetail.class
+                ApiProblemDetail.class
         );
-        ProblemDetail result = response.getBody();
+        ApiProblemDetail result = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(result).isNotNull();
         assertThat(result.getDetail()).contains("potwora");
-        assertThat(result.getProperties())
-                .containsEntry("errorCode", MonsterExceptionErrorCode.ERR_MONSTER_NOT_FOUND.getCodeName());
+        assertThat(result.getErrorCode()).isEqualTo(MonsterExceptionErrorCode.ERR_MONSTER_NOT_FOUND.getCodeName());
     }
 }

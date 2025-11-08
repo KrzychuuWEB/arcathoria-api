@@ -1,0 +1,13 @@
+{
+  auto_https off
+}
+
+api.arcathoria.dev {
+  tls /certs/dev-cert.pem /certs/dev-key.pem
+  reverse_proxy host.docker.internal:8080
+}
+
+game.arcathoria.dev {
+  tls /certs/dev-cert.pem /certs/dev-key.pem
+  reverse_proxy host.docker.internal:5173
+}

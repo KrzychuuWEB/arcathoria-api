@@ -57,7 +57,7 @@ class MonsterClientAdapterTest {
                 .satisfies(e -> {
                     CombatParticipantNotAvailableException ex = (CombatParticipantNotAvailableException) e;
                     assertThat(ex.getUpstreamInfo()).isPresent();
-                    assertThat(ex.getUpstreamInfo().get().type()).isEqualTo("monster");
+                    assertThat(ex.getUpstreamInfo().get().service()).isEqualTo("monster");
                     assertThat(ex.getUpstreamInfo().get().code()).isEqualTo("ERR_MONSTER_NOT_FOUND");
                     assertThat(ex.getContext()).containsEntry("participantId", monsterId.value());
                 });

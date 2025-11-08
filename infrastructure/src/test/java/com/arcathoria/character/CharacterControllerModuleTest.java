@@ -1,5 +1,6 @@
 package com.arcathoria.character;
 
+import com.arcathoria.ApiProblemDetail;
 import com.arcathoria.UUIDGenerator;
 import com.arcathoria.auth.AccountWithAuthenticated;
 import com.arcathoria.auth.FakeJwtTokenConfig;
@@ -21,7 +22,6 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -84,14 +84,13 @@ class CharacterControllerModuleTest {
 
         createCharacterE2EHelper.create(createCharacterDTO, headers);
 
-        ResponseEntity<ProblemDetail> response = restTemplate.postForEntity(baseUrl, new HttpEntity<>(createCharacterDTO, headers), ProblemDetail.class);
-        ProblemDetail result = response.getBody();
+        ResponseEntity<ApiProblemDetail> response = restTemplate.postForEntity(baseUrl, new HttpEntity<>(createCharacterDTO, headers), ApiProblemDetail.class);
+        ApiProblemDetail result = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
         assertThat(result).isNotNull();
         assertThat(result.getDetail()).contains("Nazwa postaci");
-        assertThat(result.getProperties())
-                .containsEntry("errorCode", CharacterExceptionErrorCode.ERR_CHARACTER_NAME_EXISTS.getCodeName());
+        assertThat(result.getErrorCode()).isEqualTo(CharacterExceptionErrorCode.ERR_CHARACTER_NAME_EXISTS.getCodeName());
     }
 
     @Test
@@ -119,7 +118,7 @@ class CharacterControllerModuleTest {
         HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
 
         ResponseEntity<List<CharacterDTO>> response = restTemplate.exchange(
-                baseSelectCharacterUrl,
+                baseUrl,
                 HttpMethod.GET,
                 requestEntity,
                 new ParameterizedTypeReference<>() {
@@ -148,7 +147,7 @@ class CharacterControllerModuleTest {
         HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
 
         ResponseEntity<List<CharacterDTO>> response = restTemplate.exchange(
-                baseSelectCharacterUrl,
+                baseUrl,
                 HttpMethod.GET,
                 requestEntity,
                 new ParameterizedTypeReference<>() {
@@ -184,14 +183,13 @@ class CharacterControllerModuleTest {
 
         fakeAccountClient.withDefaultAccount(accountId.value());
 
-        ResponseEntity<ProblemDetail> response = restTemplate.postForEntity(baseSelectCharacterUrl, new HttpEntity<>(selectCharacterDTO, headers), ProblemDetail.class);
-        ProblemDetail result = response.getBody();
+        ResponseEntity<ApiProblemDetail> response = restTemplate.postForEntity(baseSelectCharacterUrl, new HttpEntity<>(selectCharacterDTO, headers), ApiProblemDetail.class);
+        ApiProblemDetail result = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(result).isNotNull();
         assertThat(result.getDetail()).contains("Postać z podanym");
-        assertThat(result.getProperties())
-                .containsEntry("errorCode", CharacterExceptionErrorCode.ERR_CHARACTER_NOT_FOUND.getCodeName());
+        assertThat(result.getErrorCode()).isEqualTo(CharacterExceptionErrorCode.ERR_CHARACTER_NOT_FOUND.getCodeName());
     }
 
     @Test
@@ -211,14 +209,13 @@ class CharacterControllerModuleTest {
         assertThat(responseForAccount1).isNotNull();
         SelectCharacterDTO selectCharacterDTO = new SelectCharacterDTO(responseForAccount1.id());
 
-        ResponseEntity<ProblemDetail> response = restTemplate.postForEntity(baseSelectCharacterUrl, new HttpEntity<>(selectCharacterDTO, account2), ProblemDetail.class);
-        ProblemDetail result = response.getBody();
+        ResponseEntity<ApiProblemDetail> response = restTemplate.postForEntity(baseSelectCharacterUrl, new HttpEntity<>(selectCharacterDTO, account2), ApiProblemDetail.class);
+        ApiProblemDetail result = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
         assertThat(result).isNotNull();
-        assertThat(result.getDetail()).contains("nie ma dostepu");
-        assertThat(result.getProperties())
-                .containsEntry("errorCode", CharacterExceptionErrorCode.ERR_CHARACTER_ACCESS_DENIED.getCodeName());
+        assertThat(result.getDetail()).contains("nie należy");
+        assertThat(result.getErrorCode()).isEqualTo(CharacterExceptionErrorCode.ERR_CHARACTER_NOT_OWNED.getCodeName());
     }
 
     @Test
@@ -255,19 +252,18 @@ class CharacterControllerModuleTest {
         fakeAccountClient.withDefaultAccount(accountId.value());
 
         HttpEntity<Void> request = new HttpEntity<>(headers);
-        ResponseEntity<ProblemDetail> response = restTemplate.exchange(
+        ResponseEntity<ApiProblemDetail> response = restTemplate.exchange(
                 baseSelectCharacterUrl + "/me",
                 HttpMethod.GET,
                 request,
-                ProblemDetail.class
+                ApiProblemDetail.class
         );
-        ProblemDetail result = response.getBody();
+        ApiProblemDetail result = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(result).isNotNull();
         assertThat(result.getDetail()).contains("Postać nie została wybrana");
-        assertThat(result.getProperties())
-                .containsEntry("errorCode", CharacterExceptionErrorCode.ERR_CHARACTER_NOT_SELECTED.getCodeName());
+        assertThat(result.getErrorCode()).isEqualTo(CharacterExceptionErrorCode.ERR_CHARACTER_NOT_SELECTED.getCodeName());
     }
 
     @Test
@@ -286,7 +282,7 @@ class CharacterControllerModuleTest {
         HttpEntity<Void> request = new HttpEntity<>(headers);
         ResponseEntity<Void> deleteResponse = restTemplate.exchange(baseSelectCharacterUrl, HttpMethod.DELETE, request, Void.class);
 
-        ResponseEntity<ProblemDetail> response = restTemplate.exchange(baseSelectCharacterUrl + "/me", HttpMethod.GET, request, ProblemDetail.class);
+        ResponseEntity<ApiProblemDetail> response = restTemplate.exchange(baseSelectCharacterUrl + "/me", HttpMethod.GET, request, ApiProblemDetail.class);
 
         assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -300,14 +296,13 @@ class CharacterControllerModuleTest {
         fakeAccountClient.withDefaultAccount(accountId.value());
 
         HttpEntity<Void> request = new HttpEntity<>(headers);
-        ResponseEntity<ProblemDetail> response = restTemplate.exchange(baseSelectCharacterUrl, HttpMethod.DELETE, request, ProblemDetail.class);
-        ProblemDetail result = response.getBody();
+        ResponseEntity<ApiProblemDetail> response = restTemplate.exchange(baseSelectCharacterUrl, HttpMethod.DELETE, request, ApiProblemDetail.class);
+        ApiProblemDetail result = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(result).isNotNull();
         assertThat(result.getDetail()).contains("Postać nie została wybrana");
-        assertThat(result.getProperties())
-                .containsEntry("errorCode", CharacterExceptionErrorCode.ERR_CHARACTER_NOT_SELECTED.getCodeName());
+        assertThat(result.getErrorCode()).isEqualTo(CharacterExceptionErrorCode.ERR_CHARACTER_NOT_SELECTED.getCodeName());
     }
 
     @Test
@@ -318,18 +313,15 @@ class CharacterControllerModuleTest {
         fakeAccountClient.withDefaultAccount(accountId.value()).throwCharacterOwnerNotFoundException();
 
         CreateCharacterDTO createCharacterDTO = CreateCharacterDTOMother.aCreateCharacterDTO().withCharacterName(randomCharacterName).build();
-        ResponseEntity<ProblemDetail> response = createCharacterE2EHelper.createResponseProblemDetail(createCharacterDTO, headers);
-        ProblemDetail result = response.getBody();
+        ResponseEntity<ApiProblemDetail> response = createCharacterE2EHelper.createResponseProblemDetail(createCharacterDTO, headers);
+        ApiProblemDetail result = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(result).isNotNull();
         assertThat(result.getTitle()).isEqualTo("ERR CHARACTER OWNER NOT FOUND");
         assertThat(result.getDetail()).contains("nie istnieje");
-        assertThat(result.getProperties())
-                .containsEntry("errorCode", CharacterExceptionErrorCode.ERR_CHARACTER_OWNER_NOT_FOUND.getCodeName());
-        assertThat(result.getProperties().get("upstream")).isNotNull();
-        @SuppressWarnings("unchecked")
-        Map<String, Object> upstream = (Map<String, Object>) result.getProperties().get("upstream");
-        assertThat(upstream).containsEntry("type", "account").containsEntry("code", "ERR_ACCOUNT_NOT_FOUND");
+        assertThat(result.getErrorCode()).isEqualTo(CharacterExceptionErrorCode.ERR_CHARACTER_OWNER_NOT_FOUND.getCodeName());
+        assertThat(result.getUpstream().service()).isEqualTo("account");
+        assertThat(result.getUpstream().code()).isEqualTo("ERR_ACCOUNT_NOT_FOUND");
     }
 }
