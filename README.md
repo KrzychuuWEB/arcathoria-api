@@ -116,7 +116,8 @@ arcathoria-api/
 
 ## Run dev with caddy for local domain (*api.arcathoria.dev* and *game.arcathoria.dev*)
 
-[DEV-SETUP.md](https://github.com/KrzychuuWEB/arcathoria-api/docs/DEV-SETUP.md) - Step by step guide for dev with caddy
+[DEV-SETUP.md](https://github.com/KrzychuuWEB/arcathoria-api/blob/master/docs/DEV-SETUP.md) - Step by step guide for dev
+with caddy
 and local
 
 ## Screenshots
