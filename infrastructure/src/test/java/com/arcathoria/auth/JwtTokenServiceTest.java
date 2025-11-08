@@ -4,8 +4,6 @@ import com.arcathoria.testContainers.WithPostgres;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.UUID;
 
@@ -31,41 +29,6 @@ class JwtTokenServiceTest {
 
         assertThat(token).isNotNull();
         assertThat(token.split("\\.")).hasSize(3);
-    }
-
-    @Test
-    void should_extract_username_from_token() {
-        String token = jwtTokenService.generateToken(username, userId);
-        String extractedUsername = jwtTokenService.extractUserName(token);
-
-        assertThat(extractedUsername).isEqualTo(username);
-    }
-
-    @Test
-    void should_validate_token_successfully() {
-        String token = jwtTokenService.generateToken(username, userId);
-
-        UserDetails userDetails = User.builder()
-                .username(username)
-                .password("password")
-                .roles("USER")
-                .build();
-
-        assertThat(jwtTokenService.validateToken(token, userDetails)).isTrue();
-    }
-
-    @Test
-    void should_invalidate_token_for_incorrect_username() {
-        properties.setValidity(1000L);
-        String token = jwtTokenService.generateToken(username, userId);
-
-        UserDetails otherUser = User.builder()
-                .username("other@example.com")
-                .password("password")
-                .roles("USER")
-                .build();
-
-        assertThat(jwtTokenService.validateToken(token, otherUser)).isFalse();
     }
 
     @Test

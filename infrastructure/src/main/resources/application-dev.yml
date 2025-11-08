@@ -16,4 +16,4 @@ log:
 
 jwt:
   secret: RUoYVGoUm4t+zRhg9fMlKLG35iKvcoQJo8ts6D/oo1c=
-  validity: 3600
+  validity: 1200
